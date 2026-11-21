@@ -51,7 +51,7 @@ for vowel in ["a","o"]:
         _,s,vt=np.linalg.svd(jf,full_matrices=True)
         assert s[-1]>s[0]*1e-5
         basis=vt[3:].T
-        _,hs,directions=np.linalg.svd(jh@basis,full_matrices=False)
+        _,hs,directions=np.linalg.svd(np.einsum("ij,jk->ik",jh,basis),full_matrices=False)
         run={"difference_step":eps,"formant_singular_values":s.tolist(),"directions":[]}
         for name,i in [("sensitive",0),("insensitive",-1)]:
             direction=basis@directions[i]
