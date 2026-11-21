@@ -438,15 +438,12 @@ void TdsModel::prepareSparseCholesky()
   }
 
   choleskyRowStart.assign(1, 0);
-  choleskyColStart.assign(1, 0);
   choleskyRowIndex.clear();
   choleskyRowSource.clear();
-  choleskyColIndex.clear();
 
   for (k = 0; k < N; k++)
   {
     sort(rows[k].begin(), rows[k].end());
-    sort(cols[k].begin(), cols[k].end());
 
     int a = choleskyPerm[k];
     choleskyDiagSource[k] = a * N + a;
@@ -461,19 +458,37 @@ void TdsModel::prepareSparseCholesky()
       choleskyRowSource.push_back((matrix[hi][lo] != 0.0) ? hi * N + lo : -1);
     }
     choleskyRowStart.push_back((int)choleskyRowIndex.size());
-
-    choleskyColIndex.insert(choleskyColIndex.end(), cols[k].begin(), cols[k].end());
-    choleskyColStart.push_back((int)choleskyColIndex.size());
   }
 
-  // Entries outside of the pattern of L must be zero.
-  for (i = 0; i < N; i++)
+  // For each entry (p,q), the pairs of entries (p,j) and (q,j) with
+  // j < q that contribute to the inner product in the factorization.
+
+  choleskyPairStart.assign(1, 0);
+  choleskyPairA.clear();
+  choleskyPairB.clear();
+
+  for (int p = 0; p < N; p++)
   {
-    for (j = 0; j < N; j++)
+    for (int v = choleskyRowStart[p]; v < choleskyRowStart[p + 1]; v++)
     {
-      factorizationMatrix[i][j] = 0.0;
+      int q = choleskyRowIndex[v];
+      for (int vp = choleskyRowStart[p]; vp < v; vp++)
+      {
+        int jj = choleskyRowIndex[vp];
+        for (int vq = choleskyRowStart[q]; vq < choleskyRowStart[q + 1]; vq++)
+        {
+          if (choleskyRowIndex[vq] == jj)
+          {
+            choleskyPairA.push_back(vp);
+            choleskyPairB.push_back(vq);
+          }
+        }
+      }
+      choleskyPairStart.push_back((int)choleskyPairA.size());
     }
   }
+
+  choleskyValues.assign(choleskyRowIndex.size(), 0.0);
 }
 
 
@@ -2144,50 +2159,41 @@ void TdsModel::updateVariables()
 void TdsModel::solveEquationsCholesky()
 {
   // Solves (-matrix) * flowVector = (-solutionVector) with a sparse
-  // Cholesky factorization in the fill-reducing order choleskyPerm
+  // Cholesky factorization L*L^T in the fill-reducing order choleskyPerm
   // (see prepareSparseCholesky()). Only the lower triangle of matrix is
-  // read. Entries of factorizationMatrix outside of the pattern of L
-  // are always zero.
+  // read. The factorization is computed row by row (up-looking) and
+  // fused with the forward substitution.
 
   const int N = NUM_BRANCH_CURRENTS;
   const double *A = &matrix[0][0];
   const int *rowStart = choleskyRowStart.data();
   const int *rowIndex = choleskyRowIndex.data();
   const int *rowSource = choleskyRowSource.data();
-  const int *colStart = choleskyColStart.data();
-  const int *colIndex = choleskyColIndex.data();
+  const int *pairStart = choleskyPairStart.data();
+  const int *pairA = choleskyPairA.data();
+  const int *pairB = choleskyPairB.data();
+  double *L = choleskyValues.data();
+  double diag[NUM_BRANCH_CURRENTS];
   double y[NUM_BRANCH_CURRENTS];
-  int i, k, u, v;
+  int p, v, w;
 
-  // ****************************************************************
-  // Gather the negated, permuted matrix and right-hand side.
-  // ****************************************************************
-
-  for (k = 0; k < N; k++)
+  for (p = 0; p < N; p++)
   {
-    double *Fk = factorizationMatrix[k];
-    Fk[k] = -A[choleskyDiagSource[k]];
-    for (v = rowStart[k]; v < rowStart[k + 1]; v++)
+    double d = -A[choleskyDiagSource[p]];
+    double b = -solutionVector[choleskyPerm[p]];
+
+    for (v = rowStart[p]; v < rowStart[p + 1]; v++)
     {
-      Fk[rowIndex[v]] = (rowSource[v] >= 0) ? -A[rowSource[v]] : 0.0;
-    }
-    y[k] = -solutionVector[choleskyPerm[k]];
-  }
-
-  // ****************************************************************
-  // Cholesky factorization (column by column).
-  // ****************************************************************
-
-  for (k = 0; k < N; k++)
-  {
-    double *Fk = factorizationMatrix[k];
-    const int firstK = rowStart[k];
-    const int lastK = rowStart[k + 1];
-
-    double d = Fk[k];
-    for (v = firstK; v < lastK; v++)
-    {
-      d -= Fk[rowIndex[v]] * Fk[rowIndex[v]];
+      const int q = rowIndex[v];
+      double sum = (rowSource[v] >= 0) ? -A[rowSource[v]] : 0.0;
+      for (w = pairStart[v]; w < pairStart[v + 1]; w++)
+      {
+        sum -= L[pairA[w]] * L[pairB[w]];
+      }
+      const double l = sum / diag[q];
+      L[v] = l;
+      d -= l * l;
+      b -= l * y[q];
     }
 
     if (d < 0.0)
@@ -2195,50 +2201,21 @@ void TdsModel::solveEquationsCholesky()
       d = 0.0;
       printf("Error: Cholesky factorization: Matrix is not positive definite!\n");
     }
-    d = sqrt(d);
-    Fk[k] = d;
-
-    for (u = colStart[k]; u < colStart[k + 1]; u++)
-    {
-      double *Fi = factorizationMatrix[colIndex[u]];
-      double sum = Fi[k];
-      for (v = firstK; v < lastK; v++)
-      {
-        sum -= Fi[rowIndex[v]] * Fk[rowIndex[v]];
-      }
-      Fi[k] = sum / d;
-    }
+    diag[p] = sqrt(d);
+    y[p] = b / diag[p];
   }
 
-  // ****************************************************************
-  // Forward substitution.
-  // ****************************************************************
+  // Backward substitution with L^T (y is overwritten with the solution).
 
-  for (k = 0; k < N; k++)
+  for (p = N - 1; p >= 0; --p)
   {
-    const double *Fk = factorizationMatrix[k];
-    double sum = y[k];
-    for (v = rowStart[k]; v < rowStart[k + 1]; v++)
+    const double x = y[p] / diag[p];
+    y[p] = x;
+    flowVector[choleskyPerm[p]] = x;
+    for (v = rowStart[p]; v < rowStart[p + 1]; v++)
     {
-      sum -= Fk[rowIndex[v]] * y[rowIndex[v]];
+      y[rowIndex[v]] -= L[v] * x;
     }
-    y[k] = sum / Fk[k];
-  }
-
-  // ****************************************************************
-  // Backward substitution (y is overwritten with the solution).
-  // ****************************************************************
-
-  for (k = N - 1; k >= 0; --k)
-  {
-    double sum = y[k];
-    for (u = colStart[k]; u < colStart[k + 1]; u++)
-    {
-      i = colIndex[u];
-      sum -= factorizationMatrix[i][k] * y[i];
-    }
-    y[k] = sum / factorizationMatrix[k][k];
-    flowVector[choleskyPerm[k]] = y[k];
   }
 }
 

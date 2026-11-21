@@ -230,14 +230,16 @@ public:
 
   // Sparse Cholesky factorization with a fill-reducing (minimum fill)
   // ordering of the branch currents. The ordering and the non-zero
-  // pattern of the factor are computed once in prepareSparseCholesky().
-  // The factor is stored in the permuted positions of factorizationMatrix.
+  // pattern of the factor L are computed once in prepareSparseCholesky().
+  // L is stored row by row (compressed) in the permuted positions.
   int choleskyPerm[NUM_BRANCH_CURRENTS];        ///< Position -> branch current
-  std::vector<int> choleskyRowStart;            ///< Row p of L: [rowStart[p], rowStart[p+1])
-  std::vector<int> choleskyRowIndex;            ///< Column positions (ascending) of row entries
+  std::vector<int> choleskyRowStart;            ///< Row p of L: entries [rowStart[p], rowStart[p+1])
+  std::vector<int> choleskyRowIndex;            ///< Column positions (ascending) of the row entries
   std::vector<int> choleskyRowSource;           ///< Offset of the entry in matrix, or -1 for fill-in
-  std::vector<int> choleskyColStart;            ///< Column k of L: [colStart[k], colStart[k+1])
-  std::vector<int> choleskyColIndex;            ///< Row positions (ascending) of column entries
+  std::vector<int> choleskyPairStart;           ///< Entry v=(p,q): pairs [pairStart[v], pairStart[v+1])
+  std::vector<int> choleskyPairA;               ///< Entry index of (p,j) for j in rows p and q, j < q
+  std::vector<int> choleskyPairB;               ///< Entry index of (q,j)
+  std::vector<double> choleskyValues;           ///< Off-diagonal values of L
   int choleskyDiagSource[NUM_BRANCH_CURRENTS];  ///< Offset of the diagonal entry in matrix
 
   IirFilter transglottalPressureFilter;
