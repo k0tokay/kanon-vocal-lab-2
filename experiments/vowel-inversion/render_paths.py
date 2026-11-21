@@ -1,12 +1,14 @@
 """Hold the reference, traverse the measured path at constant normalized speed, hold the endpoint."""
 import json
+import sys
 import os
 from pathlib import Path
 import numpy as np
 from scipy.io import wavfile
 os.environ["VTL_EXPERIMENT_SPEAKER"]=str(Path(__file__).resolve().parents[2]/"speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vowel-variation.speaker")
 from run import out,call,ptr,shape,rate,labels,voice
-folder=out/"integrated"
+long_path="--long" in sys.argv[1:]
+folder=out/("integrated-long" if long_path else "integrated")
 audio={}
 for vowel in "ao":
     ref=shape(vowel)

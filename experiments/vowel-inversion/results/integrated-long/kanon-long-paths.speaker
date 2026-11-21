@@ -1,0 +1,1673 @@
+<speaker>
+  <vocal_tract_model>
+    <anatomy>
+      <palate>
+        <p0 x="0.0000" z="-1.7870" teeth_height="0.0000" top_teeth_width="0.9382" bottom_teeth_width="0.9382" palate_height="1.2838" palate_angle_deg="60.8000"/>
+        <p1 x="0.0000" z="-1.7870" teeth_height="0.0000" top_teeth_width="0.9382" bottom_teeth_width="0.9382" palate_height="1.2838" palate_angle_deg="60.8000"/>
+        <p2 x="0.1700" z="-1.7870" teeth_height="0.5000" top_teeth_width="0.8935" bottom_teeth_width="0.8935" palate_height="1.3324" palate_angle_deg="60.8000"/>
+        <p3 x="1.1700" z="-1.6083" teeth_height="0.5000" top_teeth_width="0.8935" bottom_teeth_width="0.8935" palate_height="1.4960" palate_angle_deg="60.8000"/>
+        <p4 x="1.8700" z="-1.4296" teeth_height="0.6000" top_teeth_width="0.7148" bottom_teeth_width="0.7148" palate_height="1.3090" palate_angle_deg="60.8000"/>
+        <p5 x="2.5200" z="-1.2509" teeth_height="0.7000" top_teeth_width="0.6254" bottom_teeth_width="0.6254" palate_height="0.6545" palate_angle_deg="38.0000"/>
+        <p6 x="2.9200" z="-0.9829" teeth_height="0.8000" top_teeth_width="0.5808" bottom_teeth_width="0.2680" palate_height="0.1402" palate_angle_deg="23.4000"/>
+        <p7 x="3.0700" z="-0.5361" teeth_height="0.8000" top_teeth_width="0.7148" bottom_teeth_width="0.1787" palate_height="0.0000" palate_angle_deg="0.0000"/>
+        <p8 x="3.0700" z="0.0000" teeth_height="0.8000" top_teeth_width="0.7595" bottom_teeth_width="0.1787" palate_height="0.0000" palate_angle_deg="0.0000"/>
+      </palate>
+      <jaw fulcrum_x="-6.5000" fulcrum_y="2.0000" rest_pos_x="0.0000" rest_pos_y="-1.1760" tooth_root_length="0.7968">
+        <p0 x="0.0000" z="-1.6976" teeth_height="0.0000" top_teeth_width="0.9382" bottom_teeth_width="0.9382" jaw_height="1.4940" jaw_angle_deg="69.5000"/>
+        <p1 x="0.0000" z="-1.6976" teeth_height="0.0000" top_teeth_width="0.9829" bottom_teeth_width="0.9829" jaw_height="1.4940" jaw_angle_deg="69.5000"/>
+        <p2 x="0.7200" z="-1.6976" teeth_height="0.4760" top_teeth_width="0.9382" bottom_teeth_width="0.9382" jaw_height="1.4940" jaw_angle_deg="69.5000"/>
+        <p3 x="1.7200" z="-1.4296" teeth_height="0.4760" top_teeth_width="0.8042" bottom_teeth_width="0.8042" jaw_height="1.4940" jaw_angle_deg="69.5000"/>
+        <p4 x="2.4200" z="-1.2509" teeth_height="0.4760" top_teeth_width="0.6701" bottom_teeth_width="0.6701" jaw_height="0.9960" jaw_angle_deg="42.2000"/>
+        <p5 x="2.8200" z="-0.9829" teeth_height="0.5236" top_teeth_width="0.5361" bottom_teeth_width="0.6254" jaw_height="0.3984" jaw_angle_deg="35.8000"/>
+        <p6 x="3.0200" z="-0.6254" teeth_height="0.5712" top_teeth_width="0.2680" bottom_teeth_width="0.7148" jaw_height="0.1295" jaw_angle_deg="31.4000"/>
+        <p7 x="3.0700" z="-0.4467" teeth_height="0.6664" top_teeth_width="0.1787" bottom_teeth_width="0.8042" jaw_height="0.0000" jaw_angle_deg="0.0000"/>
+        <p8 x="3.0700" z="0.0000" teeth_height="0.6664" top_teeth_width="0.1787" bottom_teeth_width="0.8042" jaw_height="0.0000" jaw_angle_deg="0.0000"/>
+      </jaw>
+      <lips width="0.8700"/>
+      <tongue>
+        <tip radius="0.1580"/>
+        <body radius_x="1.4218" radius_y="1.2472"/>
+        <root automatic_calc="1" trx_slope="0.8596" trx_intercept="-4.2732" try_slope="0.9937" try_intercept="-1.2625"/>
+        <tonsil length="2.2000" height="0.5000"/>
+      </tongue>
+      <velum uvula_width="0.4850" uvula_height="0.6236" uvula_depth="0.6254">
+        <low points="-1.326 -0.7 -1.061 -0.3032 -0.7425 -0.005668 -0.3182 0.3415 0 0.5399 "/>
+        <mid points="-1.856 -0.005668 -1.644 0.2919 -1.22 0.4903 -0.6364 0.6887 0 0.8573 "/>
+        <high points="-1.856 0.4903 -1.591 0.9366 -1.167 1.185 -0.6364 1.234 0 1.284 "/>
+      </velum>
+      <pharynx fulcrum_x="-2.5160" fulcrum_y="1.1985" rotation_angle_deg="-91.8990" top_rib_y="-1.4000" upper_depth="3.3953" lower_depth="3.0379" back_side_width="1.5000"/>
+      <larynx upper_depth="0.8935" lower_depth="0.8935" epiglottis_width="0.3465" epiglottis_height="1.1087" epiglottis_depth="1.2509" epiglottis_angle_deg="100.0000">
+        <narrow points="1.156 0 0.6745 -0.1313 0.9449 -0.7875 1.586 -2.1 0.9508 -2.1 0.4949 -0.7875 0 -0.6562 0 0 "/>
+        <wide points="2.12 0 1.368 -0.1313 1.17 -0.7875 1.586 -2.1 0.9508 -2.1 0.7197 -0.7875 0 -0.6562 0 0 "/>
+      </larynx>
+      <vocal_folds default_f0="220.0000"/>
+      <piriform_fossa length="2.5000" volume="1.5000"/>
+      <subglottal_cavity length="23.0000"/>
+      <nasal_cavity length="11.4000"/>
+      <param index="0"  name="HX"  min="0.000"  max="1.000"  neutral="1.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="1"  name="HY"  min="-3.770"  max="-2.038"  neutral="-3.488"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="2"  name="JX"  min="-0.395"  max="0.000"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="3"  name="JA"  min="-7.000"  max="0.000"  neutral="-2.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="4"  name="LP"  min="-1.000"  max="1.000"  neutral="-0.070"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="5"  name="LD"  min="-1.386"  max="2.772"  neutral="0.658"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="6"  name="VS"  min="0.000"  max="1.000"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="7"  name="VO"  min="-0.100"  max="1.000"  neutral="-0.100"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="8"  name="TCX"  min="-3.182"  max="2.613"  neutral="-0.424"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="9"  name="TCY"  min="-1.691"  max="1.080"  neutral="-0.858"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="10"  name="TTX"  min="0.980"  max="3.593"  neutral="2.286"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="11"  name="TTY"  min="-1.691"  max="2.120"  neutral="-0.898"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="12"  name="TBX"  min="-3.182"  max="2.613"  neutral="1.306"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="13"  name="TBY"  min="-1.691"  max="3.852"  neutral="0.547"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="14"  name="TRX"  min="-4.243"  max="1.306"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="15"  name="TRY"  min="-3.770"  max="0.387"  neutral="0.240"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="16"  name="TS1"  min="0.000"  max="0.893"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="17"  name="TS2"  min="0.000"  max="0.893"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="18"  name="TS3"  min="-0.893"  max="0.893"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+    </anatomy>
+    <shapes>
+      <shape name="a-compare-2">
+        <param name="HX" value="0.0000"/>
+        <param name="HY" value="-3.4200"/>
+        <param name="JX" value="-0.2500"/>
+        <param name="JA" value="-6.7500"/>
+        <param name="LP" value="0.1057"/>
+        <param name="LD" value="1.9384"/>
+        <param name="VS" value="0.0438"/>
+        <param name="VO" value="0.0000"/>
+        <param name="TCX" value="0.1000"/>
+        <param name="TCY" value="-1.6910"/>
+        <param name="TTX" value="2.6187"/>
+        <param name="TTY" value="-1.3910"/>
+        <param name="TBX" value="1.1125"/>
+        <param name="TBY" value="-0.0479"/>
+        <param name="TRX" value="-2.2194"/>
+        <param name="TRY" value="-1.6910"/>
+        <param name="TS1" value="0.3000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.2000"/>
+      </shape>
+      <shape name="a-compare">
+        <param name="HX" value="0.8000"/>
+        <param name="HY" value="-3.6700"/>
+        <param name="JX" value="-0.0250"/>
+        <param name="JA" value="-5.1069"/>
+        <param name="LP" value="0.0388"/>
+        <param name="LD" value="1.3746"/>
+        <param name="VS" value="0.6000"/>
+        <param name="VO" value="0.0000"/>
+        <param name="TCX" value="-0.6500"/>
+        <param name="TCY" value="-1.6410"/>
+        <param name="TTX" value="2.3187"/>
+        <param name="TTY" value="-1.5910"/>
+        <param name="TBX" value="0.8625"/>
+        <param name="TBY" value="-0.9437"/>
+        <param name="TRX" value="-2.5269"/>
+        <param name="TRY" value="-1.9084"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0500"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="a">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8069"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="1.0051"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="0.0526"/>
+        <param name="TCX" value="-0.7225"/>
+        <param name="TCY" value="-1.3238"/>
+        <param name="TTX" value="2.3825"/>
+        <param name="TTY" value="-1.4963"/>
+        <param name="TBX" value="0.9162"/>
+        <param name="TBY" value="-0.5187"/>
+        <param name="TRX" value="-2.2948"/>
+        <param name="TRY" value="-1.9804"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-tap-a">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8069"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="1.0051"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="0.0526"/>
+        <param name="TCX" value="-0.7225"/>
+        <param name="TCY" value="-1.3238"/>
+        <param name="TTX" value="3.0983"/>
+        <param name="TTY" value="-0.2163"/>
+        <param name="TBX" value="0.9162"/>
+        <param name="TBY" value="-0.5187"/>
+        <param name="TRX" value="-2.2948"/>
+        <param name="TRY" value="-1.9804"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="i">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="0.6687"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1750"/>
+        <param name="TCY" value="-0.7775"/>
+        <param name="TTX" value="3.1588"/>
+        <param name="TTY" value="-0.9500"/>
+        <param name="TBX" value="2.1525"/>
+        <param name="TBY" value="0.4588"/>
+        <param name="TRX" value="-1.2995"/>
+        <param name="TRY" value="-0.7775"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="tt-tap-i">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="0.6687"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1750"/>
+        <param name="TCY" value="-0.7775"/>
+        <param name="TTX" value="3.3312"/>
+        <param name="TTY" value="-0.3900"/>
+        <param name="TBX" value="2.1525"/>
+        <param name="TBY" value="0.4588"/>
+        <param name="TRX" value="-1.2995"/>
+        <param name="TRY" value="-0.7775"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="M">
+        <param name="HX" value="0.5422"/>
+        <param name="HY" value="-3.7583"/>
+        <param name="JX" value="-0.1291"/>
+        <param name="JA" value="-2.3211"/>
+        <param name="LP" value="-0.6600"/>
+        <param name="LD" value="1.0300"/>
+        <param name="VS" value="0.0203"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.5374"/>
+        <param name="TCY" value="-0.7039"/>
+        <param name="TTX" value="2.0478"/>
+        <param name="TTY" value="-0.7165"/>
+        <param name="TBX" value="0.8369"/>
+        <param name="TBY" value="0.7359"/>
+        <param name="TRX" value="-1.6175"/>
+        <param name="TRY" value="-1.7965"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0500"/>
+        <param name="TS3" value="0.2036"/>
+      </shape>
+      <shape name="u">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="0.0380"/>
+        <param name="LD" value="0.5569"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2912"/>
+        <param name="TCY" value="-0.3900"/>
+        <param name="TTX" value="2.0587"/>
+        <param name="TTY" value="-0.8062"/>
+        <param name="TBX" value="0.9950"/>
+        <param name="TBY" value="0.4868"/>
+        <param name="TRX" value="-1.3527"/>
+        <param name="TRY" value="-1.5519"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tt-tap-u">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="0.0380"/>
+        <param name="LD" value="0.5569"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2912"/>
+        <param name="TCY" value="-0.3900"/>
+        <param name="TTX" value="3.0012"/>
+        <param name="TTY" value="-0.0462"/>
+        <param name="TBX" value="0.9950"/>
+        <param name="TBY" value="0.4868"/>
+        <param name="TRX" value="-1.3527"/>
+        <param name="TRY" value="-1.5519"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="e">
+        <param name="HX" value="0.8562"/>
+        <param name="HY" value="-3.6895"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-3.6850"/>
+        <param name="LP" value="-0.6600"/>
+        <param name="LD" value="1.0300"/>
+        <param name="VS" value="0.3832"/>
+        <param name="VO" value="0.0100"/>
+        <param name="TCX" value="0.0796"/>
+        <param name="TCY" value="-1.0003"/>
+        <param name="TTX" value="2.4141"/>
+        <param name="TTY" value="-1.1642"/>
+        <param name="TBX" value="1.4078"/>
+        <param name="TBY" value="0.0505"/>
+        <param name="TRX" value="-1.8672"/>
+        <param name="TRY" value="-1.1834"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1656"/>
+        <param name="TS3" value="-0.0096"/>
+      </shape>
+      <shape name="tt-tap-e">
+        <param name="HX" value="0.8562"/>
+        <param name="HY" value="-3.6895"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-3.6850"/>
+        <param name="LP" value="-0.6600"/>
+        <param name="LD" value="1.0300"/>
+        <param name="VS" value="0.3832"/>
+        <param name="VO" value="0.0100"/>
+        <param name="TCX" value="0.0796"/>
+        <param name="TCY" value="-1.0003"/>
+        <param name="TTX" value="3.1078"/>
+        <param name="TTY" value="-0.2042"/>
+        <param name="TBX" value="1.4078"/>
+        <param name="TBY" value="0.0505"/>
+        <param name="TRX" value="-1.8672"/>
+        <param name="TRY" value="-1.1834"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1656"/>
+        <param name="TS3" value="-0.0096"/>
+      </shape>
+      <shape name="y">
+        <param name="HX" value="0.9612"/>
+        <param name="HY" value="-3.7554"/>
+        <param name="JX" value="-0.0044"/>
+        <param name="JA" value="-2.5269"/>
+        <param name="LP" value="0.8200"/>
+        <param name="LD" value="0.2900"/>
+        <param name="VS" value="0.4846"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.7477"/>
+        <param name="TCY" value="-0.7694"/>
+        <param name="TTX" value="2.8569"/>
+        <param name="TTY" value="-0.9727"/>
+        <param name="TBX" value="1.8414"/>
+        <param name="TBY" value="0.3655"/>
+        <param name="TRX" value="-1.4579"/>
+        <param name="TRY" value="-0.7694"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.2715"/>
+        <param name="TS3" value="-0.0077"/>
+      </shape>
+      <shape name="o-compare">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.4937"/>
+        <param name="JX" value="-0.0639"/>
+        <param name="JA" value="-3.3715"/>
+        <param name="LP" value="0.5200"/>
+        <param name="LD" value="0.4900"/>
+        <param name="VS" value="0.4124"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.6937"/>
+        <param name="TCY" value="-1.5250"/>
+        <param name="TTX" value="1.6375"/>
+        <param name="TTY" value="-1.5410"/>
+        <param name="TBX" value="1.1625"/>
+        <param name="TBY" value="-1.1194"/>
+        <param name="TRX" value="-2.5765"/>
+        <param name="TRY" value="-1.9519"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0500"/>
+        <param name="TS3" value="0.1255"/>
+      </shape>
+      <shape name="o">
+        <param name="HX" value="0.6761"/>
+        <param name="HY" value="-3.5375"/>
+        <param name="JX" value="-0.0139"/>
+        <param name="JA" value="-3.4215"/>
+        <param name="LP" value="0.6200"/>
+        <param name="LD" value="0.3900"/>
+        <param name="VS" value="0.3124"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.7225"/>
+        <param name="TCY" value="-0.8925"/>
+        <param name="TTX" value="2.2174"/>
+        <param name="TTY" value="-1.1443"/>
+        <param name="TBX" value="0.7725"/>
+        <param name="TBY" value="0.0275"/>
+        <param name="TRX" value="-1.9962"/>
+        <param name="TRY" value="-1.9804"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0255"/>
+      </shape>
+      <shape name="tt-tap-o">
+        <param name="HX" value="0.6761"/>
+        <param name="HY" value="-3.5375"/>
+        <param name="JX" value="-0.0139"/>
+        <param name="JA" value="-3.4215"/>
+        <param name="LP" value="0.6200"/>
+        <param name="LD" value="0.3900"/>
+        <param name="VS" value="0.3124"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.7225"/>
+        <param name="TCY" value="-0.8925"/>
+        <param name="TTX" value="3.0488"/>
+        <param name="TTY" value="-0.1043"/>
+        <param name="TBX" value="0.7725"/>
+        <param name="TBY" value="0.0275"/>
+        <param name="TRX" value="-1.9962"/>
+        <param name="TRY" value="-1.9804"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0255"/>
+      </shape>
+      <shape name="ll-labial-closure(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.1893"/>
+        <param name="LP" value="0.2364"/>
+        <param name="LD" value="-0.1107"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.7225"/>
+        <param name="TCY" value="-1.3238"/>
+        <param name="TTX" value="2.4400"/>
+        <param name="TTY" value="-1.2088"/>
+        <param name="TBX" value="0.8626"/>
+        <param name="TBY" value="-0.3577"/>
+        <param name="TRX" value="-2.2948"/>
+        <param name="TRY" value="-1.9804"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-labial-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.0363"/>
+        <param name="LP" value="0.1754"/>
+        <param name="LD" value="-0.0406"/>
+        <param name="VS" value="0.4262"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="1.1463"/>
+        <param name="TCY" value="-0.7487"/>
+        <param name="TTX" value="3.0725"/>
+        <param name="TTY" value="-0.8637"/>
+        <param name="TBX" value="2.1525"/>
+        <param name="TBY" value="0.5450"/>
+        <param name="TRX" value="-1.2902"/>
+        <param name="TRY" value="-0.7487"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="ll-labial-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.7428"/>
+        <param name="LP" value="0.0714"/>
+        <param name="LD" value="-0.1257"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2625"/>
+        <param name="TCY" value="-0.4612"/>
+        <param name="TTX" value="2.0587"/>
+        <param name="TTY" value="-0.8062"/>
+        <param name="TBX" value="0.9950"/>
+        <param name="TBY" value="0.4868"/>
+        <param name="TRX" value="-1.4109"/>
+        <param name="TRY" value="-1.5233"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="ll-labial-fricative(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="-0.0555"/>
+        <param name="JA" value="-2.0999"/>
+        <param name="LP" value="0.3837"/>
+        <param name="LD" value="0.1392"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.5500"/>
+        <param name="TCY" value="-1.1800"/>
+        <param name="TTX" value="2.4400"/>
+        <param name="TTY" value="-1.2088"/>
+        <param name="TBX" value="0.9450"/>
+        <param name="TBY" value="-0.2312"/>
+        <param name="TRX" value="-2.1609"/>
+        <param name="TRY" value="-1.8090"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-labial-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="0.3684"/>
+        <param name="LD" value="0.0608"/>
+        <param name="VS" value="0.4262"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="0.7437"/>
+        <param name="TCY" value="-0.6625"/>
+        <param name="TTX" value="3.1300"/>
+        <param name="TTY" value="-0.7775"/>
+        <param name="TBX" value="2.0662"/>
+        <param name="TBY" value="0.6025"/>
+        <param name="TRX" value="-1.3762"/>
+        <param name="TRY" value="-0.6625"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="ll-labial-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8197"/>
+        <param name="LP" value="0.3589"/>
+        <param name="LD" value="0.0851"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2625"/>
+        <param name="TCY" value="-0.4612"/>
+        <param name="TTX" value="2.0587"/>
+        <param name="TTY" value="-0.8062"/>
+        <param name="TBX" value="0.9950"/>
+        <param name="TBY" value="0.4868"/>
+        <param name="TRX" value="-1.4109"/>
+        <param name="TRY" value="-1.5233"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="ll-labial-approximant(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="-0.0555"/>
+        <param name="JA" value="-2.0999"/>
+        <param name="LP" value="0.7488"/>
+        <param name="LD" value="0.2087"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.5500"/>
+        <param name="TCY" value="-1.1800"/>
+        <param name="TTX" value="2.4400"/>
+        <param name="TTY" value="-1.2088"/>
+        <param name="TBX" value="0.9450"/>
+        <param name="TBY" value="-0.2312"/>
+        <param name="TRX" value="-2.1609"/>
+        <param name="TRY" value="-1.8090"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-labial-approximant(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="0.8027"/>
+        <param name="LD" value="0.2549"/>
+        <param name="VS" value="0.4262"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="0.7437"/>
+        <param name="TCY" value="-0.6625"/>
+        <param name="TTX" value="3.1300"/>
+        <param name="TTY" value="-0.7775"/>
+        <param name="TBX" value="2.0662"/>
+        <param name="TBY" value="0.6025"/>
+        <param name="TRX" value="-1.3762"/>
+        <param name="TRY" value="-0.6625"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="ll-labial-approximant(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8197"/>
+        <param name="LP" value="0.8644"/>
+        <param name="LD" value="0.3073"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2625"/>
+        <param name="TCY" value="-0.4612"/>
+        <param name="TTX" value="2.0587"/>
+        <param name="TTY" value="-0.8062"/>
+        <param name="TBX" value="0.9950"/>
+        <param name="TBY" value="0.4868"/>
+        <param name="TRX" value="-1.4109"/>
+        <param name="TRY" value="-1.5233"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="ll-dental-fricative(a)">
+        <param name="HX" value="0.5776"/>
+        <param name="HY" value="-3.7584"/>
+        <param name="JX" value="-0.3282"/>
+        <param name="JA" value="-1.6569"/>
+        <param name="LP" value="0.0022"/>
+        <param name="LD" value="0.2242"/>
+        <param name="VS" value="0.1214"/>
+        <param name="VO" value="-0.0639"/>
+        <param name="TCX" value="-0.4577"/>
+        <param name="TCY" value="-1.6620"/>
+        <param name="TTX" value="1.9472"/>
+        <param name="TTY" value="-1.1875"/>
+        <param name="TBX" value="0.8668"/>
+        <param name="TBY" value="-0.3704"/>
+        <param name="TRX" value="-2.4186"/>
+        <param name="TRY" value="-1.7173"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-dental-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.3495"/>
+        <param name="JA" value="-2.4761"/>
+        <param name="LP" value="-0.5563"/>
+        <param name="LD" value="0.3575"/>
+        <param name="VS" value="0.3688"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="1.0312"/>
+        <param name="TCY" value="-0.7775"/>
+        <param name="TTX" value="3.0725"/>
+        <param name="TTY" value="-0.8350"/>
+        <param name="TBX" value="2.0375"/>
+        <param name="TBY" value="0.5450"/>
+        <param name="TRX" value="-1.3595"/>
+        <param name="TRY" value="-0.7775"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="ll-dental-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.3950"/>
+        <param name="JA" value="-1.9578"/>
+        <param name="LP" value="-0.0249"/>
+        <param name="LD" value="0.1538"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2625"/>
+        <param name="TCY" value="-0.4612"/>
+        <param name="TTX" value="2.0587"/>
+        <param name="TTY" value="-0.8062"/>
+        <param name="TBX" value="0.9950"/>
+        <param name="TBY" value="0.4868"/>
+        <param name="TRX" value="-1.4109"/>
+        <param name="TRY" value="-1.5233"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tt-alveolar-closure(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.6812"/>
+        <param name="JX" value="-0.0935"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3758"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="-0.1187"/>
+        <param name="TCY" value="-1.6910"/>
+        <param name="TTX" value="3.3312"/>
+        <param name="TTY" value="0.1425"/>
+        <param name="TBX" value="1.0888"/>
+        <param name="TBY" value="-0.0875"/>
+        <param name="TRX" value="-2.4543"/>
+        <param name="TRY" value="-1.6910"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-alveolar-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0349"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1175"/>
+        <param name="TCY" value="-0.7200"/>
+        <param name="TTX" value="3.3312"/>
+        <param name="TTY" value="-0.6625"/>
+        <param name="TBX" value="2.3250"/>
+        <param name="TBY" value="0.6600"/>
+        <param name="TRX" value="-1.2807"/>
+        <param name="TRY" value="-0.7200"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="tt-alveolar-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="-0.0612"/>
+        <param name="TCY" value="-0.8350"/>
+        <param name="TTX" value="3.2162"/>
+        <param name="TTY" value="-0.0875"/>
+        <param name="TBX" value="1.5200"/>
+        <param name="TBY" value="0.3725"/>
+        <param name="TRX" value="-1.7023"/>
+        <param name="TRY" value="-1.3234"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tt-alveolar-flap(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.6812"/>
+        <param name="JX" value="-0.0935"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3758"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="0.1975"/>
+        <param name="TCY" value="-1.6910"/>
+        <param name="TTX" value="2.9575"/>
+        <param name="TTY" value="-0.0300"/>
+        <param name="TBX" value="1.5200"/>
+        <param name="TBY" value="-0.4900"/>
+        <param name="TRX" value="-2.3449"/>
+        <param name="TRY" value="-1.6910"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-alveolar-flap(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0349"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1175"/>
+        <param name="TCY" value="-0.7200"/>
+        <param name="TTX" value="3.2737"/>
+        <param name="TTY" value="-0.6050"/>
+        <param name="TBX" value="2.4112"/>
+        <param name="TBY" value="0.3438"/>
+        <param name="TRX" value="-1.2807"/>
+        <param name="TRY" value="-0.7200"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3858"/>
+        <param name="TS3" value="0.2429"/>
+      </shape>
+      <shape name="tt-alveolar-flap(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="-0.0612"/>
+        <param name="TCY" value="-0.8350"/>
+        <param name="TTX" value="3.1013"/>
+        <param name="TTY" value="-0.1163"/>
+        <param name="TBX" value="1.5488"/>
+        <param name="TBY" value="0.1425"/>
+        <param name="TRX" value="-1.7023"/>
+        <param name="TRY" value="-1.3233"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tt-alveolar-fricative(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.6812"/>
+        <param name="JX" value="-0.0935"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3758"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="-0.0612"/>
+        <param name="TCY" value="-1.4388"/>
+        <param name="TTX" value="3.1588"/>
+        <param name="TTY" value="-0.4900"/>
+        <param name="TBX" value="1.0888"/>
+        <param name="TBY" value="-0.0875"/>
+        <param name="TRX" value="-2.2334"/>
+        <param name="TRY" value="-1.4388"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.8894"/>
+      </shape>
+      <shape name="tt-alveolar-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7100"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.0803"/>
+        <param name="LD" value="0.8432"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1175"/>
+        <param name="TCY" value="-0.7200"/>
+        <param name="TTX" value="3.1588"/>
+        <param name="TTY" value="-0.5475"/>
+        <param name="TBX" value="2.3537"/>
+        <param name="TBY" value="0.4300"/>
+        <param name="TRX" value="-1.3267"/>
+        <param name="TRY" value="-0.7200"/>
+        <param name="TS1" value="0.1929"/>
+        <param name="TS2" value="0.0304"/>
+        <param name="TS3" value="0.7537"/>
+      </shape>
+      <shape name="tt-alveolar-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.5865"/>
+        <param name="LP" value="0.1877"/>
+        <param name="LD" value="0.3167"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="0.0250"/>
+        <param name="TCY" value="-1.1225"/>
+        <param name="TTX" value="3.1013"/>
+        <param name="TTY" value="-0.5762"/>
+        <param name="TBX" value="1.9800"/>
+        <param name="TBY" value="-0.0587"/>
+        <param name="TRX" value="-1.9275"/>
+        <param name="TRY" value="-1.2377"/>
+        <param name="TS1" value="0.1554"/>
+        <param name="TS2" value="0.0679"/>
+        <param name="TS3" value="0.8894"/>
+      </shape>
+      <shape name="tt-postalveolar-closure(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.6812"/>
+        <param name="JX" value="-0.0935"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3758"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.6575"/>
+        <param name="TCY" value="-0.8925"/>
+        <param name="TTX" value="2.4400"/>
+        <param name="TTY" value="0.7175"/>
+        <param name="TBX" value="1.0312"/>
+        <param name="TBY" value="0.7456"/>
+        <param name="TRX" value="-1.5533"/>
+        <param name="TRY" value="-0.8925"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-postalveolar-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0349"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="0.9450"/>
+        <param name="TCY" value="-0.4037"/>
+        <param name="TTX" value="2.5263"/>
+        <param name="TTY" value="0.4012"/>
+        <param name="TBX" value="1.3475"/>
+        <param name="TBY" value="1.2056"/>
+        <param name="TRX" value="-1.1033"/>
+        <param name="TRY" value="-0.4037"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3679"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="tt-postalveolar-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="0.4850"/>
+        <param name="TCY" value="-0.6913"/>
+        <param name="TTX" value="2.4112"/>
+        <param name="TTY" value="0.6888"/>
+        <param name="TBX" value="1.0888"/>
+        <param name="TBY" value="0.8613"/>
+        <param name="TRX" value="-1.4567"/>
+        <param name="TRY" value="-0.7806"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tt-postalveolar-fricative(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8069"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="0.6583"/>
+        <param name="VS" value="0.1675"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.1475"/>
+        <param name="TCY" value="-0.7775"/>
+        <param name="TTX" value="2.3825"/>
+        <param name="TTY" value="0.1425"/>
+        <param name="TBX" value="1.4912"/>
+        <param name="TBY" value="0.7462"/>
+        <param name="TRX" value="-1.7616"/>
+        <param name="TRY" value="-1.4091"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-postalveolar-fricative(i)">
+        <param name="HX" value="0.6741"/>
+        <param name="HY" value="-3.4800"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0349"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="0.6288"/>
+        <param name="TCY" value="-1.1800"/>
+        <param name="TTX" value="2.9000"/>
+        <param name="TTY" value="-0.2888"/>
+        <param name="TBX" value="1.8362"/>
+        <param name="TBY" value="-0.1738"/>
+        <param name="TRX" value="-1.9156"/>
+        <param name="TRY" value="-1.1800"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.2875"/>
+        <param name="TS3" value="0.3286"/>
+      </shape>
+      <shape name="tt-postalveolar-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="0.3700"/>
+        <param name="TCY" value="-0.5475"/>
+        <param name="TTX" value="2.1237"/>
+        <param name="TTY" value="0.6025"/>
+        <param name="TBX" value="1.4337"/>
+        <param name="TBY" value="1.2637"/>
+        <param name="TRX" value="-1.3712"/>
+        <param name="TRY" value="-0.8948"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tb-palatal-fricative(a)">
+        <param name="HX" value="0.8530"/>
+        <param name="HY" value="-3.5088"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8117"/>
+        <param name="LP" value="-0.0775"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.6850"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="1.0888"/>
+        <param name="TCY" value="-0.6913"/>
+        <param name="TTX" value="2.6700"/>
+        <param name="TTY" value="-0.3175"/>
+        <param name="TBX" value="1.6638"/>
+        <param name="TBY" value="1.1775"/>
+        <param name="TRX" value="-1.4072"/>
+        <param name="TRY" value="-0.6912"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.7537"/>
+      </shape>
+      <shape name="tb-palatal-fricative(i)">
+        <param name="HX" value="0.9694"/>
+        <param name="HY" value="-3.3937"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8197"/>
+        <param name="LP" value="-0.0592"/>
+        <param name="LD" value="0.5219"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1750"/>
+        <param name="TCY" value="-0.6050"/>
+        <param name="TTX" value="2.8138"/>
+        <param name="TTY" value="-0.3750"/>
+        <param name="TBX" value="1.7500"/>
+        <param name="TBY" value="0.8318"/>
+        <param name="TRX" value="-1.4419"/>
+        <param name="TRY" value="-0.6050"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.8894"/>
+      </shape>
+      <shape name="tb-palatal-fricative(u)">
+        <param name="HX" value="0.8530"/>
+        <param name="HY" value="-3.5088"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8117"/>
+        <param name="LP" value="-0.0775"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="1.2038"/>
+        <param name="TCY" value="-0.5475"/>
+        <param name="TTX" value="2.8425"/>
+        <param name="TTY" value="-0.4038"/>
+        <param name="TBX" value="1.7500"/>
+        <param name="TBY" value="0.9181"/>
+        <param name="TRX" value="-1.2499"/>
+        <param name="TRY" value="-0.5475"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.7537"/>
+      </shape>
+      <shape name="tb-velar-closure(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="-0.0121"/>
+        <param name="JA" value="-2.3445"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="0.6583"/>
+        <param name="VS" value="0.5988"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.1475"/>
+        <param name="TCY" value="-0.1450"/>
+        <param name="TTX" value="2.4688"/>
+        <param name="TTY" value="-0.7487"/>
+        <param name="TBX" value="1.5488"/>
+        <param name="TBY" value="0.6025"/>
+        <param name="TRX" value="-1.2295"/>
+        <param name="TRY" value="-1.4091"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0429"/>
+      </shape>
+      <shape name="tb-velar-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0349"/>
+        <param name="VS" value="0.6275"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.7150"/>
+        <param name="TCY" value="-0.0300"/>
+        <param name="TTX" value="2.8425"/>
+        <param name="TTY" value="-0.6050"/>
+        <param name="TBX" value="2.1237"/>
+        <param name="TBY" value="1.0912"/>
+        <param name="TRX" value="-0.8764"/>
+        <param name="TRY" value="-0.5520"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1929"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="tb-velar-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.3200"/>
+        <param name="TCY" value="-0.1163"/>
+        <param name="TTX" value="2.0950"/>
+        <param name="TTY" value="-0.2888"/>
+        <param name="TBX" value="1.1463"/>
+        <param name="TBY" value="0.9188"/>
+        <param name="TRX" value="-1.1207"/>
+        <param name="TRY" value="-1.5805"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+      <shape name="tb-velar-fricative(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6237"/>
+        <param name="JX" value="-0.0121"/>
+        <param name="JA" value="-2.3445"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="0.6583"/>
+        <param name="VS" value="0.5988"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.1762"/>
+        <param name="TCY" value="-0.6050"/>
+        <param name="TTX" value="2.4688"/>
+        <param name="TTY" value="-0.7487"/>
+        <param name="TBX" value="1.4625"/>
+        <param name="TBY" value="0.2863"/>
+        <param name="TRX" value="-1.6221"/>
+        <param name="TRY" value="-1.4376"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0429"/>
+      </shape>
+      <shape name="tb-velar-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0349"/>
+        <param name="VS" value="0.6275"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.3125"/>
+        <param name="TCY" value="-0.2888"/>
+        <param name="TTX" value="2.8425"/>
+        <param name="TTY" value="-0.6050"/>
+        <param name="TBX" value="1.9512"/>
+        <param name="TBY" value="0.7175"/>
+        <param name="TRX" value="-1.1880"/>
+        <param name="TRY" value="-0.9520"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1929"/>
+        <param name="TS3" value="-0.0214"/>
+      </shape>
+      <shape name="tb-velar-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.7700"/>
+        <param name="JX" value="-0.0273"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5613"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.4925"/>
+        <param name="TCY" value="-0.3750"/>
+        <param name="TTX" value="2.0950"/>
+        <param name="TTY" value="-0.2888"/>
+        <param name="TBX" value="1.0888"/>
+        <param name="TBY" value="0.7750"/>
+        <param name="TRX" value="-1.3522"/>
+        <param name="TRY" value="-1.7519"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0500"/>
+      </shape>
+    <shape name="a-insensitive-001"><param name="HX" value="0.737982378" /><param name="HY" value="-3.632774771" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.770277512" /><param name="LP" value="-0.209959897" /><param name="LD" value="1.012263409" /><param name="VS" value="0.267422670" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.721731428" /><param name="TCY" value="-1.333221603" /><param name="TTX" value="2.409238309" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.945750402" /><param name="TBY" value="-0.525348770" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.005891517" /></shape>
+<shape name="a-insensitive-002"><param name="HX" value="0.734325960" /><param name="HY" value="-3.635948668" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.709907090" /><param name="LP" value="-0.214992098" /><param name="LD" value="1.017799230" /><param name="VS" value="0.274668082" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.722883928" /><param name="TCY" value="-1.332089055" /><param name="TTX" value="2.393396349" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.871054849" /><param name="TBY" value="-0.499339915" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.003566091" /></shape>
+<shape name="a-insensitive-003"><param name="HX" value="0.739020287" /><param name="HY" value="-3.632171860" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.628895028" /><param name="LP" value="-0.240050921" /><param name="LD" value="1.045170111" /><param name="VS" value="0.275628917" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.720866841" /><param name="TCY" value="-1.330045813" /><param name="TTX" value="2.375791226" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.876890739" /><param name="TBY" value="-0.514909304" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.002011565" /></shape>
+<shape name="a-insensitive-004"><param name="HX" value="0.739825975" /><param name="HY" value="-3.632636242" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.626318336" /><param name="LP" value="-0.241096432" /><param name="LD" value="1.044362173" /><param name="VS" value="0.274006953" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.719898108" /><param name="TCY" value="-1.330345262" /><param name="TTX" value="2.376693588" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.978602523" /><param name="TBY" value="-0.566899893" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.002165837" /></shape>
+<shape name="a-insensitive-005"><param name="HX" value="0.742811451" /><param name="HY" value="-3.631773069" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.586162902" /><param name="LP" value="-0.222195192" /><param name="LD" value="1.049648783" /><param name="VS" value="0.270693518" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.718433427" /><param name="TCY" value="-1.332137001" /><param name="TTX" value="2.380019196" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.070353415" /><param name="TBY" value="-0.591152975" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.000601098" /></shape>
+<shape name="a-insensitive-006"><param name="HX" value="0.743081267" /><param name="HY" value="-3.634936245" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.619943279" /><param name="LP" value="-0.184767918" /><param name="LD" value="1.079223687" /><param name="VS" value="0.269965305" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.715491433" /><param name="TCY" value="-1.331853073" /><param name="TTX" value="2.386390725" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.087102576" /><param name="TBY" value="-0.622517523" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.001446848" /></shape>
+<shape name="a-insensitive-007"><param name="HX" value="0.749847027" /><param name="HY" value="-3.628526104" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.590439536" /><param name="LP" value="-0.187401069" /><param name="LD" value="1.085774894" /><param name="VS" value="0.267155319" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.715279162" /><param name="TCY" value="-1.327641908" /><param name="TTX" value="2.396997377" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.169104681" /><param name="TBY" value="-0.629120827" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.018409808" /></shape>
+<shape name="a-insensitive-008"><param name="HX" value="0.755040578" /><param name="HY" value="-3.625088426" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.592597226" /><param name="LP" value="-0.187967387" /><param name="LD" value="1.081772606" /><param name="VS" value="0.262386749" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.711834919" /><param name="TCY" value="-1.328192430" /><param name="TTX" value="2.396145977" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.265780945" /><param name="TBY" value="-0.668648086" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.026274981" /></shape>
+<shape name="a-insensitive-009"><param name="HX" value="0.769963876" /><param name="HY" value="-3.622313237" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.614011788" /><param name="LP" value="-0.190380078" /><param name="LD" value="1.070645219" /><param name="VS" value="0.255839814" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.707273953" /><param name="TCY" value="-1.327470607" /><param name="TTX" value="2.415455503" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.278320390" /><param name="TBY" value="-0.669331769" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.039631344" /></shape>
+<shape name="a-insensitive-010"><param name="HX" value="0.772953491" /><param name="HY" value="-3.619296255" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.606617844" /><param name="LP" value="-0.193817976" /><param name="LD" value="1.070364401" /><param name="VS" value="0.248929442" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.707885759" /><param name="TCY" value="-1.327181270" /><param name="TTX" value="2.435856796" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.309987515" /><param name="TBY" value="-0.636071725" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.065599318" /></shape>
+<shape name="a-insensitive-011"><param name="HX" value="0.772853368" /><param name="HY" value="-3.617141620" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.597510202" /><param name="LP" value="-0.195790948" /><param name="LD" value="1.071284329" /><param name="VS" value="0.244277082" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.707826233" /><param name="TCY" value="-1.324291095" /><param name="TTX" value="2.449832410" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.216306104" /><param name="TBY" value="-0.586859895" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.069272526" /></shape>
+<shape name="a-insensitive-012"><param name="HX" value="0.769421199" /><param name="HY" value="-3.624208845" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.604344137" /><param name="LP" value="-0.193490766" /><param name="LD" value="1.067840554" /><param name="VS" value="0.261577287" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.707476737" /><param name="TCY" value="-1.333263451" /><param name="TTX" value="2.450991052" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="1.175689255" /><param name="TBY" value="-0.576915354" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.064795678" /></shape>
+<shape name="a-insensitive-013"><param name="HX" value="0.769969951" /><param name="HY" value="-3.617511561" /><param name="JX" value="-0.000179490" /><param name="JA" value="-4.760192273" /><param name="LP" value="-0.208083814" /><param name="LD" value="1.043747059" /><param name="VS" value="0.232700381" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.724503248" /><param name="TCY" value="-1.320434635" /><param name="TTX" value="2.400459822" /><param name="TTY" value="-1.497806394" /><param name="TBX" value="1.181542363" /><param name="TBY" value="-0.509453536" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000377219" /><param name="TS2" value="0.000355790" /><param name="TS3" value="-0.070171151" /></shape>
+<shape name="a-insensitive-014"><param name="HX" value="0.768660488" /><param name="HY" value="-3.616767068" /><param name="JX" value="-0.000014130" /><param name="JA" value="-4.834186172" /><param name="LP" value="-0.283463898" /><param name="LD" value="1.061787286" /><param name="VS" value="0.217018441" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.744023222" /><param name="TCY" value="-1.317070781" /><param name="TTX" value="2.386428563" /><param name="TTY" value="-1.483205749" /><param name="TBX" value="1.150102157" /><param name="TBY" value="-0.441978108" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000274725" /><param name="TS2" value="0.001265475" /><param name="TS3" value="-0.075674198" /></shape>
+<shape name="a-insensitive-015"><param name="HX" value="0.765835815" /><param name="HY" value="-3.616985189" /><param name="JX" value="-0.000005623" /><param name="JA" value="-4.966821864" /><param name="LP" value="-0.354232669" /><param name="LD" value="1.081346759" /><param name="VS" value="0.209366367" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.762532059" /><param name="TCY" value="-1.321675181" /><param name="TTX" value="2.367710737" /><param name="TTY" value="-1.494598626" /><param name="TBX" value="1.110673764" /><param name="TBY" value="-0.393593313" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.001416622" /><param name="TS2" value="0.000248271" /><param name="TS3" value="-0.060220487" /></shape>
+<shape name="a-insensitive-016"><param name="HX" value="0.766066207" /><param name="HY" value="-3.613804771" /><param name="JX" value="-0.000621545" /><param name="JA" value="-5.182398364" /><param name="LP" value="-0.399826084" /><param name="LD" value="1.089573944" /><param name="VS" value="0.192659829" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.778490122" /><param name="TCY" value="-1.325115218" /><param name="TTX" value="2.353518296" /><param name="TTY" value="-1.488692043" /><param name="TBX" value="1.065662350" /><param name="TBY" value="-0.331785048" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000726315" /><param name="TS2" value="0.005483874" /><param name="TS3" value="-0.066414894" /></shape>
+<shape name="a-insensitive-017"><param name="HX" value="0.765481367" /><param name="HY" value="-3.608857451" /><param name="JX" value="0.000000000" /><param name="JA" value="-5.313877552" /><param name="LP" value="-0.465281390" /><param name="LD" value="1.112994309" /><param name="VS" value="0.179349459" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.793106891" /><param name="TCY" value="-1.329555062" /><param name="TTX" value="2.368520257" /><param name="TTY" value="-1.543117040" /><param name="TBX" value="1.071920820" /><param name="TBY" value="-0.302675159" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000033105" /><param name="TS2" value="0.001995687" /><param name="TS3" value="-0.054317543" /></shape>
+<shape name="a-insensitive-018"><param name="HX" value="0.765264162" /><param name="HY" value="-3.604474792" /><param name="JX" value="0.000000000" /><param name="JA" value="-5.516901244" /><param name="LP" value="-0.508933511" /><param name="LD" value="1.134598927" /><param name="VS" value="0.157210957" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.805755399" /><param name="TCY" value="-1.338749456" /><param name="TTX" value="2.374171889" /><param name="TTY" value="-1.576535698" /><param name="TBX" value="1.112063200" /><param name="TBY" value="-0.282442606" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.005173410" /><param name="TS3" value="-0.056279095" /></shape>
+<shape name="a-insensitive-019"><param name="HX" value="0.762467680" /><param name="HY" value="-3.598950927" /><param name="JX" value="-0.000017803" /><param name="JA" value="-5.734648249" /><param name="LP" value="-0.553932858" /><param name="LD" value="1.170751421" /><param name="VS" value="0.136301652" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.814908467" /><param name="TCY" value="-1.338488637" /><param name="TTX" value="2.372120945" /><param name="TTY" value="-1.589456835" /><param name="TBX" value="1.119911124" /><param name="TBY" value="-0.278673917" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000445419" /><param name="TS2" value="0.006189216" /><param name="TS3" value="-0.058770035" /></shape>
+<shape name="a-insensitive-020"><param name="HX" value="0.759892309" /><param name="HY" value="-3.594921161" /><param name="JX" value="-0.001710637" /><param name="JA" value="-5.811912606" /><param name="LP" value="-0.632832266" /><param name="LD" value="1.234340152" /><param name="VS" value="0.126218210" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.825828224" /><param name="TCY" value="-1.347884239" /><param name="TTX" value="2.367769018" /><param name="TTY" value="-1.600308389" /><param name="TBX" value="1.125863739" /><param name="TBY" value="-0.251891918" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000452179" /><param name="TS2" value="0.005982106" /><param name="TS3" value="-0.064631073" /></shape>
+<shape name="a-insensitive-021"><param name="HX" value="0.756747166" /><param name="HY" value="-3.594156648" /><param name="JX" value="-0.000272341" /><param name="JA" value="-5.960874756" /><param name="LP" value="-0.705167108" /><param name="LD" value="1.285988097" /><param name="VS" value="0.118900937" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.835440512" /><param name="TCY" value="-1.357202903" /><param name="TTX" value="2.364788108" /><param name="TTY" value="-1.603388077" /><param name="TBX" value="1.115788574" /><param name="TBY" value="-0.242250289" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000003069" /><param name="TS2" value="0.008432380" /><param name="TS3" value="-0.066873701" /></shape>
+<shape name="a-insensitive-022"><param name="HX" value="0.757464969" /><param name="HY" value="-3.585650076" /><param name="JX" value="-0.002034556" /><param name="JA" value="-6.144413137" /><param name="LP" value="-0.748978672" /><param name="LD" value="1.340105662" /><param name="VS" value="0.095582872" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.843691404" /><param name="TCY" value="-1.365611266" /><param name="TTX" value="2.357889658" /><param name="TTY" value="-1.605807253" /><param name="TBX" value="1.135776492" /><param name="TBY" value="-0.237266740" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000017463" /><param name="TS2" value="0.009709689" /><param name="TS3" value="-0.082234288" /></shape>
+<shape name="a-insensitive-023"><param name="HX" value="0.754008310" /><param name="HY" value="-3.583628484" /><param name="JX" value="-0.001069644" /><param name="JA" value="-6.253818734" /><param name="LP" value="-0.824135337" /><param name="LD" value="1.401298022" /><param name="VS" value="0.088824457" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.849522069" /><param name="TCY" value="-1.380382168" /><param name="TTX" value="2.357287983" /><param name="TTY" value="-1.607159147" /><param name="TBX" value="1.100004706" /><param name="TBY" value="-0.219185076" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.007595175" /><param name="TS3" value="-0.078829059" /></shape>
+<shape name="a-insensitive-024"><param name="HX" value="0.747814483" /><param name="HY" value="-3.585076690" /><param name="JX" value="0.000000000" /><param name="JA" value="-6.401666728" /><param name="LP" value="-0.893105742" /><param name="LD" value="1.465592261" /><param name="VS" value="0.089396452" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.854954835" /><param name="TCY" value="-1.396651896" /><param name="TTX" value="2.349006136" /><param name="TTY" value="-1.624269438" /><param name="TBX" value="1.104214339" /><param name="TBY" value="-0.215058294" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.003195584" /><param name="TS2" value="0.006999185" /><param name="TS3" value="-0.082478638" /></shape>
+<shape name="a-insensitive-025"><param name="HX" value="0.747305365" /><param name="HY" value="-3.578239017" /><param name="JX" value="-0.002118984" /><param name="JA" value="-6.609295570" /><param name="LP" value="-0.930778203" /><param name="LD" value="1.509819218" /><param name="VS" value="0.065380153" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.861050340" /><param name="TCY" value="-1.402445583" /><param name="TTX" value="2.341689495" /><param name="TTY" value="-1.623577022" /><param name="TBX" value="1.112703665" /><param name="TBY" value="-0.212982679" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.002272828" /><param name="TS2" value="0.006491116" /><param name="TS3" value="-0.094152311" /></shape>
+<shape name="a-insensitive-026"><param name="HX" value="0.742221892" /><param name="HY" value="-3.573307705" /><param name="JX" value="-0.000072946" /><param name="JA" value="-6.826423714" /><param name="LP" value="-0.969424697" /><param name="LD" value="1.571066858" /><param name="VS" value="0.052443919" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.871542139" /><param name="TCY" value="-1.404864577" /><param name="TTX" value="2.315589975" /><param name="TTY" value="-1.610453614" /><param name="TBX" value="1.099268932" /><param name="TBY" value="-0.252752291" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.002464727" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.086305194" /></shape>
+<shape name="a-insensitive-027"><param name="HX" value="0.732131450" /><param name="HY" value="-3.575064445" /><param name="JX" value="0.000000000" /><param name="JA" value="-6.879472391" /><param name="LP" value="-1.000000000" /><param name="LD" value="1.633251763" /><param name="VS" value="0.063338407" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.873735724" /><param name="TCY" value="-1.433258133" /><param name="TTX" value="2.331518708" /><param name="TTY" value="-1.680294261" /><param name="TBX" value="1.122712597" /><param name="TBY" value="-0.191510373" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000063138" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.102719090" /></shape>
+<shape name="a-sensitive-001"><param name="HX" value="0.743312693" /><param name="HY" value="-3.596215712" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.812154549" /><param name="LP" value="-0.200215509" /><param name="LD" value="1.006020639" /><param name="VS" value="0.257702708" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.727692450" /><param name="TCY" value="-1.329969138" /><param name="TTX" value="2.392415231" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.938336712" /><param name="TBY" value="-0.486444790" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.009608823" /></shape>
+<shape name="a-sensitive-002"><param name="HX" value="0.749363989" /><param name="HY" value="-3.568388052" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.803144807" /><param name="LP" value="-0.197488343" /><param name="LD" value="1.009667238" /><param name="VS" value="0.261739616" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.729247877" /><param name="TCY" value="-1.334461137" /><param name="TTX" value="2.402356452" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.952708549" /><param name="TBY" value="-0.470660246" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.022891088" /></shape>
+<shape name="a-sensitive-003"><param name="HX" value="0.755201107" /><param name="HY" value="-3.550080061" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.802086676" /><param name="LP" value="-0.188971746" /><param name="LD" value="1.013943191" /><param name="VS" value="0.267445853" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.736740184" /><param name="TCY" value="-1.349884389" /><param name="TTX" value="2.411019915" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.976668166" /><param name="TBY" value="-0.426230321" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.039576038" /></shape>
+<shape name="a-sensitive-004"><param name="HX" value="0.757533156" /><param name="HY" value="-3.528581133" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.799959729" /><param name="LP" value="-0.167776733" /><param name="LD" value="0.955563861" /><param name="VS" value="0.268967055" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.734031118" /><param name="TCY" value="-1.354618962" /><param name="TTX" value="2.410337935" /><param name="TTY" value="-1.496300000" /><param name="TBX" value="0.981319781" /><param name="TBY" value="-0.404336737" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.039429199" /></shape>
+<shape name="a-sensitive-005"><param name="HX" value="0.754553946" /><param name="HY" value="-3.554291952" /><param name="JX" value="0.000000000" /><param name="JA" value="-4.953343102" /><param name="LP" value="-0.217523561" /><param name="LD" value="0.990218858" /><param name="VS" value="0.252608390" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.743639820" /><param name="TCY" value="-1.336785054" /><param name="TTX" value="2.403409248" /><param name="TTY" value="-1.510387397" /><param name="TBX" value="0.989662207" /><param name="TBY" value="-0.406619295" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000196724" /><param name="TS2" value="0.000250249" /><param name="TS3" value="0.029196146" /></shape>
+<shape name="a-sensitive-006"><param name="HX" value="0.752422246" /><param name="HY" value="-3.580351483" /><param name="JX" value="-0.000009739" /><param name="JA" value="-5.092594147" /><param name="LP" value="-0.274085526" /><param name="LD" value="1.030797696" /><param name="VS" value="0.236474052" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.757192457" /><param name="TCY" value="-1.336820483" /><param name="TTX" value="2.385661474" /><param name="TTY" value="-1.547451680" /><param name="TBX" value="0.996537307" /><param name="TBY" value="-0.402601895" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000146626" /><param name="TS2" value="0.000442278" /><param name="TS3" value="0.010620835" /></shape>
+<shape name="a-sensitive-007"><param name="HX" value="0.750172979" /><param name="HY" value="-3.603006750" /><param name="JX" value="-0.000052161" /><param name="JA" value="-5.233400912" /><param name="LP" value="-0.334562424" /><param name="LD" value="1.042895460" /><param name="VS" value="0.218416312" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.774396350" /><param name="TCY" value="-1.324218916" /><param name="TTX" value="2.375191572" /><param name="TTY" value="-1.569364823" /><param name="TBX" value="1.003984227" /><param name="TBY" value="-0.374189537" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000215517" /><param name="TS2" value="0.000301200" /><param name="TS3" value="-0.005883371" /></shape>
+<shape name="a-sensitive-008"><param name="HX" value="0.749524641" /><param name="HY" value="-3.576590520" /><param name="JX" value="0.000000000" /><param name="JA" value="-5.385867336" /><param name="LP" value="-0.392076288" /><param name="LD" value="1.078257765" /><param name="VS" value="0.205453878" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.791688773" /><param name="TCY" value="-1.344501923" /><param name="TTX" value="2.382538253" /><param name="TTY" value="-1.554306475" /><param name="TBX" value="1.030685835" /><param name="TBY" value="-0.305030463" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000035584" /><param name="TS2" value="0.000763358" /><param name="TS3" value="-0.003274964" /></shape>
+<shape name="a-sensitive-009"><param name="HX" value="0.749708098" /><param name="HY" value="-3.555196815" /><param name="JX" value="-0.000002469" /><param name="JA" value="-5.529489184" /><param name="LP" value="-0.450526697" /><param name="LD" value="1.141452815" /><param name="VS" value="0.193082638" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.804511234" /><param name="TCY" value="-1.367562541" /><param name="TTX" value="2.382920954" /><param name="TTY" value="-1.557770958" /><param name="TBX" value="1.052466917" /><param name="TBY" value="-0.257444076" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.004547094" /><param name="TS2" value="0.005244130" /><param name="TS3" value="-0.002747230" /></shape>
+<shape name="a-sensitive-010"><param name="HX" value="0.749354157" /><param name="HY" value="-3.537160537" /><param name="JX" value="-0.000451568" /><param name="JA" value="-5.684554158" /><param name="LP" value="-0.510186909" /><param name="LD" value="1.220349911" /><param name="VS" value="0.180547384" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.813263195" /><param name="TCY" value="-1.388636485" /><param name="TTX" value="2.376665837" /><param name="TTY" value="-1.565962110" /><param name="TBX" value="1.061920610" /><param name="TBY" value="-0.230720493" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.005319513" /><param name="TS2" value="0.009569337" /><param name="TS3" value="-0.004981979" /></shape>
+<shape name="a-sensitive-011"><param name="HX" value="0.746698177" /><param name="HY" value="-3.564734706" /><param name="JX" value="-0.000558944" /><param name="JA" value="-5.815228783" /><param name="LP" value="-0.570164220" /><param name="LD" value="1.236014154" /><param name="VS" value="0.162217100" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.823598880" /><param name="TCY" value="-1.378000760" /><param name="TTX" value="2.368934282" /><param name="TTY" value="-1.581011596" /><param name="TBX" value="1.072158336" /><param name="TBY" value="-0.226373722" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.002823952" /><param name="TS2" value="0.006493178" /><param name="TS3" value="-0.023010844" /></shape>
+<shape name="a-sensitive-012"><param name="HX" value="0.744122590" /><param name="HY" value="-3.585981288" /><param name="JX" value="-0.000715882" /><param name="JA" value="-5.944384322" /><param name="LP" value="-0.635400730" /><param name="LD" value="1.257211877" /><param name="VS" value="0.145230964" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.836537402" /><param name="TCY" value="-1.368863472" /><param name="TTX" value="2.358213671" /><param name="TTY" value="-1.601046103" /><param name="TBX" value="1.074831575" /><param name="TBY" value="-0.224067063" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000067009" /><param name="TS2" value="0.003632967" /><param name="TS3" value="-0.039674829" /></shape>
+<shape name="a-sensitive-013"><param name="HX" value="0.744978261" /><param name="HY" value="-3.562086228" /><param name="JX" value="-0.000345665" /><param name="JA" value="-6.105703770" /><param name="LP" value="-0.688306366" /><param name="LD" value="1.339040093" /><param name="VS" value="0.133881454" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.837949858" /><param name="TCY" value="-1.387680770" /><param name="TTX" value="2.358850250" /><param name="TTY" value="-1.598108058" /><param name="TBX" value="1.087531202" /><param name="TBY" value="-0.212760556" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.005087201" /><param name="TS2" value="0.005876865" /><param name="TS3" value="-0.041318046" /></shape>
+<shape name="a-sensitive-014"><param name="HX" value="0.742366918" /><param name="HY" value="-3.588980888" /><param name="JX" value="-0.000542913" /><param name="JA" value="-6.242381383" /><param name="LP" value="-0.748048703" /><param name="LD" value="1.361597093" /><param name="VS" value="0.116053698" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.846174232" /><param name="TCY" value="-1.380030628" /><param name="TTX" value="2.349362200" /><param name="TTY" value="-1.614940880" /><param name="TBX" value="1.094927594" /><param name="TBY" value="-0.218509209" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.002499504" /><param name="TS2" value="0.002250420" /><param name="TS3" value="-0.058052824" /></shape>
+<shape name="a-sensitive-015"><param name="HX" value="0.741427704" /><param name="HY" value="-3.564713257" /><param name="JX" value="-0.000397842" /><param name="JA" value="-6.394664070" /><param name="LP" value="-0.800321630" /><param name="LD" value="1.443254111" /><param name="VS" value="0.104340579" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.853685257" /><param name="TCY" value="-1.408604319" /><param name="TTX" value="2.346522258" /><param name="TTY" value="-1.623818260" /><param name="TBX" value="1.097522778" /><param name="TBY" value="-0.199943039" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.003758338" /><param name="TS2" value="0.005451685" /><param name="TS3" value="-0.063340293" /></shape>
+<shape name="a-sensitive-016"><param name="HX" value="0.741595656" /><param name="HY" value="-3.547346837" /><param name="JX" value="-0.000203632" /><param name="JA" value="-6.548746067" /><param name="LP" value="-0.861660333" /><param name="LD" value="1.525698682" /><param name="VS" value="0.092616804" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.855015503" /><param name="TCY" value="-1.425111444" /><param name="TTX" value="2.356823187" /><param name="TTY" value="-1.624154624" /><param name="TBX" value="1.102518122" /><param name="TBY" value="-0.201657329" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.004219685" /><param name="TS2" value="0.005836629" /><param name="TS3" value="-0.068647303" /></shape>
+<shape name="a-sensitive-017"><param name="HX" value="0.739150606" /><param name="HY" value="-3.576656076" /><param name="JX" value="-0.000019056" /><param name="JA" value="-6.676787438" /><param name="LP" value="-0.920840690" /><param name="LD" value="1.512970327" /><param name="VS" value="0.074522505" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.867222717" /><param name="TCY" value="-1.414431569" /><param name="TTX" value="2.344142146" /><param name="TTY" value="-1.638069991" /><param name="TBX" value="1.111356386" /><param name="TBY" value="-0.185885187" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.002115846" /><param name="TS3" value="-0.084829786" /></shape>
+<shape name="a-sensitive-018"><param name="HX" value="0.740046575" /><param name="HY" value="-3.554359093" /><param name="JX" value="-0.000257200" /><param name="JA" value="-6.842469070" /><param name="LP" value="-0.969106121" /><param name="LD" value="1.605455769" /><param name="VS" value="0.063820024" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.861602924" /><param name="TCY" value="-1.430731376" /><param name="TTX" value="2.336809582" /><param name="TTY" value="-1.638871384" /><param name="TBX" value="1.110394057" /><param name="TBY" value="-0.201280315" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.006459484" /><param name="TS2" value="0.002352476" /><param name="TS3" value="-0.088670604" /></shape>
+<shape name="a-sensitive-019"><param name="HX" value="0.737460949" /><param name="HY" value="-3.600616476" /><param name="JX" value="0.000000000" /><param name="JA" value="-6.903860295" /><param name="LP" value="-1.000000000" /><param name="LD" value="1.580971521" /><param name="VS" value="0.047184814" /><param name="VO" value="0.000000000" /><param name="TCX" value="-0.877047632" /><param name="TCY" value="-1.414660773" /><param name="TTX" value="2.324312575" /><param name="TTY" value="-1.655725418" /><param name="TBX" value="1.119706002" /><param name="TBY" value="-0.201738575" /><param name="TRX" value="-2.294800000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000036726" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.108741030" /></shape>
+<shape name="o-insensitive-001"><param name="HX" value="0.673417401" /><param name="HY" value="-3.532401744" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.418045981" /><param name="LP" value="0.614861300" /><param name="LD" value="0.385720477" /><param name="VS" value="0.302538754" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.722825435" /><param name="TCY" value="-0.892162236" /><param name="TTX" value="2.216616918" /><param name="TTY" value="-1.103868009" /><param name="TBX" value="0.715597993" /><param name="TBY" value="0.046205441" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.011837157" /></shape>
+<shape name="o-insensitive-002"><param name="HX" value="0.684991590" /><param name="HY" value="-3.529379138" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.424270377" /><param name="LP" value="0.605359036" /><param name="LD" value="0.382700800" /><param name="VS" value="0.298139099" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.723043570" /><param name="TCY" value="-0.887934141" /><param name="TTX" value="2.217315056" /><param name="TTY" value="-1.096013961" /><param name="TBX" value="0.666717631" /><param name="TBY" value="0.099682904" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.000648134" /></shape>
+<shape name="o-insensitive-003"><param name="HX" value="0.690645191" /><param name="HY" value="-3.524008801" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.384308692" /><param name="LP" value="0.611199571" /><param name="LD" value="0.410414091" /><param name="VS" value="0.293556115" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.729010294" /><param name="TCY" value="-0.894072736" /><param name="TTX" value="2.183022887" /><param name="TTY" value="-1.070938628" /><param name="TBX" value="0.621968652" /><param name="TBY" value="0.124145331" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.002465679" /></shape>
+<shape name="o-insensitive-004"><param name="HX" value="0.693288640" /><param name="HY" value="-3.525872039" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.381420078" /><param name="LP" value="0.612420109" /><param name="LD" value="0.414458242" /><param name="VS" value="0.301265340" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.729412451" /><param name="TCY" value="-0.893206301" /><param name="TTX" value="2.138447637" /><param name="TTY" value="-1.056573682" /><param name="TBX" value="0.613581837" /><param name="TBY" value="0.140318029" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.009384116" /></shape>
+<shape name="o-insensitive-005"><param name="HX" value="0.691738905" /><param name="HY" value="-3.526756310" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.368178058" /><param name="LP" value="0.612856556" /><param name="LD" value="0.412785097" /><param name="VS" value="0.301199354" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.729353941" /><param name="TCY" value="-0.893594473" /><param name="TTX" value="2.127417468" /><param name="TTY" value="-1.049486893" /><param name="TBX" value="0.614687357" /><param name="TBY" value="0.140741564" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.008116719" /></shape>
+<shape name="o-insensitive-006"><param name="HX" value="0.685267980" /><param name="HY" value="-3.527012648" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.327303144" /><param name="LP" value="0.622526798" /><param name="LD" value="0.405635196" /><param name="VS" value="0.296520106" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.728148660" /><param name="TCY" value="-0.900029654" /><param name="TTX" value="2.095714684" /><param name="TTY" value="-1.015588443" /><param name="TBX" value="0.638081887" /><param name="TBY" value="0.112775246" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.004779296" /></shape>
+<shape name="o-insensitive-007"><param name="HX" value="0.683574320" /><param name="HY" value="-3.531294170" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.291043857" /><param name="LP" value="0.626919227" /><param name="LD" value="0.412455773" /><param name="VS" value="0.307255055" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.728197826" /><param name="TCY" value="-0.904111719" /><param name="TTX" value="2.069124679" /><param name="TTY" value="-0.984939922" /><param name="TBX" value="0.590974287" /><param name="TBY" value="0.130112660" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.006292324" /></shape>
+<shape name="o-insensitive-008"><param name="HX" value="0.675015888" /><param name="HY" value="-3.535130420" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.262155803" /><param name="LP" value="0.632838254" /><param name="LD" value="0.419303188" /><param name="VS" value="0.319087872" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.727969558" /><param name="TCY" value="-0.904859532" /><param name="TTX" value="2.055416310" /><param name="TTY" value="-0.984160827" /><param name="TBX" value="0.556710805" /><param name="TBY" value="0.129558955" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.023303669" /></shape>
+<shape name="o-insensitive-009"><param name="HX" value="0.678138249" /><param name="HY" value="-3.540714507" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.234615015" /><param name="LP" value="0.634177016" /><param name="LD" value="0.425676707" /><param name="VS" value="0.336143451" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.731560575" /><param name="TCY" value="-0.913528543" /><param name="TTX" value="2.053021174" /><param name="TTY" value="-0.991063269" /><param name="TBX" value="0.528555059" /><param name="TBY" value="0.160044235" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.027155618" /></shape>
+<shape name="o-insensitive-010"><param name="HX" value="0.667499022" /><param name="HY" value="-3.544933618" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.191536900" /><param name="LP" value="0.634494490" /><param name="LD" value="0.427279944" /><param name="VS" value="0.350721104" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.732380523" /><param name="TCY" value="-0.920357363" /><param name="TTX" value="2.042024820" /><param name="TTY" value="-0.986294802" /><param name="TBX" value="0.530330507" /><param name="TBY" value="0.157086060" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.031143703" /></shape>
+<shape name="o-insensitive-011"><param name="HX" value="0.657718328" /><param name="HY" value="-3.543774136" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.080061017" /><param name="LP" value="0.629861701" /><param name="LD" value="0.437733307" /><param name="VS" value="0.349870561" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.733661760" /><param name="TCY" value="-0.916676986" /><param name="TTX" value="2.039197772" /><param name="TTY" value="-0.959430434" /><param name="TBX" value="0.520452759" /><param name="TBY" value="0.151316833" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.032155957" /></shape>
+<shape name="o-insensitive-012"><param name="HX" value="0.649471385" /><param name="HY" value="-3.544288122" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.066396324" /><param name="LP" value="0.629560172" /><param name="LD" value="0.438186553" /><param name="VS" value="0.351867348" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.733524231" /><param name="TCY" value="-0.918874017" /><param name="TTX" value="2.040014490" /><param name="TTY" value="-0.944753533" /><param name="TBX" value="0.507215487" /><param name="TBY" value="0.145589172" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.029492931" /></shape>
+<shape name="o-insensitive-013"><param name="HX" value="0.646158926" /><param name="HY" value="-3.543186852" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.052705352" /><param name="LP" value="0.629591332" /><param name="LD" value="0.439763651" /><param name="VS" value="0.350082319" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.733484382" /><param name="TCY" value="-0.918497280" /><param name="TTX" value="2.039395435" /><param name="TTY" value="-0.943489042" /><param name="TBX" value="0.494120627" /><param name="TBY" value="0.144318907" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.031386512" /></shape>
+<shape name="o-insensitive-014"><param name="HX" value="0.630698193" /><param name="HY" value="-3.546589465" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.005886268" /><param name="LP" value="0.631983193" /><param name="LD" value="0.438495632" /><param name="VS" value="0.355753200" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.733169679" /><param name="TCY" value="-0.924743597" /><param name="TTX" value="2.059127665" /><param name="TTY" value="-0.943093963" /><param name="TBX" value="0.489924958" /><param name="TBY" value="0.122681142" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.033160104" /></shape>
+<shape name="o-insensitive-015"><param name="HX" value="0.638043820" /><param name="HY" value="-3.552563802" /><param name="JX" value="-0.017534472" /><param name="JA" value="-3.118761150" /><param name="LP" value="0.615419763" /><param name="LD" value="0.459713634" /><param name="VS" value="0.342078955" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.726212313" /><param name="TCY" value="-0.914891935" /><param name="TTX" value="2.071225047" /><param name="TTY" value="-0.932513134" /><param name="TBX" value="0.480260744" /><param name="TBY" value="0.101978254" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.001110032" /><param name="TS2" value="0.001025349" /><param name="TS3" value="0.026827542" /></shape>
+<shape name="o-insensitive-016"><param name="HX" value="0.640440592" /><param name="HY" value="-3.552915908" /><param name="JX" value="-0.020418064" /><param name="JA" value="-3.232680314" /><param name="LP" value="0.580091905" /><param name="LD" value="0.405388744" /><param name="VS" value="0.312505903" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.716186785" /><param name="TCY" value="-0.915274708" /><param name="TTX" value="2.086985812" /><param name="TTY" value="-0.924517916" /><param name="TBX" value="0.451295938" /><param name="TBY" value="0.107163372" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.014824382" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.013040404" /></shape>
+<shape name="o-insensitive-017"><param name="HX" value="0.650733568" /><param name="HY" value="-3.555018455" /><param name="JX" value="-0.027875410" /><param name="JA" value="-3.400708503" /><param name="LP" value="0.548030112" /><param name="LD" value="0.344539076" /><param name="VS" value="0.293814398" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.716673357" /><param name="TCY" value="-0.917870792" /><param name="TTX" value="2.093000368" /><param name="TTY" value="-0.930266468" /><param name="TBX" value="0.442342539" /><param name="TBY" value="0.131891134" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.025513288" /><param name="TS2" value="0.000868614" /><param name="TS3" value="0.004177333" /></shape>
+<shape name="o-insensitive-018"><param name="HX" value="0.659445687" /><param name="HY" value="-3.556215304" /><param name="JX" value="-0.034329910" /><param name="JA" value="-3.577779060" /><param name="LP" value="0.516304078" /><param name="LD" value="0.313336049" /><param name="VS" value="0.274993145" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.710473337" /><param name="TCY" value="-0.913264699" /><param name="TTX" value="2.110687994" /><param name="TTY" value="-0.921179447" /><param name="TBX" value="0.460280579" /><param name="TBY" value="0.091699088" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.038592534" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.013786349" /></shape>
+<shape name="o-insensitive-019"><param name="HX" value="0.666548136" /><param name="HY" value="-3.559538548" /><param name="JX" value="-0.040482061" /><param name="JA" value="-3.726536187" /><param name="LP" value="0.470003067" /><param name="LD" value="0.278846107" /><param name="VS" value="0.254004134" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.704867185" /><param name="TCY" value="-0.904796599" /><param name="TTX" value="2.132153235" /><param name="TTY" value="-0.914251615" /><param name="TBX" value="0.494232674" /><param name="TBY" value="0.066129145" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.047663237" /><param name="TS2" value="0.004302310" /><param name="TS3" value="0.005143111" /></shape>
+<shape name="o-insensitive-020"><param name="HX" value="0.672069754" /><param name="HY" value="-3.568173103" /><param name="JX" value="-0.042299563" /><param name="JA" value="-3.909867638" /><param name="LP" value="0.423667560" /><param name="LD" value="0.273335336" /><param name="VS" value="0.229658184" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.700060686" /><param name="TCY" value="-0.896512637" /><param name="TTX" value="2.148159332" /><param name="TTY" value="-0.912981350" /><param name="TBX" value="0.423708876" /><param name="TBY" value="0.059995097" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.053607245" /><param name="TS2" value="0.001773416" /><param name="TS3" value="0.011211909" /></shape>
+<shape name="o-insensitive-021"><param name="HX" value="0.679136538" /><param name="HY" value="-3.571803920" /><param name="JX" value="-0.048243209" /><param name="JA" value="-4.090934553" /><param name="LP" value="0.381105863" /><param name="LD" value="0.241540529" /><param name="VS" value="0.215272586" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.696964885" /><param name="TCY" value="-0.902809125" /><param name="TTX" value="2.162762041" /><param name="TTY" value="-0.927870765" /><param name="TBX" value="0.506687986" /><param name="TBY" value="0.052007881" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.062818143" /><param name="TS2" value="0.003692768" /><param name="TS3" value="-0.000760062" /></shape>
+<shape name="o-insensitive-022"><param name="HX" value="0.688374731" /><param name="HY" value="-3.574793614" /><param name="JX" value="-0.050342829" /><param name="JA" value="-4.329816578" /><param name="LP" value="0.337942223" /><param name="LD" value="0.220807949" /><param name="VS" value="0.210849012" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.700904976" /><param name="TCY" value="-0.908145412" /><param name="TTX" value="2.170124869" /><param name="TTY" value="-0.931709410" /><param name="TBX" value="0.501737155" /><param name="TBY" value="0.073360036" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.073081798" /><param name="TS2" value="0.003785165" /><param name="TS3" value="0.014990110" /></shape>
+<shape name="o-insensitive-023"><param name="HX" value="0.694060810" /><param name="HY" value="-3.572394612" /><param name="JX" value="-0.053866397" /><param name="JA" value="-4.488002855" /><param name="LP" value="0.279206043" /><param name="LD" value="0.198533779" /><param name="VS" value="0.193136164" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.703018895" /><param name="TCY" value="-0.928422329" /><param name="TTX" value="2.203338458" /><param name="TTY" value="-0.934048225" /><param name="TBX" value="0.591325840" /><param name="TBY" value="0.064637664" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.084283456" /><param name="TS2" value="0.007259127" /><param name="TS3" value="-0.002190741" /></shape>
+<shape name="o-insensitive-024"><param name="HX" value="0.697217300" /><param name="HY" value="-3.583667136" /><param name="JX" value="-0.059121114" /><param name="JA" value="-4.700586691" /><param name="LP" value="0.241223437" /><param name="LD" value="0.190442004" /><param name="VS" value="0.181184127" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.683379238" /><param name="TCY" value="-0.911333762" /><param name="TTX" value="2.234189343" /><param name="TTY" value="-0.948480715" /><param name="TBX" value="0.587223977" /><param name="TBY" value="0.009997346" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.093221937" /><param name="TS2" value="0.004889220" /><param name="TS3" value="0.003035505" /></shape>
+<shape name="o-insensitive-025"><param name="HX" value="0.703980885" /><param name="HY" value="-3.587449574" /><param name="JX" value="-0.063942407" /><param name="JA" value="-4.889529857" /><param name="LP" value="0.221651462" /><param name="LD" value="0.183602417" /><param name="VS" value="0.156556068" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.673213407" /><param name="TCY" value="-0.902415370" /><param name="TTX" value="2.248800497" /><param name="TTY" value="-0.929703432" /><param name="TBX" value="0.570060293" /><param name="TBY" value="-0.026147545" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.106544636" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.008496904" /></shape>
+<shape name="o-insensitive-026"><param name="HX" value="0.700857948" /><param name="HY" value="-3.582364802" /><param name="JX" value="-0.065578039" /><param name="JA" value="-5.142845770" /><param name="LP" value="0.184366965" /><param name="LD" value="0.168284844" /><param name="VS" value="0.141875890" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.681635023" /><param name="TCY" value="-0.932003180" /><param name="TTX" value="2.249665688" /><param name="TTY" value="-0.955403098" /><param name="TBX" value="0.595363980" /><param name="TBY" value="-0.002176460" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.115798287" /><param name="TS2" value="0.003231856" /><param name="TS3" value="-0.000817113" /></shape>
+<shape name="o-insensitive-027"><param name="HX" value="0.707378276" /><param name="HY" value="-3.582373633" /><param name="JX" value="-0.059720270" /><param name="JA" value="-5.255681148" /><param name="LP" value="0.146369048" /><param name="LD" value="0.166589253" /><param name="VS" value="0.122690671" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.668529955" /><param name="TCY" value="-0.918147737" /><param name="TTX" value="2.280729771" /><param name="TTY" value="-0.941368538" /><param name="TBX" value="0.689473640" /><param name="TBY" value="-0.051343722" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.125539379" /><param name="TS2" value="0.010559115" /><param name="TS3" value="-0.016902003" /></shape>
+<shape name="o-insensitive-028"><param name="HX" value="0.709571033" /><param name="HY" value="-3.584417485" /><param name="JX" value="-0.066386632" /><param name="JA" value="-5.418296475" /><param name="LP" value="0.091179559" /><param name="LD" value="0.149828399" /><param name="VS" value="0.107413531" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.664859844" /><param name="TCY" value="-0.917334873" /><param name="TTX" value="2.283170650" /><param name="TTY" value="-0.952518209" /><param name="TBX" value="0.681045499" /><param name="TBY" value="-0.071282668" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.135785785" /><param name="TS2" value="0.004601140" /><param name="TS3" value="-0.018175757" /></shape>
+<shape name="o-insensitive-029"><param name="HX" value="0.714821739" /><param name="HY" value="-3.587025112" /><param name="JX" value="-0.072838568" /><param name="JA" value="-5.566390078" /><param name="LP" value="0.053845182" /><param name="LD" value="0.150980224" /><param name="VS" value="0.092345247" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.656329098" /><param name="TCY" value="-0.918476432" /><param name="TTX" value="2.275207319" /><param name="TTY" value="-0.961048974" /><param name="TBX" value="0.651673083" /><param name="TBY" value="-0.130816572" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.147185775" /><param name="TS2" value="0.004405591" /><param name="TS3" value="0.025715738" /></shape>
+<shape name="o-insensitive-030"><param name="HX" value="0.716705301" /><param name="HY" value="-3.618149961" /><param name="JX" value="-0.070195442" /><param name="JA" value="-5.716286585" /><param name="LP" value="0.035244728" /><param name="LD" value="0.150517122" /><param name="VS" value="0.066881363" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.650330775" /><param name="TCY" value="-0.886273842" /><param name="TTX" value="2.266841577" /><param name="TTY" value="-0.976268803" /><param name="TBX" value="0.567765146" /><param name="TBY" value="-0.148537202" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.146715580" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.019691239" /></shape>
+<shape name="o-insensitive-031"><param name="HX" value="0.719540603" /><param name="HY" value="-3.637749862" /><param name="JX" value="-0.070721802" /><param name="JA" value="-5.830484822" /><param name="LP" value="0.002022672" /><param name="LD" value="0.147707272" /><param name="VS" value="0.065929020" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.697387294" /><param name="TCY" value="-0.878230973" /><param name="TTX" value="2.278600524" /><param name="TTY" value="-0.902624611" /><param name="TBX" value="0.663055581" /><param name="TBY" value="0.012355927" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.140420686" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.039629413" /></shape>
+<shape name="o-insensitive-032"><param name="HX" value="0.710470567" /><param name="HY" value="-3.610418111" /><param name="JX" value="-0.074736304" /><param name="JA" value="-6.018382439" /><param name="LP" value="-0.022165556" /><param name="LD" value="0.147141522" /><param name="VS" value="0.054879468" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.656286872" /><param name="TCY" value="-0.867017248" /><param name="TTX" value="2.277491881" /><param name="TTY" value="-0.935138348" /><param name="TBX" value="0.628752184" /><param name="TBY" value="-0.067902411" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.150811055" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.013649110" /></shape>
+<shape name="o-insensitive-033"><param name="HX" value="0.712411223" /><param name="HY" value="-3.605190568" /><param name="JX" value="-0.076811667" /><param name="JA" value="-6.177482939" /><param name="LP" value="-0.039756308" /><param name="LD" value="0.148374476" /><param name="VS" value="0.050023807" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.641042079" /><param name="TCY" value="-0.805538997" /><param name="TTX" value="2.234588703" /><param name="TTY" value="-0.922389648" /><param name="TBX" value="0.508636217" /><param name="TBY" value="-0.219257365" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.170247712" /><param name="TS2" value="0.000021714" /><param name="TS3" value="0.015623967" /></shape>
+<shape name="o-insensitive-034"><param name="HX" value="0.711659978" /><param name="HY" value="-3.624203553" /><param name="JX" value="-0.076058335" /><param name="JA" value="-6.245661265" /><param name="LP" value="-0.075155885" /><param name="LD" value="0.141683754" /><param name="VS" value="0.046692171" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.635676505" /><param name="TCY" value="-0.814591167" /><param name="TTX" value="2.254193835" /><param name="TTY" value="-0.910804932" /><param name="TBX" value="0.605028370" /><param name="TBY" value="-0.037714412" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.175630026" /><param name="TS2" value="0.007408421" /><param name="TS3" value="0.015819466" /></shape>
+<shape name="o-insensitive-035"><param name="HX" value="0.686984182" /><param name="HY" value="-3.653991701" /><param name="JX" value="-0.072338765" /><param name="JA" value="-6.261992122" /><param name="LP" value="-0.080814566" /><param name="LD" value="0.146245692" /><param name="VS" value="0.042451404" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.621612572" /><param name="TCY" value="-0.772503333" /><param name="TTX" value="2.248980576" /><param name="TTY" value="-1.002767825" /><param name="TBX" value="0.675023098" /><param name="TBY" value="-0.051012002" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.179126333" /><param name="TS2" value="0.000705574" /><param name="TS3" value="0.033050408" /></shape>
+<shape name="o-insensitive-036"><param name="HX" value="0.708042551" /><param name="HY" value="-3.694460261" /><param name="JX" value="-0.062903957" /><param name="JA" value="-6.144837584" /><param name="LP" value="-0.093914909" /><param name="LD" value="0.151935631" /><param name="VS" value="0.042641007" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.626252374" /><param name="TCY" value="-0.777103009" /><param name="TTX" value="2.234698165" /><param name="TTY" value="-1.004671107" /><param name="TBX" value="0.774434134" /><param name="TBY" value="-0.062050593" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.178851209" /><param name="TS2" value="0.000074880" /><param name="TS3" value="0.009413765" /></shape>
+<shape name="o-insensitive-037"><param name="HX" value="0.706803564" /><param name="HY" value="-3.672866038" /><param name="JX" value="-0.066297271" /><param name="JA" value="-6.218599975" /><param name="LP" value="-0.042214056" /><param name="LD" value="0.156284915" /><param name="VS" value="0.037408380" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.672445807" /><param name="TCY" value="-0.798055224" /><param name="TTX" value="2.242534223" /><param name="TTY" value="-0.958336810" /><param name="TBX" value="0.700403523" /><param name="TBY" value="0.074729431" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.175659294" /><param name="TS2" value="0.005851920" /><param name="TS3" value="0.032105353" /></shape>
+<shape name="o-insensitive-038"><param name="HX" value="0.716178846" /><param name="HY" value="-3.645742211" /><param name="JX" value="-0.068800247" /><param name="JA" value="-6.309889784" /><param name="LP" value="-0.066659797" /><param name="LD" value="0.153825122" /><param name="VS" value="0.031679797" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.616994981" /><param name="TCY" value="-0.748568186" /><param name="TTX" value="2.202808858" /><param name="TTY" value="-0.989154095" /><param name="TBX" value="0.661313392" /><param name="TBY" value="0.011836729" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.174056988" /><param name="TS2" value="0.015248830" /><param name="TS3" value="-0.004591302" /></shape>
+<shape name="o-insensitive-039"><param name="HX" value="0.712646504" /><param name="HY" value="-3.643304293" /><param name="JX" value="-0.074140567" /><param name="JA" value="-6.381532440" /><param name="LP" value="-0.112057159" /><param name="LD" value="0.130956132" /><param name="VS" value="0.024264089" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.667513046" /><param name="TCY" value="-0.798270531" /><param name="TTX" value="2.231942108" /><param name="TTY" value="-0.968926425" /><param name="TBX" value="0.709439693" /><param name="TBY" value="0.109958719" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.177218448" /><param name="TS2" value="0.007804511" /><param name="TS3" value="0.014707709" /></shape>
+<shape name="o-insensitive-040"><param name="HX" value="0.712539993" /><param name="HY" value="-3.636367481" /><param name="JX" value="-0.074832323" /><param name="JA" value="-6.404616720" /><param name="LP" value="-0.123181443" /><param name="LD" value="0.121720143" /><param name="VS" value="0.022979154" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.671865675" /><param name="TCY" value="-0.818056603" /><param name="TTX" value="2.233217511" /><param name="TTY" value="-0.977252948" /><param name="TBX" value="0.722908740" /><param name="TBY" value="0.115632894" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.176992919" /><param name="TS2" value="0.008867187" /><param name="TS3" value="0.004553716" /></shape>
+<shape name="o-insensitive-041"><param name="HX" value="0.706054655" /><param name="HY" value="-3.633474377" /><param name="JX" value="-0.072425291" /><param name="JA" value="-6.384279890" /><param name="LP" value="-0.148104370" /><param name="LD" value="0.113332462" /><param name="VS" value="0.025584889" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.671458407" /><param name="TCY" value="-0.839698891" /><param name="TTX" value="2.308699658" /><param name="TTY" value="-1.016399977" /><param name="TBX" value="0.742882612" /><param name="TBY" value="0.097951861" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.179905920" /><param name="TS2" value="0.013199325" /><param name="TS3" value="0.001181251" /></shape>
+<shape name="o-insensitive-042"><param name="HX" value="0.697806276" /><param name="HY" value="-3.654966486" /><param name="JX" value="-0.071217327" /><param name="JA" value="-6.410995857" /><param name="LP" value="-0.127790656" /><param name="LD" value="0.122507693" /><param name="VS" value="0.028368151" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.695100695" /><param name="TCY" value="-0.829250910" /><param name="TTX" value="2.396003284" /><param name="TTY" value="-0.996241223" /><param name="TBX" value="0.758944985" /><param name="TBY" value="0.178718500" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.177924272" /><param name="TS2" value="0.000000000" /><param name="TS3" value="-0.015752009" /></shape>
+<shape name="o-insensitive-043"><param name="HX" value="0.697935414" /><param name="HY" value="-3.631594474" /><param name="JX" value="-0.072021330" /><param name="JA" value="-6.432413945" /><param name="LP" value="-0.139794329" /><param name="LD" value="0.111671493" /><param name="VS" value="0.021707476" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.689909288" /><param name="TCY" value="-0.863326947" /><param name="TTX" value="2.421433852" /><param name="TTY" value="-1.012333004" /><param name="TBX" value="0.781859610" /><param name="TBY" value="0.155539659" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.183423249" /><param name="TS2" value="0.000141189" /><param name="TS3" value="-0.027678848" /></shape>
+<shape name="o-sensitive-001"><param name="HX" value="0.672048141" /><param name="HY" value="-3.534284878" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.456795582" /><param name="LP" value="0.619108619" /><param name="LD" value="0.385847051" /><param name="VS" value="0.311016749" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.735446653" /><param name="TCY" value="-0.878815889" /><param name="TTX" value="2.238426737" /><param name="TTY" value="-1.135890581" /><param name="TBX" value="0.822686456" /><param name="TBY" value="0.103843671" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.028494745" /></shape>
+<shape name="o-sensitive-002"><param name="HX" value="0.667369173" /><param name="HY" value="-3.532442322" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.488189177" /><param name="LP" value="0.614885659" /><param name="LD" value="0.376637292" /><param name="VS" value="0.309445908" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.755987403" /><param name="TCY" value="-0.877457031" /><param name="TTX" value="2.225596198" /><param name="TTY" value="-1.119095190" /><param name="TBX" value="0.857128129" /><param name="TBY" value="0.178306468" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.043886175" /></shape>
+<shape name="o-sensitive-003"><param name="HX" value="0.664753897" /><param name="HY" value="-3.534754099" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.549265796" /><param name="LP" value="0.619997517" /><param name="LD" value="0.388025423" /><param name="VS" value="0.307821474" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.771709478" /><param name="TCY" value="-0.867625593" /><param name="TTX" value="2.212233117" /><param name="TTY" value="-1.096877344" /><param name="TBX" value="0.897602258" /><param name="TBY" value="0.243951701" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.053885397" /></shape>
+<shape name="o-sensitive-004"><param name="HX" value="0.661482497" /><param name="HY" value="-3.531778493" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.587675195" /><param name="LP" value="0.610613083" /><param name="LD" value="0.399240151" /><param name="VS" value="0.306127009" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.784486199" /><param name="TCY" value="-0.851246557" /><param name="TTX" value="2.187480394" /><param name="TTY" value="-1.092733753" /><param name="TBX" value="0.931842623" /><param name="TBY" value="0.313944823" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.054535739" /></shape>
+<shape name="o-sensitive-005"><param name="HX" value="0.659910347" /><param name="HY" value="-3.531544287" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.581045240" /><param name="LP" value="0.596222263" /><param name="LD" value="0.399412871" /><param name="VS" value="0.305457831" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.790491066" /><param name="TCY" value="-0.866909153" /><param name="TTX" value="2.211449828" /><param name="TTY" value="-1.096240126" /><param name="TBX" value="0.926400444" /><param name="TBY" value="0.318099770" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.053647129" /></shape>
+<shape name="o-sensitive-006"><param name="HX" value="0.658560288" /><param name="HY" value="-3.518546694" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.632097950" /><param name="LP" value="0.587712113" /><param name="LD" value="0.406637462" /><param name="VS" value="0.303398121" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.815099934" /><param name="TCY" value="-0.865323137" /><param name="TTX" value="2.221135552" /><param name="TTY" value="-1.079096668" /><param name="TBX" value="0.952512393" /><param name="TBY" value="0.392948392" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.059134205" /></shape>
+<shape name="o-sensitive-007"><param name="HX" value="0.656412246" /><param name="HY" value="-3.511625275" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.652408429" /><param name="LP" value="0.585064825" /><param name="LD" value="0.417728255" /><param name="VS" value="0.303245642" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.820977905" /><param name="TCY" value="-0.854136286" /><param name="TTX" value="2.178580165" /><param name="TTY" value="-1.013925219" /><param name="TBX" value="0.963522696" /><param name="TBY" value="0.401322847" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.058956468" /></shape>
+<shape name="o-sensitive-008"><param name="HX" value="0.655707004" /><param name="HY" value="-3.513404474" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.663127972" /><param name="LP" value="0.573865003" /><param name="LD" value="0.420811004" /><param name="VS" value="0.303632627" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.812243973" /><param name="TCY" value="-0.841536363" /><param name="TTX" value="2.171837022" /><param name="TTY" value="-0.991624179" /><param name="TBX" value="0.946706649" /><param name="TBY" value="0.375667964" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.059812128" /></shape>
+<shape name="o-sensitive-009"><param name="HX" value="0.656070736" /><param name="HY" value="-3.503922062" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.654897918" /><param name="LP" value="0.583647537" /><param name="LD" value="0.422582816" /><param name="VS" value="0.304067537" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.805984054" /><param name="TCY" value="-0.840715308" /><param name="TTX" value="2.168999115" /><param name="TTY" value="-0.997609548" /><param name="TBX" value="0.944101514" /><param name="TBY" value="0.367723438" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.058297078" /></shape>
+<shape name="o-sensitive-010"><param name="HX" value="0.654834870" /><param name="HY" value="-3.501588291" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.674302591" /><param name="LP" value="0.575172131" /><param name="LD" value="0.413464454" /><param name="VS" value="0.303935473" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.815328175" /><param name="TCY" value="-0.839904801" /><param name="TTX" value="2.193319889" /><param name="TTY" value="-0.985420735" /><param name="TBX" value="0.954770354" /><param name="TBY" value="0.377690563" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.059386076" /></shape>
+<shape name="o-sensitive-011"><param name="HX" value="0.659186231" /><param name="HY" value="-3.524989019" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.670361388" /><param name="LP" value="0.567803688" /><param name="LD" value="0.420373181" /><param name="VS" value="0.299898245" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.846758778" /><param name="TCY" value="-0.857382220" /><param name="TTX" value="2.199183440" /><param name="TTY" value="-0.962403287" /><param name="TBX" value="0.959377074" /><param name="TBY" value="0.413503751" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.066279003" /></shape>
+<shape name="o-sensitive-012"><param name="HX" value="0.659946120" /><param name="HY" value="-3.523549853" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.650794799" /><param name="LP" value="0.556221494" /><param name="LD" value="0.445422386" /><param name="VS" value="0.299750729" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.864049331" /><param name="TCY" value="-0.866014692" /><param name="TTX" value="2.204438689" /><param name="TTY" value="-0.961104106" /><param name="TBX" value="0.966262766" /><param name="TBY" value="0.429875780" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.070452048" /></shape>
+<shape name="o-sensitive-013"><param name="HX" value="0.660061698" /><param name="HY" value="-3.524028124" /><param name="JX" value="-0.013900000" /><param name="JA" value="-3.650037114" /><param name="LP" value="0.555028317" /><param name="LD" value="0.457610427" /><param name="VS" value="0.299079391" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.875819802" /><param name="TCY" value="-0.873088960" /><param name="TTX" value="2.205834628" /><param name="TTY" value="-0.959657710" /><param name="TBX" value="0.969231420" /><param name="TBY" value="0.440374668" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.000000000" /><param name="TS3" value="0.071809149" /></shape>
+<shape name="o-sensitive-014"><param name="HX" value="0.661829455" /><param name="HY" value="-3.521470508" /><param name="JX" value="-0.016344606" /><param name="JA" value="-3.823063614" /><param name="LP" value="0.517888019" /><param name="LD" value="0.462457896" /><param name="VS" value="0.279778417" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.928316475" /><param name="TCY" value="-0.921645639" /><param name="TTX" value="2.198487550" /><param name="TTY" value="-0.969290498" /><param name="TBX" value="0.981609088" /><param name="TBY" value="0.482461807" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.014138679" /><param name="TS2" value="0.000932535" /><param name="TS3" value="0.067861494" /></shape>
+<shape name="o-sensitive-015"><param name="HX" value="0.662497527" /><param name="HY" value="-3.527316681" /><param name="JX" value="-0.021303715" /><param name="JA" value="-4.004866557" /><param name="LP" value="0.463186907" /><param name="LD" value="0.501191608" /><param name="VS" value="0.263288975" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.953659608" /><param name="TCY" value="-0.957417604" /><param name="TTX" value="2.203680334" /><param name="TTY" value="-0.987634055" /><param name="TBX" value="0.969483587" /><param name="TBY" value="0.473317802" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.026024204" /><param name="TS2" value="0.000217220" /><param name="TS3" value="0.061285385" /></shape>
+<shape name="o-sensitive-016"><param name="HX" value="0.689697081" /><param name="HY" value="-3.529736554" /><param name="JX" value="-0.024482497" /><param name="JA" value="-3.973280453" /><param name="LP" value="0.459229689" /><param name="LD" value="0.545258705" /><param name="VS" value="0.277588979" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.945081747" /><param name="TCY" value="-0.957683752" /><param name="TTX" value="2.171358086" /><param name="TTY" value="-1.007578396" /><param name="TBX" value="1.011500492" /><param name="TBY" value="0.422306857" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.024128467" /><param name="TS2" value="0.008183490" /><param name="TS3" value="0.078878154" /></shape>
+<shape name="o-sensitive-017"><param name="HX" value="0.717276032" /><param name="HY" value="-3.518922392" /><param name="JX" value="-0.027921498" /><param name="JA" value="-3.957287002" /><param name="LP" value="0.474075432" /><param name="LD" value="0.632929733" /><param name="VS" value="0.291934835" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.952930564" /><param name="TCY" value="-0.977823527" /><param name="TTX" value="2.145954621" /><param name="TTY" value="-1.031434431" /><param name="TBX" value="1.043482295" /><param name="TBY" value="0.364935661" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.022412007" /><param name="TS2" value="0.016234544" /><param name="TS3" value="0.095666658" /></shape>
+<shape name="o-sensitive-018"><param name="HX" value="0.742895789" /><param name="HY" value="-3.510473839" /><param name="JX" value="-0.031889813" /><param name="JA" value="-3.948172179" /><param name="LP" value="0.445073159" /><param name="LD" value="0.690345846" /><param name="VS" value="0.303929574" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.963888366" /><param name="TCY" value="-1.013321896" /><param name="TTX" value="2.113413950" /><param name="TTY" value="-1.061639374" /><param name="TBX" value="1.070646134" /><param name="TBY" value="0.292053436" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.021393940" /><param name="TS2" value="0.023606061" /><param name="TS3" value="0.108886141" /></shape>
+<shape name="o-sensitive-019"><param name="HX" value="0.768624308" /><param name="HY" value="-3.499377817" /><param name="JX" value="-0.035708052" /><param name="JA" value="-3.968581798" /><param name="LP" value="0.462130267" /><param name="LD" value="0.754147786" /><param name="VS" value="0.319045922" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.967473319" /><param name="TCY" value="-1.043352915" /><param name="TTX" value="2.078672094" /><param name="TTY" value="-1.094528192" /><param name="TBX" value="1.106542549" /><param name="TBY" value="0.242355567" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.018789646" /><param name="TS2" value="0.032047438" /><param name="TS3" value="0.126722146" /></shape>
+<shape name="o-sensitive-020"><param name="HX" value="0.791210993" /><param name="HY" value="-3.505228887" /><param name="JX" value="-0.035076310" /><param name="JA" value="-3.960604836" /><param name="LP" value="0.421313622" /><param name="LD" value="0.827943923" /><param name="VS" value="0.318959580" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.978029024" /><param name="TCY" value="-1.080463163" /><param name="TTX" value="2.017503574" /><param name="TTY" value="-1.120409304" /><param name="TBX" value="1.082426523" /><param name="TBY" value="0.190436097" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.010612378" /><param name="TS2" value="0.043738206" /><param name="TS3" value="0.140050790" /></shape>
+<shape name="o-sensitive-021"><param name="HX" value="0.815748557" /><param name="HY" value="-3.495739559" /><param name="JX" value="-0.036939198" /><param name="JA" value="-3.952811325" /><param name="LP" value="0.388646067" /><param name="LD" value="0.886399941" /><param name="VS" value="0.332515633" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.984554666" /><param name="TCY" value="-1.121064458" /><param name="TTX" value="1.977826596" /><param name="TTY" value="-1.154457138" /><param name="TBX" value="1.122656346" /><param name="TBY" value="0.136041633" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.012760764" /><param name="TS2" value="0.047941485" /><param name="TS3" value="0.153531183" /></shape>
+<shape name="o-sensitive-022"><param name="HX" value="0.838345513" /><param name="HY" value="-3.491597659" /><param name="JX" value="-0.039640865" /><param name="JA" value="-3.902998663" /><param name="LP" value="0.344449131" /><param name="LD" value="0.904724066" /><param name="VS" value="0.342390935" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.987379456" /><param name="TCY" value="-1.167780031" /><param name="TTX" value="1.933816225" /><param name="TTY" value="-1.195725853" /><param name="TBX" value="1.151253180" /><param name="TBY" value="0.081553690" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.012414201" /><param name="TS2" value="0.052543494" /><param name="TS3" value="0.164005359" /></shape>
+<shape name="o-sensitive-023"><param name="HX" value="0.862500007" /><param name="HY" value="-3.492950611" /><param name="JX" value="-0.043177338" /><param name="JA" value="-3.855203025" /><param name="LP" value="0.302195566" /><param name="LD" value="0.924145978" /><param name="VS" value="0.354083620" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.989888856" /><param name="TCY" value="-1.199626441" /><param name="TTX" value="1.887281758" /><param name="TTY" value="-1.233395151" /><param name="TBX" value="1.180104184" /><param name="TBY" value="0.028663119" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.011247032" /><param name="TS2" value="0.058222852" /><param name="TS3" value="0.178638571" /></shape>
+<shape name="o-sensitive-024"><param name="HX" value="0.884987950" /><param name="HY" value="-3.502127655" /><param name="JX" value="-0.047251881" /><param name="JA" value="-3.854045983" /><param name="LP" value="0.345620283" /><param name="LD" value="0.912074039" /><param name="VS" value="0.368440145" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.984099588" /><param name="TCY" value="-1.181526024" /><param name="TTX" value="1.835685433" /><param name="TTY" value="-1.253217616" /><param name="TBX" value="1.239196092" /><param name="TBY" value="0.025940931" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.008051331" /><param name="TS2" value="0.066047012" /><param name="TS3" value="0.194108353" /></shape>
+<shape name="o-sensitive-025"><param name="HX" value="0.907543680" /><param name="HY" value="-3.500360835" /><param name="JX" value="-0.051326178" /><param name="JA" value="-3.815662006" /><param name="LP" value="0.298226510" /><param name="LD" value="0.943799484" /><param name="VS" value="0.379367277" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.988862119" /><param name="TCY" value="-1.214468345" /><param name="TTX" value="1.791749850" /><param name="TTY" value="-1.288724091" /><param name="TBX" value="1.251676017" /><param name="TBY" value="-0.051057772" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.006308606" /><param name="TS2" value="0.071212213" /><param name="TS3" value="0.206719423" /></shape>
+<shape name="o-sensitive-026"><param name="HX" value="0.927689173" /><param name="HY" value="-3.516434108" /><param name="JX" value="-0.057648697" /><param name="JA" value="-3.830722994" /><param name="LP" value="0.249182793" /><param name="LD" value="1.047841513" /><param name="VS" value="0.387732734" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.991144149" /><param name="TCY" value="-1.263315110" /><param name="TTX" value="1.786505953" /><param name="TTY" value="-1.333673319" /><param name="TBX" value="1.289954622" /><param name="TBY" value="-0.092065269" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.006164767" /><param name="TS2" value="0.074300258" /><param name="TS3" value="0.215309550" /></shape>
+<shape name="o-sensitive-027"><param name="HX" value="0.946400880" /><param name="HY" value="-3.535434569" /><param name="JX" value="-0.059128770" /><param name="JA" value="-3.801895023" /><param name="LP" value="0.298887983" /><param name="LD" value="0.958875122" /><param name="VS" value="0.395042118" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.988146487" /><param name="TCY" value="-1.233865658" /><param name="TTX" value="1.756791147" /><param name="TTY" value="-1.344524159" /><param name="TBX" value="1.334775690" /><param name="TBY" value="-0.130973511" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.001575806" /><param name="TS2" value="0.076110743" /><param name="TS3" value="0.227865128" /></shape>
+<shape name="o-sensitive-028"><param name="HX" value="0.966961747" /><param name="HY" value="-3.507479460" /><param name="JX" value="-0.060036187" /><param name="JA" value="-3.780884574" /><param name="LP" value="0.224453458" /><param name="LD" value="0.956683050" /><param name="VS" value="0.407782639" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.991980262" /><param name="TCY" value="-1.270407896" /><param name="TTX" value="1.774593583" /><param name="TTY" value="-1.358834966" /><param name="TBX" value="1.393904481" /><param name="TBY" value="-0.129282934" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000880" /><param name="TS2" value="0.082582571" /><param name="TS3" value="0.240967469" /></shape>
+<shape name="o-sensitive-029"><param name="HX" value="0.982436740" /><param name="HY" value="-3.504879239" /><param name="JX" value="-0.063395353" /><param name="JA" value="-3.761400958" /><param name="LP" value="0.183243212" /><param name="LD" value="1.024095398" /><param name="VS" value="0.415185859" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.992943515" /><param name="TCY" value="-1.308542182" /><param name="TTX" value="1.709604670" /><param name="TTY" value="-1.410110423" /><param name="TBX" value="1.412847400" /><param name="TBY" value="-0.176002923" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.005299268" /><param name="TS2" value="0.083215941" /><param name="TS3" value="0.243127991" /></shape>
+<shape name="o-sensitive-030"><param name="HX" value="0.991406038" /><param name="HY" value="-3.534823246" /><param name="JX" value="-0.065712835" /><param name="JA" value="-3.822574055" /><param name="LP" value="0.249171346" /><param name="LD" value="1.003134054" /><param name="VS" value="0.420067666" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.984307175" /><param name="TCY" value="-1.246422202" /><param name="TTX" value="1.689400127" /><param name="TTY" value="-1.411418064" /><param name="TBX" value="1.429629491" /><param name="TBY" value="-0.168399782" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000572601" /><param name="TS2" value="0.086231060" /><param name="TS3" value="0.250646301" /></shape>
+<shape name="o-sensitive-031"><param name="HX" value="0.999987582" /><param name="HY" value="-3.516562859" /><param name="JX" value="-0.062713576" /><param name="JA" value="-3.795945135" /><param name="LP" value="0.187250579" /><param name="LD" value="0.961910703" /><param name="VS" value="0.421767368" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.995407179" /><param name="TCY" value="-1.306660540" /><param name="TTX" value="1.670759757" /><param name="TTY" value="-1.407652318" /><param name="TBX" value="1.492822538" /><param name="TBY" value="-0.206265558" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.001251757" /><param name="TS2" value="0.082216884" /><param name="TS3" value="0.241128963" /></shape>
+<shape name="o-sensitive-032"><param name="HX" value="1.000000000" /><param name="HY" value="-3.499049070" /><param name="JX" value="-0.063143861" /><param name="JA" value="-3.836794880" /><param name="LP" value="0.189507235" /><param name="LD" value="1.006444035" /><param name="VS" value="0.424228796" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.993939698" /><param name="TCY" value="-1.301699041" /><param name="TTX" value="1.648715084" /><param name="TTY" value="-1.446253496" /><param name="TBX" value="1.437082908" /><param name="TBY" value="-0.236909785" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.001634043" /><param name="TS2" value="0.087431814" /><param name="TS3" value="0.250201641" /></shape>
+<shape name="o-sensitive-033"><param name="HX" value="0.999727424" /><param name="HY" value="-3.519330699" /><param name="JX" value="-0.064643437" /><param name="JA" value="-3.874801431" /><param name="LP" value="0.249033843" /><param name="LD" value="0.888693674" /><param name="VS" value="0.426406813" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.980407367" /><param name="TCY" value="-1.222168636" /><param name="TTX" value="1.690164699" /><param name="TTY" value="-1.479305911" /><param name="TBX" value="1.489763921" /><param name="TBY" value="-0.169223916" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000157942" /><param name="TS2" value="0.090312680" /><param name="TS3" value="0.261139112" /></shape>
+<shape name="o-sensitive-034"><param name="HX" value="1.000000000" /><param name="HY" value="-3.516825645" /><param name="JX" value="-0.066191044" /><param name="JA" value="-3.889928107" /><param name="LP" value="0.366560532" /><param name="LD" value="0.973395389" /><param name="VS" value="0.429619808" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.973977462" /><param name="TCY" value="-1.214499100" /><param name="TTX" value="1.698615158" /><param name="TTY" value="-1.473373031" /><param name="TBX" value="1.517867078" /><param name="TBY" value="-0.160127252" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.004664297" /><param name="TS2" value="0.091592393" /><param name="TS3" value="0.271314363" /></shape>
+<shape name="o-sensitive-035"><param name="HX" value="0.999960985" /><param name="HY" value="-3.520792991" /><param name="JX" value="-0.067013184" /><param name="JA" value="-3.836773149" /><param name="LP" value="0.331419010" /><param name="LD" value="0.962721309" /><param name="VS" value="0.427682505" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.979194941" /><param name="TCY" value="-1.239902705" /><param name="TTX" value="1.677915780" /><param name="TTY" value="-1.469216562" /><param name="TBX" value="1.543303790" /><param name="TBY" value="-0.192319449" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.003296694" /><param name="TS2" value="0.087872646" /><param name="TS3" value="0.267090885" /></shape>
+<shape name="o-sensitive-036"><param name="HX" value="1.000000000" /><param name="HY" value="-3.555344602" /><param name="JX" value="-0.062890415" /><param name="JA" value="-3.675561183" /><param name="LP" value="0.353810590" /><param name="LD" value="0.966103477" /><param name="VS" value="0.425379257" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.971953162" /><param name="TCY" value="-1.210411618" /><param name="TTX" value="1.669731663" /><param name="TTY" value="-1.388003220" /><param name="TBX" value="1.594172608" /><param name="TBY" value="-0.166046632" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000010823" /><param name="TS2" value="0.087505120" /><param name="TS3" value="0.261115622" /></shape>
+<shape name="o-sensitive-037"><param name="HX" value="1.000000000" /><param name="HY" value="-3.551392873" /><param name="JX" value="-0.064183062" /><param name="JA" value="-3.689774983" /><param name="LP" value="0.269172470" /><param name="LD" value="1.066041050" /><param name="VS" value="0.424032160" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.981563526" /><param name="TCY" value="-1.239512019" /><param name="TTX" value="1.654520458" /><param name="TTY" value="-1.410749818" /><param name="TBX" value="1.533230445" /><param name="TBY" value="-0.190557218" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.085182728" /><param name="TS3" value="0.262017562" /></shape>
+<shape name="o-sensitive-038"><param name="HX" value="0.999664212" /><param name="HY" value="-3.555523843" /><param name="JX" value="-0.064353355" /><param name="JA" value="-3.766291844" /><param name="LP" value="0.317430564" /><param name="LD" value="0.918439099" /><param name="VS" value="0.424041461" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.972825466" /><param name="TCY" value="-1.212455795" /><param name="TTX" value="1.655016326" /><param name="TTY" value="-1.398674582" /><param name="TBX" value="1.564412932" /><param name="TBY" value="-0.182532648" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.090474078" /><param name="TS3" value="0.265305888" /></shape>
+<shape name="o-sensitive-039"><param name="HX" value="1.000000000" /><param name="HY" value="-3.538183226" /><param name="JX" value="-0.064897734" /><param name="JA" value="-3.743850371" /><param name="LP" value="0.229118796" /><param name="LD" value="0.956091730" /><param name="VS" value="0.426590979" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.981644491" /><param name="TCY" value="-1.242356401" /><param name="TTX" value="1.648932213" /><param name="TTY" value="-1.397463830" /><param name="TBX" value="1.529569171" /><param name="TBY" value="-0.215351310" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000645178" /><param name="TS2" value="0.092543879" /><param name="TS3" value="0.271146177" /></shape>
+<shape name="o-sensitive-040"><param name="HX" value="1.000000000" /><param name="HY" value="-3.522221250" /><param name="JX" value="-0.063802348" /><param name="JA" value="-3.810263282" /><param name="LP" value="0.205049893" /><param name="LD" value="0.863784039" /><param name="VS" value="0.418983871" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.986011341" /><param name="TCY" value="-1.262889487" /><param name="TTX" value="1.732652282" /><param name="TTY" value="-1.415001952" /><param name="TBX" value="1.505766938" /><param name="TBY" value="-0.196333947" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000141939" /><param name="TS2" value="0.082210041" /><param name="TS3" value="0.270905299" /></shape>
+<shape name="o-sensitive-041"><param name="HX" value="0.999989967" /><param name="HY" value="-3.541716994" /><param name="JX" value="-0.064875022" /><param name="JA" value="-3.764303781" /><param name="LP" value="0.234598757" /><param name="LD" value="0.907298370" /><param name="VS" value="0.429652393" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.978140270" /><param name="TCY" value="-1.227202908" /><param name="TTX" value="1.706840297" /><param name="TTY" value="-1.471458641" /><param name="TBX" value="1.505031318" /><param name="TBY" value="-0.138938373" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000283574" /><param name="TS2" value="0.084455365" /><param name="TS3" value="0.258835186" /></shape>
+<shape name="o-sensitive-042"><param name="HX" value="0.999996267" /><param name="HY" value="-3.510361315" /><param name="JX" value="-0.068081826" /><param name="JA" value="-3.855844596" /><param name="LP" value="0.198074759" /><param name="LD" value="0.954814483" /><param name="VS" value="0.440216580" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.993995598" /><param name="TCY" value="-1.296142322" /><param name="TTX" value="1.679357422" /><param name="TTY" value="-1.537573019" /><param name="TBX" value="1.487795977" /><param name="TBY" value="-0.190989986" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.001386727" /><param name="TS2" value="0.074617717" /><param name="TS3" value="0.260648961" /></shape>
+<shape name="o-sensitive-043"><param name="HX" value="0.999975693" /><param name="HY" value="-3.540293940" /><param name="JX" value="-0.066142522" /><param name="JA" value="-3.810637565" /><param name="LP" value="0.257506670" /><param name="LD" value="0.983237563" /><param name="VS" value="0.436932612" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.978715500" /><param name="TCY" value="-1.224721934" /><param name="TTX" value="1.667614481" /><param name="TTY" value="-1.498089568" /><param name="TBX" value="1.504324528" /><param name="TBY" value="-0.152424553" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000382712" /><param name="TS2" value="0.082302441" /><param name="TS3" value="0.263737986" /></shape>
+<shape name="o-sensitive-044"><param name="HX" value="1.000000000" /><param name="HY" value="-3.517759097" /><param name="JX" value="-0.064556409" /><param name="JA" value="-3.777860859" /><param name="LP" value="0.228419747" /><param name="LD" value="1.022854731" /><param name="VS" value="0.427351009" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.992548160" /><param name="TCY" value="-1.292966931" /><param name="TTX" value="1.708883122" /><param name="TTY" value="-1.441067073" /><param name="TBX" value="1.553259872" /><param name="TBY" value="-0.207206018" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.081562869" /><param name="TS3" value="0.253472420" /></shape>
+<shape name="o-sensitive-045"><param name="HX" value="0.999981305" /><param name="HY" value="-3.542577664" /><param name="JX" value="-0.064670917" /><param name="JA" value="-3.763719637" /><param name="LP" value="0.198529311" /><param name="LD" value="0.884805726" /><param name="VS" value="0.427875944" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.983219201" /><param name="TCY" value="-1.258846182" /><param name="TTX" value="1.666213484" /><param name="TTY" value="-1.441624525" /><param name="TBX" value="1.542197837" /><param name="TBY" value="-0.174171274" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.086837065" /><param name="TS3" value="0.253294004" /></shape>
+<shape name="o-sensitive-046"><param name="HX" value="0.999899123" /><param name="HY" value="-3.526593505" /><param name="JX" value="-0.065545692" /><param name="JA" value="-3.761556936" /><param name="LP" value="0.224550430" /><param name="LD" value="1.032605304" /><param name="VS" value="0.425465446" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.992726284" /><param name="TCY" value="-1.311764202" /><param name="TTX" value="1.697087944" /><param name="TTY" value="-1.512127714" /><param name="TBX" value="1.595093277" /><param name="TBY" value="-0.205686739" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000382812" /><param name="TS2" value="0.087980560" /><param name="TS3" value="0.251933978" /></shape>
+<shape name="o-sensitive-047"><param name="HX" value="0.999996574" /><param name="HY" value="-3.545268200" /><param name="JX" value="-0.065185922" /><param name="JA" value="-3.786346948" /><param name="LP" value="0.233861114" /><param name="LD" value="0.948494164" /><param name="VS" value="0.426028764" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.979061568" /><param name="TCY" value="-1.234814254" /><param name="TTX" value="1.655709176" /><param name="TTY" value="-1.451640852" /><param name="TBX" value="1.530468048" /><param name="TBY" value="-0.184459643" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000090171" /><param name="TS2" value="0.092077273" /><param name="TS3" value="0.264143084" /></shape>
+<shape name="o-sensitive-048"><param name="HX" value="0.999958649" /><param name="HY" value="-3.518972615" /><param name="JX" value="-0.059883293" /><param name="JA" value="-3.819387713" /><param name="LP" value="0.220452764" /><param name="LD" value="1.011080424" /><param name="VS" value="0.418946180" /><param name="VO" value="-0.100000000" /><param name="TCX" value="-0.994595523" /><param name="TCY" value="-1.301881954" /><param name="TTX" value="1.706263518" /><param name="TTY" value="-1.411822076" /><param name="TBX" value="1.527120645" /><param name="TBY" value="-0.224643995" /><param name="TRX" value="-1.996200000" /><param name="TRY" value="-1.980400000" /><param name="TS1" value="0.000000000" /><param name="TS2" value="0.086849368" /><param name="TS3" value="0.256025641" /></shape>
+</shapes>
+  </vocal_tract_model>
+  <glottis_models>
+    <glottis_model type="Geometric glottis 2025" selected="0">
+      <static_params>
+        <param index="0" name="Rest thickness" abbr="rest_thickness" unit="cm" min="0.200000" max="1.000000" default="0.450000" value="0.450000"/>
+        <param index="1" name="Rest length" abbr="rest_length" unit="cm" min="0.500000" max="2.000000" default="1.600000" value="1.600000"/>
+        <param index="2" name="Rest f0" abbr="rest_f0" unit="Hz" min="50.000000" max="400.000000" default="120.000000" value="120.000000"/>
+        <param index="3" name="Chink length" abbr="chink_length" unit="cm" min="0.100000" max="0.500000" default="0.400000" value="0.400000"/>
+        <param index="4" name="Jitter" abbr="jitter" unit="%" min="0.000000" max="100.000000" default="10.000000" value="10.000000"/>
+      </static_params>
+      <control_params>
+        <param index="0" name="f0" abbr="f0" unit="Hz" min="40.000000" max="600.000000" default="120.000000" value="120.000000"/>
+        <param index="1" name="Subglottal pressure" abbr="pressure" unit="dPa" min="0.000000" max="16000.000000" default="8000.000000" value="8000.000000"/>
+        <param index="2" name="Lower displacement" abbr="x_bottom" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.020000"/>
+        <param index="3" name="Upper displacement" abbr="x_top" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.020000"/>
+        <param index="4" name="Chink area" abbr="chink_area" unit="cm^2" min="-0.250000" max="0.250000" default="0.030000" value="0.030000"/>
+        <param index="5" name="Phase lag" abbr="lag" unit="rad" min="0.000000" max="3.141500" default="1.220000" value="1.220000"/>
+        <param index="6" name="Relative amplitude" abbr="rel_amp" unit="" min="-1.000000" max="1.000000" default="1.000000" value="1.000000"/>
+        <param index="7" name="Pulse shape" abbr="pulse_shape" unit="" min="-1.000000" max="1.000000" default="0.000000" value="0.000000"/>
+        <param index="8" name="Flutter" abbr="flutter" unit="%" min="0.000000" max="100.000000" default="25.000000" value="25.000000"/>
+      </control_params>
+      <shapes>
+        <shape name="stop">
+          <control_param index="0" value="108.672036"/>
+          <control_param index="1" value="7999.996827"/>
+          <control_param index="2" value="-0.009750"/>
+          <control_param index="3" value="-0.010100"/>
+          <control_param index="4" value="-0.001000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="-0.204000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="modal">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.040300"/>
+          <control_param index="3" value="0.039950"/>
+          <control_param index="4" value="0.020000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="h">
+          <control_param index="0" value="108.672036"/>
+          <control_param index="1" value="7999.996827"/>
+          <control_param index="2" value="0.044850"/>
+          <control_param index="3" value="0.045200"/>
+          <control_param index="4" value="0.100000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="0.002000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" value="194.350346"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.099800"/>
+          <control_param index="3" value="0.100150"/>
+          <control_param index="4" value="0.100000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" value="115.000000"/>
+          <control_param index="1" value="0.000000"/>
+          <control_param index="2" value="0.100150"/>
+          <control_param index="3" value="0.099800"/>
+          <control_param index="4" value="0.080000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" value="133.631612"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.149850"/>
+          <control_param index="3" value="0.150200"/>
+          <control_param index="4" value="0.000000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" value="133.631612"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.249600"/>
+          <control_param index="3" value="0.249950"/>
+          <control_param index="4" value="0.000000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="-1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="pressed">
+          <control_param index="0" value="140.630000"/>
+          <control_param index="1" value="3450.419653"/>
+          <control_param index="2" value="0.009850"/>
+          <control_param index="3" value="0.009850"/>
+          <control_param index="4" value="0.010000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="breathy">
+          <control_param index="0" value="138.688231"/>
+          <control_param index="1" value="15999.999998"/>
+          <control_param index="2" value="0.069700"/>
+          <control_param index="3" value="0.070400"/>
+          <control_param index="4" value="0.020000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.246000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+      </shapes>
+    </glottis_model>
+    <glottis_model type="Geometric glottis 2019" selected="1">
+      <static_params>
+        <param index="0" name="Rest thickness" abbr="rest_thickness" unit="cm" min="0.300000" max="1.000000" default="0.450000" value="0.300000"/>
+        <param index="1" name="Rest length" abbr="rest_length" unit="cm" min="0.500000" max="2.000000" default="1.600000" value="0.800000"/>
+        <param index="2" name="Rest f0" abbr="rest_f0" unit="Hz" min="50.000000" max="400.000000" default="120.000000" value="170.000000"/>
+        <param index="3" name="Chink length" abbr="chink_length" unit="cm" min="0.100000" max="0.500000" default="0.400000" value="0.200000"/>
+      </static_params>
+      <control_params>
+        <param index="0" name="f0" abbr="f0" unit="Hz" min="40.000000" max="600.000000" default="120.000000" value="203.187335"/>
+        <param index="1" name="Subglottal pressure" abbr="pressure" unit="dPa" min="0.000000" max="16000.000000" default="8000.000000" value="0.002738"/>
+        <param index="2" name="Lower displacement" abbr="x_bottom" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.080811"/>
+        <param index="3" name="Upper displacement" abbr="x_top" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.121128"/>
+        <param index="4" name="Chink area" abbr="chink_area" unit="cm^2" min="-0.250000" max="0.250000" default="0.030000" value="0.003500"/>
+        <param index="5" name="Phase lag" abbr="lag" unit="rad" min="0.000000" max="3.141500" default="1.220000" value="0.863913"/>
+        <param index="6" name="Relative amplitude" abbr="rel_amp" unit="" min="-1.000000" max="1.000000" default="1.000000" value="0.508000"/>
+        <param index="7" name="Double pulsing" abbr="double_pulsing" unit="" min="0.000000" max="1.000000" default="0.050000" value="0.014000"/>
+        <param index="8" name="Pulse skewness" abbr="pulse_skewness" unit="" min="-0.500000" max="0.500000" default="0.000000" value="0.283000"/>
+        <param index="9" name="Flutter" abbr="flutter" unit="%" min="0.000000" max="100.000000" default="25.000000" value="9.541404"/>
+      </control_params>
+      <shapes>
+        <shape name="default">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.050200"/>
+          <control_param index="3" value="0.090350"/>
+          <control_param index="4" value="0.050000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.200000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="stop">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="7999.996827"/>
+          <control_param index="2" value="-0.009750"/>
+          <control_param index="3" value="-0.010100"/>
+          <control_param index="4" value="-0.001000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="-0.204000"/>
+          <control_param index="7" value="0.504000"/>
+          <control_param index="8" value="0.200000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="pressed">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.000050"/>
+          <control_param index="3" value="0.050200"/>
+          <control_param index="4" value="0.095000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.200000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="modal">
+          <control_param index="0" value="220.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.080811"/>
+          <control_param index="3" value="0.121128"/>
+          <control_param index="4" value="0.003500"/>
+          <control_param index="5" value="0.863913"/>
+          <control_param index="6" value="0.508000"/>
+          <control_param index="7" value="0.014000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="9.541404"/>
+        </shape>
+        <shape name="breathy">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="7850.264062"/>
+          <control_param index="2" value="0.019650"/>
+          <control_param index="3" value="0.030500"/>
+          <control_param index="4" value="0.100000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="h">
+          <control_param index="0" value="218.080000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.127450"/>
+          <control_param index="3" value="0.153000"/>
+          <control_param index="4" value="0.025500"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="0.002000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="whisper">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.099800"/>
+          <control_param index="3" value="0.100150"/>
+          <control_param index="4" value="0.250000"/>
+          <control_param index="5" value="0.880000"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.000000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="hoarse">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.020350"/>
+          <control_param index="3" value="0.040300"/>
+          <control_param index="4" value="0.160000"/>
+          <control_param index="5" value="0.880000"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.203000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" value="220.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.132700"/>
+          <control_param index="3" value="0.132700"/>
+          <control_param index="4" value="0.025500"/>
+          <control_param index="5" value="1.002139"/>
+          <control_param index="6" value="0.594000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" value="218.640000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.102250"/>
+          <control_param index="3" value="0.137600"/>
+          <control_param index="4" value="0.011000"/>
+          <control_param index="5" value="1.002139"/>
+          <control_param index="6" value="0.478000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" value="241.631824"/>
+          <control_param index="1" value="84.957872"/>
+          <control_param index="2" value="0.137600"/>
+          <control_param index="3" value="0.149800"/>
+          <control_param index="4" value="0.025500"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" value="241.631824"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.153000"/>
+          <control_param index="3" value="0.142850"/>
+          <control_param index="4" value="0.032500"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="hoarse2">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="-0.009750"/>
+          <control_param index="3" value="-0.009750"/>
+          <control_param index="4" value="0.160000"/>
+          <control_param index="5" value="0.880000"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.203000"/>
+          <control_param index="8" value="0.500000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+      </shapes>
+    </glottis_model>
+    <glottis_model type="Triangular glottis" selected="0">
+      <static_params>
+        <param index="0" name="Cord length" abbr="cord_length" unit="cm" min="0.500000" max="2.000000" default="1.300000" value="1.300000"/>
+        <param index="1" name="L. rest thickness" abbr="lower_rest_thickness" unit="cm" min="0.100000" max="0.500000" default="0.240000" value="0.240000"/>
+        <param index="2" name="U. rest thickness" abbr="upper_rest_thickness" unit="cm" min="0.010000" max="0.200000" default="0.060000" value="0.060000"/>
+        <param index="3" name="L. rest mass" abbr="lower_rest_mass" unit="g" min="0.010000" max="0.200000" default="0.120000" value="0.120000"/>
+        <param index="4" name="U. rest mass" abbr="upper_rest_mass" unit="g" min="0.010000" max="0.200000" default="0.030000" value="0.030000"/>
+        <param index="5" name="L. damping ratio" abbr="lower_damping_ratio" unit="" min="0.000000" max="3.000000" default="0.100000" value="0.100000"/>
+        <param index="6" name="U. damping ratio" abbr="upper_damping_ratio" unit="" min="0.000000" max="3.000000" default="0.600000" value="0.600000"/>
+        <param index="7" name="L. spring k" abbr="lower_spring_k" unit="dyne/cm" min="0.000000" max="400000.000000" default="80000.000000" value="80000.000000"/>
+        <param index="8" name="U. spring k" abbr="upper_spring_k" unit="dyne/cm" min="0.000000" max="400000.000000" default="8000.000000" value="8000.000000"/>
+        <param index="9" name="L. contact spring k" abbr="lower_contact_spring_k" unit="dyne/cm" min="0.000000" max="500000.000000" default="240000.000000" value="240000.000000"/>
+        <param index="10" name="U. contact spring k" abbr="upper_contact_spring_k" unit="dyne/cm" min="0.000000" max="500000.000000" default="24000.000000" value="24000.000000"/>
+        <param index="11" name="Coupling spring k" abbr="coupling_spring_k" unit="dyne/cm" min="0.000000" max="400000.000000" default="25000.000000" value="25000.000000"/>
+        <param index="12" name="Inlet length" abbr="inlet_length" unit="cm" min="0.000000" max="1.000000" default="0.050000" value="0.050000"/>
+        <param index="13" name="Outlet length" abbr="outlet_length" unit="cm" min="0.000000" max="0.500000" default="0.010000" value="0.010000"/>
+        <param index="14" name="Natural F0" abbr="natural_f0" unit="Hz" min="20.000000" max="500.000000" default="129.000000" value="130.979962"/>
+        <param index="15" name="dF0/dQ" abbr="f0_div_q" unit="Hz" min="20.000000" max="500.000000" default="125.510000" value="132.065991"/>
+      </static_params>
+      <control_params>
+        <param index="0" name="f0" abbr="f0" unit="Hz" min="40.000000" max="600.000000" default="120.000000" value="120.000000"/>
+        <param index="1" name="Subglottal pressure" abbr="pressure" unit="dPa" min="0.000000" max="20000.000000" default="8000.000000" value="8000.000000"/>
+        <param index="2" name="Lower rest displacement" abbr="lower_rest_displacement" unit="cm" min="-0.050000" max="0.300000" default="0.010000" value="0.010000"/>
+        <param index="3" name="Upper rest displacement" abbr="upper_rest_displacement" unit="cm" min="-0.050000" max="0.300000" default="0.010000" value="0.010000"/>
+        <param index="4" name="Arytenoid area" abbr="ary_area" unit="cm^2" min="-0.100000" max="0.500000" default="0.000000" value="0.000000"/>
+        <param index="5" name="Aspiration strength" abbr="aspiration_strength" unit="dB" min="-40.000000" max="0.000000" default="-40.000000" value="-40.000000"/>
+      </control_params>
+      <shapes>
+        <shape name="default">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.004950"/>
+          <control_param index="3" value="0.000400"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="stop">
+          <control_param index="0" value="105.627486"/>
+          <control_param index="1" value="1424.066347"/>
+          <control_param index="2" value="-0.029700"/>
+          <control_param index="3" value="-0.030100"/>
+          <control_param index="4" value="0.000000"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="modal">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.004950"/>
+          <control_param index="3" value="0.000400"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="h">
+          <control_param index="0" value="120.405059"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.080200"/>
+          <control_param index="3" value="0.079850"/>
+          <control_param index="4" value="0.010400"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" value="113.573271"/>
+          <control_param index="1" value="7999.817730"/>
+          <control_param index="2" value="0.020350"/>
+          <control_param index="3" value="0.019650"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" value="111.718118"/>
+          <control_param index="1" value="7973.638321"/>
+          <control_param index="2" value="0.102250"/>
+          <control_param index="3" value="0.102250"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" value="120.388382"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.050100"/>
+          <control_param index="3" value="0.050100"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.004950"/>
+          <control_param index="3" value="0.000400"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+      </shapes>
+    </glottis_model>
+  </glottis_models>
+</speaker>

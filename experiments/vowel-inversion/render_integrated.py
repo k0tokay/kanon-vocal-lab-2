@@ -2,6 +2,7 @@
 import copy
 import ctypes as ct
 import json
+import sys
 import os
 import tempfile
 from pathlib import Path
@@ -14,7 +15,8 @@ root=Path(__file__).resolve().parents[2]
 os.environ["VTL_EXPERIMENT_SPEAKER"]=str(root/"speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vowel-variation.speaker")
 from run import call, labels, out, ptr, rate, shape, speaker, voice
 
-folder=out/"integrated"
+long_path="--long" in sys.argv[1:]
+folder=out/("integrated-long" if long_path else "integrated")
 clips={}
 records={}
 modes=("reference","insensitive","sensitive")
@@ -50,7 +52,7 @@ def contacts(tube):
     return times
 
 for mode in modes:
-    for adapted in ([False] if mode=="reference" else [False,True]):
+    for adapted in ([False] if long_path or mode=="reference" else [False,True]):
         with tempfile.TemporaryDirectory() as tmp:
             tmp=Path(tmp)
             xml=ET.parse(speaker)
@@ -100,7 +102,7 @@ def playlist(name, keys):
 for v in "ao":
     playlist(v+"-compare",[f"{v}-{m}" for m in modes])
 playlist("ara-compare",[f"ara-{m}-fixed" for m in modes])
-for m in modes[1:]:
+for m in ([] if long_path else modes[1:]):
     playlist("ara-"+m+"-pair",[f"ara-{m}-fixed",f"ara-{m}-shifted"])
 (folder/"tap-contact-ms.json").write_text(json.dumps(records,indent=2)+"\n")
 print(records)
