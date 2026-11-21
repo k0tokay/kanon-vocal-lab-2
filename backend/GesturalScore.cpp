@@ -2187,6 +2187,18 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       oralGestureOffsetTau_s = 0.006;
     }
 
+    // Experimental Japanese apical tap (X-SAMPA 4). The solver adjusts
+    // gesture timing to the current speaker and vowel context. These
+    // timing targets are provisional, not fitted to articulatory data.
+    if (segmentName == "4")
+    {
+      const double contactDuration_s = 0.010;
+      const double center_s = 0.5 * (segmentBegin_s + segmentEnd_s);
+      const double begin_s = max(0.0, center_s - 0.5 * contactDuration_s);
+      addClosingGesture(TONGUE_TIP_GESTURE, "tt-alveolar-closure",
+        begin_s, begin_s + contactDuration_s, 0.008, 0.008, false);
+    }
+
     if (segmentName == "t")
     {
       isPlosive = true;

@@ -38,7 +38,7 @@ const string Sampa::PHONEME[NUM_PHONEMES] =
   // Affricates
   "pf", "ts", "tS", "dZ",
   // Nasals and lateral
-  "m", "n", "N", "l"
+  "m", "n", "N", "l", "4"
 };
 
 // ****************************************************************************
@@ -190,7 +190,7 @@ bool Sampa::isAlveolar(const string& symbol)
 {
   if ((symbol == "d") || (symbol == "t") || 
       (symbol == "n") || (symbol == "l") ||
-      (symbol == "s") || (symbol == "z"))
+      (symbol == "s") || (symbol == "z") || (symbol == "4"))
   {
     return true;
   }
@@ -214,7 +214,7 @@ bool Sampa::isVoiced(const string& symbol)
     (symbol == "v") || (symbol == "D") || (symbol == "z") || 
     (symbol == "Z") || (symbol == "j") || (symbol == "R") || (symbol == "r") ||
     (symbol == "m") || (symbol == "n") || (symbol == "N") || 
-    (symbol == "l")) 
+    (symbol == "l") || (symbol == "4")) 
   {
     return true;
   }
@@ -265,7 +265,7 @@ string Sampa::getPlaceOfArticulation(const string& symbol)
   }
   else if (symbol == "t" || symbol == "d" ||
     symbol == "n" || symbol == "s" ||
-    symbol == "z" || symbol == "l")
+    symbol == "z" || symbol == "l" || symbol == "4")
   {
     placeOfArticulation = "alveolar";
   }
@@ -315,6 +315,10 @@ string Sampa::getMannerOfArticulation(const string& symbol)
   {
     mannerOfArticulation = "nasal";
   }
+  else if (symbol == "4")
+  {
+    mannerOfArticulation = "tap";
+  }
   else if (isLateral(symbol))
   {
     mannerOfArticulation = "lateral";
@@ -342,7 +346,7 @@ Sampa::Articulator Sampa::getPrimaryArticulator(const string& symbol)
   
   if (symbol == "t" || symbol == "d" || symbol == "T" || symbol == "D" || 
     symbol == "s" || symbol == "z" || symbol == "S" || symbol == "Z" || 
-    symbol == "ts" || symbol == "tS" || symbol == "dZ" || symbol == "n" || symbol == "l")
+    symbol == "ts" || symbol == "tS" || symbol == "dZ" || symbol == "n" || symbol == "l" || symbol == "4")
   {
     articulator = ARTICULATOR_TONGUE_TIP;
   }

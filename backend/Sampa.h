@@ -45,7 +45,7 @@ public:
 
   static const int NUM_VOWELS = 23;
   static const int NUM_DIPHTHONGS = 24;
-  static const int NUM_CONSONANTS = 29;
+  static const int NUM_CONSONANTS = 30;
   static const int NUM_PHONEMES = NUM_VOWELS + NUM_DIPHTHONGS + NUM_CONSONANTS;
 
   static const string PHONEME[NUM_PHONEMES];
