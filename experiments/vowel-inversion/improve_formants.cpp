@@ -41,13 +41,13 @@ double error(const Measurement &m, const Measurement &target) {
 }
 
 int main(int argc, char **argv) {
-  if (argc != 3 && argc != 4) return 1;
+  if (argc < 3 || argc > 5) return 1;
   const double minArea = std::stod(argv[2]);
   static VocalTract tract;
   tract.readFromXml(argv[1]);
   static TlModel model;
   Shape ref;
-  auto &vowel = tract.shapes.at(tract.getShapeIndex(argc == 4 ? argv[3] : "a"));
+  auto &vowel = tract.shapes.at(tract.getShapeIndex(argc >= 4 ? argv[3] : "a"));
   std::copy_n(vowel.param, ref.size(), ref.begin());
   ref[VocalTract::VO] = std::min(0.0, ref[VocalTract::VO]);
   auto target = measure(tract, model, ref);
@@ -57,11 +57,24 @@ int main(int argc, char **argv) {
   std::cout << "start,steps,rms_percent,min_area_cm2,F1,F2,F3";
   for (auto &p : tract.params) std::cout << "," << p.abbr;
   std::cout << "\n" << std::setprecision(9);
-  for (std::string seed : {"reference","open-jaw","protruded-lips","raised-jaw"}) {
+  std::vector<std::string> seeds = {"reference","open-jaw","protruded-lips","raised-jaw"};
+  if (argc == 5) seeds = {argv[4]};
+  for (std::string seed : seeds) {
     Shape x = ref;
     if (seed == "open-jaw") x[VocalTract::JA] -= .8;
     if (seed == "raised-jaw") x[VocalTract::JA] += .85;
     if (seed == "protruded-lips") x[VocalTract::LP] += .35;
+    if (seed == "wide-spread" || seed == "raised-rounded") {
+      bool open = seed == "wide-spread";
+      x[VocalTract::JA] += open ? -3.0 : 2.8;
+      x[VocalTract::LP] += open ? -0.85 : 0.85;
+      x[VocalTract::LD] += open ? 0.65 : 0.15;
+    }
+    if (seed.substr(0,5) == "from-") {
+      auto &source = tract.shapes.at(tract.getShapeIndex(seed.substr(5)));
+      std::copy_n(source.param, x.size(), x.begin());
+      x[VocalTract::VO] = std::min(0.0, x[VocalTract::VO]);
+    }
     for (int j = 0; j < VocalTract::NUM_PARAMS; ++j)
       x[j] = std::min(tract.params[j].max, std::max(tract.params[j].min, x[j]));
     auto m = measure(tract, model, x);
