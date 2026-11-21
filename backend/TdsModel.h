@@ -27,6 +27,7 @@
 #include <string>
 #include <random>
 #include <array>
+#include <vector>
 
 #include "Dsp.h"
 #include "Geometry.h"
@@ -227,6 +228,18 @@ public:
   double solutionVector[NUM_BRANCH_CURRENTS];
   double flowVector[NUM_BRANCH_CURRENTS];
 
+  // Sparse Cholesky factorization with a fill-reducing (minimum fill)
+  // ordering of the branch currents. The ordering and the non-zero
+  // pattern of the factor are computed once in prepareSparseCholesky().
+  // The factor is stored in the permuted positions of factorizationMatrix.
+  int choleskyPerm[NUM_BRANCH_CURRENTS];        ///< Position -> branch current
+  std::vector<int> choleskyRowStart;            ///< Row p of L: [rowStart[p], rowStart[p+1])
+  std::vector<int> choleskyRowIndex;            ///< Column positions (ascending) of row entries
+  std::vector<int> choleskyRowSource;           ///< Offset of the entry in matrix, or -1 for fill-in
+  std::vector<int> choleskyColStart;            ///< Column k of L: [colStart[k], colStart[k+1])
+  std::vector<int> choleskyColIndex;            ///< Row positions (ascending) of column entries
+  int choleskyDiagSource[NUM_BRANCH_CURRENTS];  ///< Offset of the diagonal entry in matrix
+
   IirFilter transglottalPressureFilter;
 
   Constriction constriction[MAX_CONSTRICTIONS];
@@ -259,6 +272,7 @@ public:
   // **************************************************************
 
   void solveEquationsCholesky();
+  void prepareSparseCholesky();
   int getSampleIndex() { return position; }
   void getSectionFlow(int sectionIndex, double &inflow, double &outflow);
   double getSectionPressure(int sectionIndex);

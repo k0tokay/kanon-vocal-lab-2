@@ -20,6 +20,7 @@
 // ****************************************************************************
 
 #include "TdsModel.h"
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <cstdlib>
@@ -336,6 +337,143 @@ void TdsModel::initModel()
 
   }
 
+  prepareSparseCholesky();
+}
+
+
+// ****************************************************************************
+/// Computes a minimum fill ordering of the branch currents and the
+/// non-zero pattern of the corresponding Cholesky factor from the non-zero
+/// pattern in matrix (which must contain the 1-entries set in initModel()).
+/// The tube network is a tree with a few branches, so this ordering avoids
+/// almost all of the fill-in of the natural ordering.
+// ****************************************************************************
+
+void TdsModel::prepareSparseCholesky()
+{
+  const int N = NUM_BRANCH_CURRENTS;
+  int i, j, k;
+
+  vector<vector<char>> adj(N, vector<char>(N, 0));
+  bool eliminated[NUM_BRANCH_CURRENTS];
+  int position[NUM_BRANCH_CURRENTS];
+  vector<vector<int>> neighborsAtElimination(N);
+
+  for (i = 0; i < N; i++)
+  {
+    eliminated[i] = false;
+    for (j = 0; j < N; j++)
+    {
+      adj[i][j] = (i != j) && ((matrix[i][j] != 0.0) || (matrix[j][i] != 0.0));
+    }
+  }
+
+  // Greedy minimum fill elimination on the (filled) graph: always
+  // eliminate the node whose remaining neighbors miss the fewest edges
+  // among each other (ties: smaller degree, then smaller index). For the
+  // chordal graph of the tube network this yields an order without any
+  // fill-in.
+
+  vector<int> nbList;
+  for (k = 0; k < N; k++)
+  {
+    int best = -1;
+    int bestFill = N * N;
+    int bestDegree = N + 1;
+    for (i = 0; i < N; i++)
+    {
+      if (eliminated[i]) { continue; }
+      nbList.clear();
+      for (j = 0; j < N; j++)
+      {
+        if ((adj[i][j]) && (!eliminated[j])) { nbList.push_back(j); }
+      }
+      int degree = (int)nbList.size();
+      int fill = 0;
+      for (size_t a = 0; a < nbList.size(); a++)
+      {
+        for (size_t b = a + 1; b < nbList.size(); b++)
+        {
+          if (!adj[nbList[a]][nbList[b]]) { fill++; }
+        }
+      }
+      if ((fill < bestFill) || ((fill == bestFill) && (degree < bestDegree)))
+      {
+        bestFill = fill;
+        bestDegree = degree;
+        best = i;
+      }
+    }
+
+    vector<int> &nb = neighborsAtElimination[k];
+    for (j = 0; j < N; j++)
+    {
+      if ((adj[best][j]) && (!eliminated[j])) { nb.push_back(j); }
+    }
+    for (int a : nb)
+    {
+      for (int b : nb)
+      {
+        if (a != b) { adj[a][b] = true; }
+      }
+    }
+
+    eliminated[best] = true;
+    choleskyPerm[k] = best;
+    position[best] = k;
+  }
+
+  // Pattern of the strictly lower triangle of L in permuted positions:
+  // column k contains the positions of the neighbors at elimination.
+
+  vector<vector<int>> rows(N), cols(N);
+  for (k = 0; k < N; k++)
+  {
+    for (int node : neighborsAtElimination[k])
+    {
+      int p = position[node];
+      cols[k].push_back(p);
+      rows[p].push_back(k);
+    }
+  }
+
+  choleskyRowStart.assign(1, 0);
+  choleskyColStart.assign(1, 0);
+  choleskyRowIndex.clear();
+  choleskyRowSource.clear();
+  choleskyColIndex.clear();
+
+  for (k = 0; k < N; k++)
+  {
+    sort(rows[k].begin(), rows[k].end());
+    sort(cols[k].begin(), cols[k].end());
+
+    int a = choleskyPerm[k];
+    choleskyDiagSource[k] = a * N + a;
+
+    for (int q : rows[k])
+    {
+      int b = choleskyPerm[q];
+      // The original solver only reads the lower triangle of matrix.
+      int hi = (a > b) ? a : b;
+      int lo = (a > b) ? b : a;
+      choleskyRowIndex.push_back(q);
+      choleskyRowSource.push_back((matrix[hi][lo] != 0.0) ? hi * N + lo : -1);
+    }
+    choleskyRowStart.push_back((int)choleskyRowIndex.size());
+
+    choleskyColIndex.insert(choleskyColIndex.end(), cols[k].begin(), cols[k].end());
+    choleskyColStart.push_back((int)choleskyColIndex.size());
+  }
+
+  // Entries outside of the pattern of L must be zero.
+  for (i = 0; i < N; i++)
+  {
+    for (j = 0; j < N; j++)
+    {
+      factorizationMatrix[i][j] = 0.0;
+    }
+  }
 }
 
 
@@ -1994,90 +2132,102 @@ void TdsModel::updateVariables()
 
 void TdsModel::solveEquationsCholesky()
 {
-  int k, i, j, u, v;
+  // Solves (-matrix) * flowVector = (-solutionVector) with a sparse
+  // Cholesky factorization in the fill-reducing order choleskyPerm
+  // (see prepareSparseCholesky()). Only the lower triangle of matrix is
+  // read. Entries of factorizationMatrix outside of the pattern of L
+  // are always zero.
+
+  const int N = NUM_BRANCH_CURRENTS;
+  const double *A = &matrix[0][0];
+  const int *rowStart = choleskyRowStart.data();
+  const int *rowIndex = choleskyRowIndex.data();
+  const int *rowSource = choleskyRowSource.data();
+  const int *colStart = choleskyColStart.data();
+  const int *colIndex = choleskyColIndex.data();
+  double y[NUM_BRANCH_CURRENTS];
+  int i, k, u, v;
 
   // ****************************************************************
-  // Negate the whole matrix and the right-hand side vector.
+  // Gather the negated, permuted matrix and right-hand side.
   // ****************************************************************
 
-  for (i = 0; i < NUM_BRANCH_CURRENTS; i++)
+  for (k = 0; k < N; k++)
   {
-    factorizationMatrix[i][i] = -matrix[i][i];
-    // calculate row i without main diagonal elements
-    for (v = 0; v < numFilledRowValuesSymmetricEnvelope[i]; v++)
+    double *Fk = factorizationMatrix[k];
+    Fk[k] = -A[choleskyDiagSource[k]];
+    for (v = rowStart[k]; v < rowStart[k + 1]; v++)
     {
-      j = filledRowIndexSymmetricEnvelope[i][v];
-      factorizationMatrix[i][j] = -matrix[i][j];
+      Fk[rowIndex[v]] = (rowSource[v] >= 0) ? -A[rowSource[v]] : 0.0;
     }
+    y[k] = -solutionVector[choleskyPerm[k]];
   }
 
-  for (i = 0; i < NUM_BRANCH_CURRENTS; i++)
-  {
-    solutionVector[i] = -solutionVector[i];
-  }
-
   // ****************************************************************
-  // Cholesky factorization
+  // Cholesky factorization (column by column).
   // ****************************************************************
 
-  for (k = 0; k < NUM_BRANCH_CURRENTS; k++)
+  for (k = 0; k < N; k++)
   {
-    for (v = 0; v < numFilledRowValuesSymmetricEnvelope[k]; v++)
+    double *Fk = factorizationMatrix[k];
+    const int firstK = rowStart[k];
+    const int lastK = rowStart[k + 1];
+
+    double d = Fk[k];
+    for (v = firstK; v < lastK; v++)
     {
-      j = filledRowIndexSymmetricEnvelope[k][v];
-      factorizationMatrix[k][k] -= factorizationMatrix[k][j] * factorizationMatrix[k][j];
+      d -= Fk[rowIndex[v]] * Fk[rowIndex[v]];
     }
 
-    if (factorizationMatrix[k][k] < 0.0)
+    if (d < 0.0)
     {
-      factorizationMatrix[k][k] = 0.0;
+      d = 0.0;
       printf("Error: Cholesky factorization: Matrix is not positive definite!\n");
     }
-    factorizationMatrix[k][k] = sqrt(factorizationMatrix[k][k]);
+    d = sqrt(d);
+    Fk[k] = d;
 
-    // calculate column k without main diagonal elements
-    for (u = 0; u < numFilledColumnValuesSymmetricEnvelope[k]; u++)
+    for (u = colStart[k]; u < colStart[k + 1]; u++)
     {
-      i = filledColumnIndexSymmetricEnvelope[k][u];
-
-      // calculate row k without main diagonal elements
-      for (v = 0; v < numFilledRowValuesSymmetricEnvelope[k]; v++)
+      double *Fi = factorizationMatrix[colIndex[u]];
+      double sum = Fi[k];
+      for (v = firstK; v < lastK; v++)
       {
-        j = filledRowIndexSymmetricEnvelope[k][v];
-        factorizationMatrix[i][k] -= factorizationMatrix[i][j] * factorizationMatrix[k][j];
+        sum -= Fi[rowIndex[v]] * Fk[rowIndex[v]];
       }
-
-      factorizationMatrix[i][k] = factorizationMatrix[i][k] / factorizationMatrix[k][k];
+      Fi[k] = sum / d;
     }
-
   }
 
   // ****************************************************************
-  // forward substitution
+  // Forward substitution.
   // ****************************************************************
 
-  for (k = 0; k < NUM_BRANCH_CURRENTS; k++)
+  for (k = 0; k < N; k++)
   {
-    for (v = 0; v < numFilledRowValuesSymmetricEnvelope[k]; v++)
+    const double *Fk = factorizationMatrix[k];
+    double sum = y[k];
+    for (v = rowStart[k]; v < rowStart[k + 1]; v++)
     {
-      j = filledRowIndexSymmetricEnvelope[k][v];
-      solutionVector[k] -= factorizationMatrix[k][j] * solutionVector[j];
+      sum -= Fk[rowIndex[v]] * y[rowIndex[v]];
     }
-    solutionVector[k] /= factorizationMatrix[k][k];
+    y[k] = sum / Fk[k];
   }
 
   // ****************************************************************
-  // backward substitution
+  // Backward substitution (y is overwritten with the solution).
   // ****************************************************************
 
-  for (k = NUM_BRANCH_CURRENTS - 1; k >= 0; --k)
+  for (k = N - 1; k >= 0; --k)
   {
-    for (u = 0; u < numFilledColumnValuesSymmetricEnvelope[k]; u++)
+    double sum = y[k];
+    for (u = colStart[k]; u < colStart[k + 1]; u++)
     {
-      i = filledColumnIndexSymmetricEnvelope[k][u];
-      solutionVector[k] -= factorizationMatrix[i][k] * flowVector[i];
+      i = colIndex[u];
+      sum -= factorizationMatrix[i][k] * y[i];
     }
-    flowVector[k] = solutionVector[k] / factorizationMatrix[k][k];
+    y[k] = sum / factorizationMatrix[k][k];
+    flowVector[choleskyPerm[k]] = y[k];
   }
 }
 
