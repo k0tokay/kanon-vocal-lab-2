@@ -2195,7 +2195,13 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       const double contactDuration_s = 0.010;
       const double center_s = 0.5 * (segmentBegin_s + segmentEnd_s);
       const double begin_s = max(0.0, center_s - 0.5 * contactDuration_s);
-      addClosingGesture(TONGUE_TIP_GESTURE, "tt-alveolar-closure",
+      // Maekawa (2023), Table 2: medial taps depend primarily on the
+      // preceding vowel; after a pause use the following vowel.
+      string context = Sampa::isVowel(prevSegmentName) ? prevSegmentName : nextSegmentName;
+      if (context.size() == 2 && context[1] == ':') { context.resize(1); }
+      string target = "tt-tap-" + context;
+      if (vocalTract->getShapeIndex(target) < 0) { target = "tt-alveolar-closure"; }
+      addClosingGesture(TONGUE_TIP_GESTURE, target,
         begin_s, begin_s + contactDuration_s, 0.008, 0.008, false);
     }
 
@@ -4380,6 +4386,17 @@ bool GesturalScore::getContextDependentConsonant(VocalTract *vt, const char *nam
   int i;
 
   std::string n(name);
+  // Vowel-specific tap targets are stored directly in the speaker file.
+  if (n.compare(0, 7, "tt-tap-") == 0)
+  {
+    int index = vt->getShapeIndex(n);
+    if (index < 0) { return false; }
+    for (i = 0; i < VocalTract::NUM_PARAMS; i++)
+    {
+      consonantParams[i] = vt->shapes[index].param[i];
+    }
+    return true;
+  }
   int consonantIndexA = vt->getShapeIndex( n + "(a)" );
   int consonantIndexI = vt->getShapeIndex( n + "(i)" );
   int consonantIndexU = vt->getShapeIndex( n + "(u)" );
