@@ -853,8 +853,19 @@ void TdsModel::prepareTimeStep()
       ts->C = ts->volume / (AMBIENT_DENSITY_CGS * SOUND_VELOCITY_CGS * SOUND_VELOCITY_CGS);
 
       // Here we use the new model for viscous losses.
-      double dcResistance = DC_R0 * pow(REF_AREA_CM2 / ts->area, DC_EXPONENT);
-      double acResistance = AC_R0 * pow(REF_AREA_CM2 / ts->area, AC_EXPONENT) * sqrt(AC_FREQUENCY_HZ);
+      // The DC resistance (with the larger exponent) only exceeds the AC
+      // resistance for small areas, i.e., for REF_AREA_CM2 / area above
+      // the crossover ratio. Far below the crossover, the expensive pow()
+      // for the DC resistance is skipped, which does not change the result.
+      static const double DC_AC_CROSSOVER_RATIO = (DC_EXPONENT > AC_EXPONENT) ?
+        pow(AC_R0 * sqrt(AC_FREQUENCY_HZ) / DC_R0, 1.0 / (DC_EXPONENT - AC_EXPONENT)) : 0.0;
+      const double areaRatio = REF_AREA_CM2 / ts->area;
+      double acResistance = AC_R0 * pow(areaRatio, AC_EXPONENT) * sqrt(AC_FREQUENCY_HZ);
+      double dcResistance = -1.0;
+      if (!(areaRatio < 0.99 * DC_AC_CROSSOVER_RATIO))
+      {
+        dcResistance = DC_R0 * pow(areaRatio, DC_EXPONENT);
+      }
 
       if (dcResistance > acResistance)
       {
