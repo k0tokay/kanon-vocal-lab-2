@@ -1,6 +1,7 @@
 """Run from the repository root with the macOS API built (numpy, scipy, matplotlib)."""
 import ctypes as ct
 import json
+import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -15,7 +16,7 @@ from scipy.signal import find_peaks
 root = Path(__file__).resolve().parents[2]
 out = Path(__file__).resolve().parent / "results"
 out.mkdir(exist_ok=True)
-speaker = root / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.speaker"
+speaker = Path(os.environ.get("VTL_EXPERIMENT_SPEAKER", root / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.speaker"))
 lib = ct.CDLL(str(root / "build-mac/gui/libVocalTractLabApi.dylib"))
 def call(function, *args):
     status = getattr(lib, function)(*args)

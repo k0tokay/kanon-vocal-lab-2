@@ -41,7 +41,7 @@ double error(const Measurement &m, const Measurement &target) {
 }
 
 int main(int argc, char **argv) {
-  if (argc < 3 || argc > 5) return 1;
+  if (argc < 3 || argc > 6) return 1;
   const double minArea = std::stod(argv[2]);
   static VocalTract tract;
   tract.readFromXml(argv[1]);
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   for (auto &p : tract.params) std::cout << "," << p.abbr;
   std::cout << "\n" << std::setprecision(9);
   std::vector<std::string> seeds = {"reference","open-jaw","protruded-lips","raised-jaw"};
-  if (argc == 5) seeds = {argv[4]};
+  if (argc >= 5) seeds = {argv[4]};
   for (std::string seed : seeds) {
     Shape x = ref;
     if (seed == "open-jaw") x[VocalTract::JA] -= .8;
@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
     if (m.area < minArea) { std::cerr << seed << " requires GUI area repair\n"; return 3; }
     std::array<int,VocalTract::NUM_PARAMS> moves{};
     int iterations = 0;
-    while (iterations < 100 && seed != "reference") {
+    while (iterations < 100 && seed != "reference" && argc < 6) {
       double best = error(m,target);
       int selected = -1, direction = 0;
       for (int j = 0; j < VocalTract::NUM_PARAMS; ++j) {
