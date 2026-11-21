@@ -1,6 +1,6 @@
 // Headless vowel experiment using the GUI's step sizes, area floor and native formant estimator.
 // Build from the repository root: clang++ -std=c++14 -Ibackend -Wl,-rpath,build-mac/gui experiments/vowel-inversion/improve_formants.cpp build-mac/gui/libVocalTractLabApi.dylib -o build-mac/improve-formants
-// Run: build-mac/improve-formants SPEAKER_FILE MIN_AREA_CM2 (0.01 for recorded results).
+// Run: build-mac/improve-formants SPEAKER_FILE MIN_AREA_CM2 [VOWEL] (0.01 for recorded results).
 #include "VocalTract.h"
 #include "TlModel.h"
 #include <algorithm>
@@ -41,14 +41,14 @@ double error(const Measurement &m, const Measurement &target) {
 }
 
 int main(int argc, char **argv) {
-  if (argc != 3) return 1;
+  if (argc != 3 && argc != 4) return 1;
   const double minArea = std::stod(argv[2]);
   static VocalTract tract;
   tract.readFromXml(argv[1]);
   static TlModel model;
   Shape ref;
-  auto &a = tract.shapes.at(tract.getShapeIndex("a"));
-  std::copy_n(a.param, ref.size(), ref.begin());
+  auto &vowel = tract.shapes.at(tract.getShapeIndex(argc == 4 ? argv[3] : "a"));
+  std::copy_n(vowel.param, ref.size(), ref.begin());
   ref[VocalTract::VO] = std::min(0.0, ref[VocalTract::VO]);
   auto target = measure(tract, model, ref);
   if (!target.valid) return 2;
@@ -62,6 +62,8 @@ int main(int argc, char **argv) {
     if (seed == "open-jaw") x[VocalTract::JA] -= .8;
     if (seed == "raised-jaw") x[VocalTract::JA] += .85;
     if (seed == "protruded-lips") x[VocalTract::LP] += .35;
+    for (int j = 0; j < VocalTract::NUM_PARAMS; ++j)
+      x[j] = std::min(tract.params[j].max, std::max(tract.params[j].min, x[j]));
     auto m = measure(tract, model, x);
     if (m.area < minArea) { std::cerr << seed << " requires GUI area repair\n"; return 3; }
     std::array<int,VocalTract::NUM_PARAMS> moves{};

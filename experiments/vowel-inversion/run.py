@@ -105,44 +105,45 @@ def fit(x, free):
         x[free] = sol.x
     return x
 
-for name, offsets in starts.items():
-    candidates[name] = fit(initial(offsets), tongue)
-    candidates["free-"+name] = fit(initial(offsets), tongue+[labels.index("JA"), labels.index("LP")])
-    print(name, flush=True)
+if __name__ == "__main__":
+    for name, offsets in starts.items():
+        candidates[name] = fit(initial(offsets), tongue)
+        candidates["free-"+name] = fit(initial(offsets), tongue+[labels.index("JA"), labels.index("LP")])
+        print(name, flush=True)
 
-n = 8192
-freq = np.arange(n//2)*rate/n
-mask = (freq>=200)&(freq<=8000)
-ref_db = spectrum(reference,n)
-ref_xy, ref_area = area(reference)
-figure, axes = plt.subplots(3,1,figsize=(9,10),layout="constrained")
-audio = {}
-for name,x in candidates.items():
-    db = spectrum(x,n)
-    xy, areas = area(x)
-    show = name == "reference" or name.startswith("free-")
-    if show:
-        axes[0].plot(xy,areas,label=name)
-    if show:
-        axes[1].plot(freq[mask],db[mask],label=name)
-    track = []
-    for t in np.linspace(0,1,17):
-        track.append(peaks(spectrum(x*(1-t)+final*t,n),n))
-    track = np.array(track)
-    if show:
-        axes[2].plot(np.linspace(0,160,17),track[:,1],label=name)
-    audio[name] = sound(x)
-    call("vtlExportTractSvg",ptr(x),bytes(out/(name+".svg")))
-    formants[name] = dict(params=dict(zip(labels,x)),formants_Hz=peaks(db,n).tolist(),
-                        transfer_rms_dB=float(np.sqrt(np.mean((db[mask]-ref_db[mask])**2))),
-                        transition_Hz=track.tolist())
-scale = 30000/max(np.max(np.abs(y)) for y in audio.values())
-for name,y in audio.items():
-    write(out/(name+".wav"),rate,np.round(y*scale).astype(np.int16))
-axes[0].set(xlabel="Distance from glottis (cm)",ylabel="Area (cm²)")
-axes[1].set(xlabel="Frequency (Hz)",ylabel="Transfer magnitude (dB)")
-axes[2].set(xlabel="Linear /a/ to /i/ transition (ms)",ylabel="F2 (Hz)")
-axes[0].legend()
-figure.savefig(out/"comparison.png",dpi=145)
-(out/"measurements.json").write_text(json.dumps(formants,indent=2)+"\n")
-call("vtlClose")
+    n = 8192
+    freq = np.arange(n//2)*rate/n
+    mask = (freq>=200)&(freq<=8000)
+    ref_db = spectrum(reference,n)
+    ref_xy, ref_area = area(reference)
+    figure, axes = plt.subplots(3,1,figsize=(9,10),layout="constrained")
+    audio = {}
+    for name,x in candidates.items():
+        db = spectrum(x,n)
+        xy, areas = area(x)
+        show = name == "reference" or name.startswith("free-")
+        if show:
+            axes[0].plot(xy,areas,label=name)
+        if show:
+            axes[1].plot(freq[mask],db[mask],label=name)
+        track = []
+        for t in np.linspace(0,1,17):
+            track.append(peaks(spectrum(x*(1-t)+final*t,n),n))
+        track = np.array(track)
+        if show:
+            axes[2].plot(np.linspace(0,160,17),track[:,1],label=name)
+        audio[name] = sound(x)
+        call("vtlExportTractSvg",ptr(x),bytes(out/(name+".svg")))
+        formants[name] = dict(params=dict(zip(labels,x)),formants_Hz=peaks(db,n).tolist(),
+                            transfer_rms_dB=float(np.sqrt(np.mean((db[mask]-ref_db[mask])**2))),
+                            transition_Hz=track.tolist())
+    scale = 30000/max(np.max(np.abs(y)) for y in audio.values())
+    for name,y in audio.items():
+        write(out/(name+".wav"),rate,np.round(y*scale).astype(np.int16))
+    axes[0].set(xlabel="Distance from glottis (cm)",ylabel="Area (cm²)")
+    axes[1].set(xlabel="Frequency (Hz)",ylabel="Transfer magnitude (dB)")
+    axes[2].set(xlabel="Linear /a/ to /i/ transition (ms)",ylabel="F2 (Hz)")
+    axes[0].legend()
+    figure.savefig(out/"comparison.png",dpi=145)
+    (out/"measurements.json").write_text(json.dumps(formants,indent=2)+"\n")
+    call("vtlClose")
