@@ -22,6 +22,11 @@
 #include "Synthesizer.h"
 #include "TriangularGlottis.h"
 #include <iomanip>
+#include <condition_variable>
+#include <cstdlib>
+#include <memory>
+#include <mutex>
+#include <thread>
 
 // ****************************************************************************
 /// Constructor.
@@ -435,6 +440,126 @@ void Synthesizer::copySignal(vector<double> &sourceSignal, Signal16 &targetSigna
 
 
 // ****************************************************************************
+/// Computes the tube shapes for a sequence of vocal tract parameter frames.
+/// Worker threads (each with its own copy of the vocal tract model) compute
+/// the frames ahead of the consumer in a bounded ring buffer. The geometry
+/// of a frame depends only on its parameters, so the result is identical to
+/// calling calculateAll()/getTube() serially on the original model.
+/// Set the environment variable VTL_NUM_THREADS=0 to disable the threads.
+// ****************************************************************************
+
+class ParallelTubeCalculator
+{
+public:
+  ParallelTubeCalculator(VocalTract *vocalTract, const double *frames, int numFrames) :
+    vocalTract(vocalTract), frames(frames), numFrames(numFrames)
+  {
+    int numWorkers = (int)std::thread::hardware_concurrency() - 1;
+    if (numWorkers > MAX_WORKERS) { numWorkers = MAX_WORKERS; }
+    const char *env = getenv("VTL_NUM_THREADS");
+    if ((env != NULL) && (env[0] != '\0')) { numWorkers = atoi(env); }
+    if (numWorkers > numFrames / 8) { numWorkers = numFrames / 8; }
+    if (numWorkers < 0) { numWorkers = 0; }
+
+    if (numWorkers == 0) { return; }
+
+    slots.resize(RING_SIZE);
+    slotFrame.assign(RING_SIZE, -1);
+
+    for (int w = 0; w < numWorkers; w++)
+    {
+      clones.push_back(std::unique_ptr<VocalTract>(new VocalTract(*vocalTract)));
+    }
+    for (int w = 0; w < numWorkers; w++)
+    {
+      workers.push_back(std::thread(&ParallelTubeCalculator::work, this, clones[w].get()));
+    }
+  }
+
+  ~ParallelTubeCalculator()
+  {
+    {
+      std::lock_guard<std::mutex> lock(mutex);
+      stop = true;
+    }
+    cond.notify_all();
+    for (auto &t : workers) { t.join(); }
+  }
+
+  // Frames must be requested in increasing order.
+  void getTube(int frame, Tube &tube)
+  {
+    if (workers.empty())
+    {
+      calcTube(vocalTract, frame, tube);
+      return;
+    }
+
+    std::unique_lock<std::mutex> lock(mutex);
+    int slot = frame % RING_SIZE;
+    cond.wait(lock, [&] { return slotFrame[slot] == frame; });
+    tube = slots[slot];
+    consumed = frame + 1;
+    lock.unlock();
+    cond.notify_all();
+  }
+
+private:
+  static const int MAX_WORKERS = 6;
+  static const int RING_SIZE = 64;
+
+  VocalTract *vocalTract;
+  const double *frames;
+  int numFrames;
+
+  std::vector<std::unique_ptr<VocalTract>> clones;
+  std::vector<std::thread> workers;
+  std::vector<Tube> slots;
+  std::vector<int> slotFrame;
+  std::mutex mutex;
+  std::condition_variable cond;
+  int nextFrame{ 0 };
+  int consumed{ 0 };
+  bool stop{ false };
+
+  void calcTube(VocalTract *vt, int frame, Tube &tube)
+  {
+    const double *params = frames + (size_t)frame * VocalTract::NUM_PARAMS;
+    for (int k = 0; k < VocalTract::NUM_PARAMS; k++)
+    {
+      vt->params[k].x = params[k];
+    }
+    vt->calculateAll();
+    vt->getTube(&tube);
+  }
+
+  void work(VocalTract *vt)
+  {
+    Tube tube;
+    while (true)
+    {
+      int frame;
+      {
+        std::unique_lock<std::mutex> lock(mutex);
+        cond.wait(lock, [&] { return stop || ((nextFrame < numFrames) && (nextFrame < consumed + RING_SIZE)); });
+        if (stop || (nextFrame >= numFrames)) { return; }
+        frame = nextFrame++;
+      }
+
+      calcTube(vt, frame, tube);
+
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        slots[frame % RING_SIZE] = tube;
+        slotFrame[frame % RING_SIZE] = frame;
+      }
+      cond.notify_all();
+    }
+  }
+};
+
+
+// ****************************************************************************
 /// Synthesis of a complete gestural score (blocking synthesis).
 /// If miscFileName != "", the glottis data are written to this text file.
 /// Returns false, if the misc file could not be written.
@@ -497,22 +622,55 @@ bool Synthesizer::synthesizeGesturalScore(GesturalScore *gesturalScore,
     printf("Synthesis of gestural score startet ");
   }
 
-  // Get the parameters right at the beginning.
-  gesturalScore->getParams(0.0, tractParams, glottisParams);
-  synth->addChunk(glottisParams, tractParams, 0, signalPart, &miscFileStream);
+  // ****************************************************************
+  // Sample the parameter curves for every chunk boundary first, so
+  // that the vocal tract geometry of upcoming chunks can be computed
+  // on worker threads while the acoustic simulation (which is
+  // inherently sequential) runs on this thread.
+  // ****************************************************************
 
-  for (i = 1; i <= numChunks; i++)
+  const int numFrames = numChunks + 1;
+  const int numGlottisParams = (int)glottis->controlParams.size();
+  vector<double> tractFrames((size_t)numFrames * VocalTract::NUM_PARAMS);
+  vector<double> glottisFrames((size_t)numFrames * Glottis::MAX_CONTROL_PARAMS);
+
+  for (i = 0; i < numFrames; i++)
   {
-    if (((i & 63) == 0) && (enableConsoleOutput))
+    pos_s = (double)i * NUM_CHUNCK_SAMPLES / AUDIO_SAMPLING_RATE_HZ;
+    gesturalScore->getParams(pos_s, &tractFrames[(size_t)i * VocalTract::NUM_PARAMS],
+      &glottisFrames[(size_t)i * Glottis::MAX_CONTROL_PARAMS]);
+  }
+
+  ParallelTubeCalculator tubeCalculator(vocalTract, tractFrames.data(), numFrames);
+  Tube tube;
+
+  for (i = 0; i < numFrames; i++)
+  {
+    if ((i > 0) && ((i & 63) == 0) && (enableConsoleOutput))
     {
       printf(".");
     }
 
-    pos_s = (double)i * NUM_CHUNCK_SAMPLES / AUDIO_SAMPLING_RATE_HZ;
-    gesturalScore->getParams(pos_s, tractParams, glottisParams);
-    synth->addChunk(glottisParams, tractParams, NUM_CHUNCK_SAMPLES, signalPart, &miscFileStream);
-    audio.insert(audio.end(), signalPart.begin(), signalPart.end());
+    tubeCalculator.getTube(i, tube);
+    for (int k = 0; k < numGlottisParams; k++)
+    {
+      glottisParams[k] = glottisFrames[(size_t)i * Glottis::MAX_CONTROL_PARAMS + k];
+    }
+
+    synth->addChunk(glottisParams, &tube, (i == 0) ? 0 : NUM_CHUNCK_SAMPLES, signalPart, &miscFileStream);
+    if (i > 0)
+    {
+      audio.insert(audio.end(), signalPart.begin(), signalPart.end());
+    }
   }
+
+  // Leave the main vocal tract in the same geometric state as the
+  // serial implementation did (i.e., the shape of the last chunk).
+  for (i = 0; i < VocalTract::NUM_PARAMS; i++)
+  {
+    vocalTract->params[i].x = tractFrames[(size_t)(numFrames - 1) * VocalTract::NUM_PARAMS + i];
+  }
+  vocalTract->calculateAll();
 
   if (enableConsoleOutput)
   {
