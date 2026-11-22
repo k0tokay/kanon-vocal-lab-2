@@ -12,7 +12,11 @@ VTL 2.4の嘉音話者では、異なる声道形状がほぼ同じF1–F3を実
 
 形状距離は独立な16パラメータの差を各可動域で割ったL2ノルム。伝達関数差は200 Hz〜8 kHzの対数振幅差のRMS。初回のみフォルマントの抽出条件が異なる。イヤホン試聴では初回の /a/ の違いは小さく、手動形状では /i/ への遷移よりも母音を保っている区間で音色の違いが分かりやすかった。これは聴取者の所感で、母音同定の成績は未測定である。[全候補の比較](experiments/vowel-inversion/results/shape-distances.csv)
 
-形状を動かす方向も効く。F1–F3をほぼ保つ長距離経路をたどると、/o/ では基準からの距離0.703の終点で伝達関数差が2.95 dB、距離0.555の終点で8.95 dBになった。形状変化の大きさだけでは音色差を予測できない。[経路上の137形状](experiments/vowel-inversion/results/integrated-long/checkpoints.csv)
+## 等フォルマント面上で伝達関数の変化を選ぶ
+
+可動域で正規化した形状パラメータを $x$、対数フォルマントを $f(x)=(\log F_1,\log F_2,\log F_3)$、周波数ごとの伝達関数の対数振幅を $h(x)$ とし、両者のヤコビアン $J_f,J_h$ を数値差分で求めた。$J_f$ の零空間の正規直交基底を列にもつ行列を $N$ とすると、変位 $Nv$ はF1–F3を一次近似で保つ。この接空間に制限した $J_hN$ の最小・最大特異値に対応する右特異ベクトル $v$ を選べば、同じ微小変位量で伝達関数の振幅がそれぞれ最も変わりにくい方向・変わりやすい方向に進める。嘉音の /a/ では、正規化距離がともに約0.045、各フォルマントのずれが0.02%以内の二点で、伝達関数差は **0.10 dB と1.18 dB** になった。[局所測定値](experiments/vowel-inversion/results/level-set.json)
+
+数値積分では各点で方向を求め直し、一歩進むごとにフォルマントのずれを補正した。長距離への延長では既知の遠方解に向かう成分も加えた。/o/ の終点では、変わりにくい側は基準からの距離0.703で伝達関数差2.95 dB、変わりやすい側は距離0.555で8.95 dBだった。試聴WAVはどちらの母音も、変わりにくい経路、変わりやすい経路の順に基準形から終点までをたどる。[積分コード](experiments/vowel-inversion/integrate.py) · [積分経路と全137保存点](experiments/vowel-inversion/results/integrated-long/checkpoints.csv) · [/a/ の試聴](experiments/vowel-inversion/results/integrated-long/a-paths.wav) · [/o/ の試聴](experiments/vowel-inversion/results/integrated-long/o-paths.wav)
 
 ## /ara/ と今後使う /r/
 
