@@ -113,6 +113,7 @@ public:
     wxGLAttributes openGlArgs, wxWindow *updateEventReceiver);
   ~VocalTractPicture();
 
+  void setCanvasViewport(int width, int height);
   void projection2D();
   void projection3D();
   void print(int x, int y, char *st);

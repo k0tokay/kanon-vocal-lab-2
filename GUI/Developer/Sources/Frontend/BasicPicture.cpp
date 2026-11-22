@@ -106,6 +106,7 @@ void BasicPicture::OnPaint(wxPaintEvent &event)
   wxBufferedPaintDC dc(this, *getBitmap());
 
   // Draw on the device context.
+  dc.SetTextForeground(*wxBLACK);
   draw(dc);
 }
 

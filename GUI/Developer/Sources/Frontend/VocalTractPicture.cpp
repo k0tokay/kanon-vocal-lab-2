@@ -135,6 +135,23 @@ VocalTractPicture::~VocalTractPicture()
 /// Set the OpenGl view in 2D-Projection Mode.
 // ****************************************************************************
 
+void VocalTractPicture::setCanvasViewport(int width, int height)
+{
+  // Picking and projection use wx client coordinates.
+  viewportX = 0;
+  viewportY = 0;
+  viewportWidth = width;
+  viewportHeight = height;
+
+  viewport[0] = 0;
+  viewport[1] = 0;
+  viewport[2] = width;
+  viewport[3] = height;
+
+  const double scale = GetContentScaleFactor();
+  glViewport(0, 0, wxRound(width * scale), wxRound(height * scale));
+}
+
 void VocalTractPicture::projection2D()
 {
   int width = this->GetSize().x;
@@ -147,7 +164,7 @@ void VocalTractPicture::projection2D()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  glViewport(0, 0, width, height);
+  setCanvasViewport(width, height);
 }
 
 
@@ -167,7 +184,7 @@ void VocalTractPicture::projection3D()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 
-  glViewport(0, 0, width, height);
+  setCanvasViewport(width, height);
 }
 
 
@@ -275,7 +292,8 @@ void VocalTractPicture::display()
 
     double zoom = (double)pictureWidth*posterScalingFactor / (double)posterWidth_pix;
 
-    glPixelZoom((GLfloat)zoom, (GLfloat)(-zoom));
+    const GLfloat pixelZoom = zoom * GetContentScaleFactor();
+    glPixelZoom(pixelZoom, -pixelZoom);
 
     // The poster section to draw equals the whole poster first.
     int subimageX = 0;
@@ -550,7 +568,7 @@ void VocalTractPicture::display()
     glDisable(GL_LIGHTING);
     glEnable(GL_POINT_SMOOTH);
     
-    glPointSize(8.0);
+    glPointSize(8.0 * GetContentScaleFactor());
 
     parameterToControlPoint(CP_TONGUE_CENTER);
     parameterToControlPoint(CP_TONGUE_TIP);
@@ -621,7 +639,7 @@ void VocalTractPicture::display()
     glDisable(GL_LIGHTING);
     glEnable(GL_POINT_SMOOTH);
     
-    glPointSize(8.0);
+    glPointSize(8.0 * GetContentScaleFactor());
     glColor3f(1.0f, 0.2f, 0.0f);
 
     Point3D P;
@@ -2131,14 +2149,7 @@ void VocalTractPicture::setProjectionMatrix3D(double fovy, double nearPlane, dou
   glFrustum(frustumLeft, frustumRight, frustumBottom, frustumTop, frustumNear, frustumFar);
   glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);   // Projektionsmatrix merken
 
-  // Den Viewport setzen
-  viewportX = 0;
-  viewportY = 0;
-  viewportWidth = w;
-  viewportHeight = h;
-
-  glViewport((GLint)viewportX, (GLint)viewportY, (GLint)viewportWidth, (GLint)viewportHeight);
-  glGetIntegerv(GL_VIEWPORT, viewport);   // Viewport-Geometrie in ein Array laden
+  setCanvasViewport(w, h);
 }
 
 
@@ -2164,14 +2175,7 @@ void VocalTractPicture::setProjectionMatrix2D(double left, double right, double 
   glOrtho(left, right, bottom, top, frustumNear, frustumFar);
   glGetDoublev(GL_PROJECTION_MATRIX, projectionMatrix);   // Projektionsmatrix merken
 
-  // Den Viewport setzen
-  viewportX = 0;
-  viewportY = 0;
-  viewportWidth = w;
-  viewportHeight = h;
-
-  glViewport((GLint)viewportX, (GLint)viewportY, (GLint)viewportWidth, (GLint)viewportHeight);
-  glGetIntegerv(GL_VIEWPORT, viewport);   // Viewport-Geometrie in ein Array laden
+  setCanvasViewport(w, h);
 }
 
 
