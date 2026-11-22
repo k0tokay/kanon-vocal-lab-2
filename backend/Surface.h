@@ -152,6 +152,8 @@ public:
 
   Surface();
   Surface(int ribs, int ribPoints);
+  Surface(const Surface &other);
+  Surface &operator=(const Surface &other);
   ~Surface();
   void init(int ribs, int ribPoints);
   void clear();

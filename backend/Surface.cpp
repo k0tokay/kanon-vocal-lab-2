@@ -20,6 +20,7 @@
 // ****************************************************************************
 
 #include "Surface.h"
+#include <algorithm>
 #include <cmath>
 #include <iostream>
 #include <fstream>
@@ -67,6 +68,57 @@ Surface::Surface(int ribs, int ribPoints)
 
   creaseAngle_deg = STANDARD_CREASE_ANGLE_DEGREE;
   init(ribs, ribPoints);
+}
+
+// ****************************************************************************
+/// @brief Deep copy (the vertex, triangle, edge and sequence arrays are owned
+/// by each surface). Needed to clone a VocalTract for parallel geometry.
+// ****************************************************************************
+
+Surface::Surface(const Surface &other)
+{
+  vertex   = NULL;
+  triangle = NULL;
+  edge     = NULL;
+  sequence = NULL;
+  numRibs = numRibPoints = numTriangles = numVertices = numEdges = 0;
+  *this = other;
+}
+
+Surface &Surface::operator=(const Surface &other)
+{
+  if (this == &other) { return *this; }
+  init(other.numRibs, other.numRibPoints);
+
+  std::copy(other.vertex, other.vertex + numVertices, vertex);
+  std::copy(other.triangle, other.triangle + numTriangles, triangle);
+  std::copy(other.edge, other.edge + numEdges, edge);
+  std::copy(other.sequence, other.sequence + numTriangles, sequence);
+
+  for (int x = 0; x < MAX_TILES_X; x++)
+  {
+    for (int y = 0; y < MAX_TILES_Y; y++)
+    {
+      const Tile &src = other.tile[x][y];
+      tile[x][y].numTriangles = src.numTriangles;
+      std::copy(src.triangle, src.triangle + src.numTriangles, tile[x][y].triangle);
+    }
+  }
+
+  leftBorder = other.leftBorder;
+  rightBorder = other.rightBorder;
+  topBorder = other.topBorder;
+  bottomBorder = other.bottomBorder;
+  tileWidth = other.tileWidth;
+  tileHeight = other.tileHeight;
+  numTilesX = other.numTilesX;
+  numTilesY = other.numTilesY;
+  creaseAngle_deg = other.creaseAngle_deg;
+  linePoint = other.linePoint;
+  lineVector = other.lineVector;
+  leftLinePoint = other.leftLinePoint;
+  rightLinePoint = other.rightLinePoint;
+  return *this;
 }
 
 // ****************************************************************************
