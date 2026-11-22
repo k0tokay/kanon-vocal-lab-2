@@ -1,4 +1,4 @@
-#include "experiments/vowel-inversion/vowel_measurement.h"
+#include "../vowel-inversion/vowel_measurement.h"
 static VocalTract tract;
 static TlModel model;
 extern "C" void init(const char *speaker) { tract.readFromXml(speaker); }
