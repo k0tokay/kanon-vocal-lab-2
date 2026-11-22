@@ -8,7 +8,7 @@ from scipy.spatial import cKDTree
 from scipy.sparse import coo_matrix
 from scipy.sparse.csgraph import connected_components
 
-speaker = next(Path("speakers").rglob("*.speaker"))
+speaker = Path("speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vowel-variation.speaker")
 lib = ctypes.CDLL("./measure.so")
 pointer = np.ctypeslib.ndpointer(np.float64, ndim=1, flags="C_CONTIGUOUS")
 lib.evaluate.argtypes = [pointer, pointer]
