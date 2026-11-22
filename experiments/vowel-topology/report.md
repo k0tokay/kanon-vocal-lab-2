@@ -62,7 +62,7 @@
 リポジトリ直下で、NumPy, SciPy, Matplotlib, ripser のある Python を使う。
 
 ```sh
-clang++ -shared -fPIC -std=c++14 -O2 -Ibackend experiments/vowel-topology/measure.cpp build-mac/gui/libVocalTractLabApi.dylib -Wl,-rpath,@loader_path/gui -o build-mac/measure.so
+clang++ -shared -fPIC -std=c++14 -O2 -w -Ibackend experiments/vowel-topology/measure.cpp $(ls backend/*.cpp | grep -v SoundLib.cpp) -o build-mac/measure.so
 cd experiments/vowel-topology
 for k in 1 2 3 4 5; do python3 sample.py --vowel a --seeds $(seq 42 51) --steps 3000 --workers 10; done
 python3 rips.py results/kanon-a/samples.npz --tolerances .01 .05
