@@ -36,7 +36,9 @@
 #include "XmlHelper.h"
 #include "XmlNode.h"
 #include "TlModel.h"
+#include "AnatomyParams.h"
 
+#include <cstring>
 #include <iostream>
 #include <fstream>
 
@@ -59,6 +61,7 @@ static Tube* tube = NULL;
 static VocalTract *vocalTract = NULL;
 static TdsModel *tdsModel = NULL;
 static Synthesizer *synthesizer = NULL;
+static AnatomyParams *anatomyParams = NULL;
 
 static bool vtlApiInitialized = false;
 
@@ -241,6 +244,18 @@ int vtlInitialize(const char *speakerFileName)
 
   tube = new Tube();
 
+  // ****************************************************************
+  // The speaker's own vocal tract is the reference for all anatomy
+  // transformations.
+  // ****************************************************************
+
+  anatomyParams = new AnatomyParams();
+  if (anatomyParams->loadReferenceVocalTract(string(speakerFileName)) == false)
+  {
+    printf("Error in vtlInitialize(): Loading the reference vocal tract failed.\n");
+  }
+  anatomyParams->getFrom(vocalTract);
+
   // We are now initialized!
   vtlApiInitialized = true;
 
@@ -274,6 +289,8 @@ int vtlClose()
 
   delete vocalTract;
   delete tube;
+  delete anatomyParams;
+  anatomyParams = NULL;
 
   vtlApiInitialized = false;
   
@@ -861,6 +878,162 @@ int vtlSynthesisAddTube(int numNewSamples, double* audio,
   for (i = 0; i < numNewSamples; i++)
   {
     audio[i] = audioVector[i];
+  }
+
+  return 0;
+}
+
+
+// ****************************************************************************
+// Samples the parameters of a gestural score frame by frame.
+// ****************************************************************************
+
+int vtlGesturalScoreToParamFrames(const char *gesFileName, int samplesPerFrame,
+  double *tractFrames, double *glottisFrames, int maxFrames, int *numFrames)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+
+  GesturalScore *gesturalScore = new GesturalScore(vocalTract, glottises[selectedGlottis]);
+  bool allValuesInRange = true;
+  if (gesturalScore->loadGesturesXml(string(gesFileName), allValuesInRange) == false)
+  {
+    delete gesturalScore;
+    return 2;
+  }
+  gesturalScore->calcCurves();
+
+  double frameDuration_s = (double)samplesPerFrame / (double)AUDIO_SAMPLING_RATE_HZ;
+  int frames = (int)(gesturalScore->getScoreDuration_s() / frameDuration_s) + 1;
+  *numFrames = frames;
+  if (frames > maxFrames)
+  {
+    delete gesturalScore;
+    return 3;
+  }
+
+  int numGlottisParams = (int)glottises[selectedGlottis]->controlParams.size();
+  int i;
+  for (i = 0; i < frames; i++)
+  {
+    gesturalScore->getParams(i*frameDuration_s, &tractFrames[i*VocalTract::NUM_PARAMS],
+      &glottisFrames[i*numGlottisParams]);
+  }
+
+  delete gesturalScore;
+  return 0;
+}
+
+
+// ****************************************************************************
+// Returns the anatomy parameters of the current vocal tract.
+// ****************************************************************************
+
+int vtlGetAnatomyParamInfo(char *names, double *paramMin, double *paramMax, double *paramValue)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return -1;
+  }
+
+  static const char *shortNames[AnatomyParams::NUM_ANATOMY_PARAMS] =
+    { "W0", "H5", "H4", "H3", "H2", "D0", "W1", "W2", "H0", "H1", "W4", "W3", "A0" };
+
+  AnatomyParams current;
+  current.getFrom(vocalTract);
+
+  int i;
+  if (names != NULL)
+  {
+    names[0] = '\0';
+  }
+  for (i = 0; i < AnatomyParams::NUM_ANATOMY_PARAMS; i++)
+  {
+    if (names != NULL)
+    {
+      strcat(names, shortNames[i]);
+      if (i < AnatomyParams::NUM_ANATOMY_PARAMS - 1)
+      {
+        strcat(names, " ");
+      }
+    }
+    if (paramMin != NULL) { paramMin[i] = current.param[i].min; }
+    if (paramMax != NULL) { paramMax[i] = current.param[i].max; }
+    if (paramValue != NULL) { paramValue[i] = current.param[i].x; }
+  }
+
+  return AnatomyParams::NUM_ANATOMY_PARAMS;
+}
+
+
+// ****************************************************************************
+// Sets the anatomy parameters relative to the speaker file's vocal tract.
+// ****************************************************************************
+
+int vtlSetAnatomyParams(double *params)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+
+  int i;
+  for (i = 0; i < AnatomyParams::NUM_ANATOMY_PARAMS; i++)
+  {
+    anatomyParams->param[i].x = params[i];
+  }
+
+  anatomyParams->setFor(vocalTract);
+
+  for (i = 0; i < AnatomyParams::NUM_ANATOMY_PARAMS; i++)
+  {
+    params[i] = anatomyParams->param[i].x;
+  }
+
+  synthesizer->reset();
+
+  return 0;
+}
+
+
+// ****************************************************************************
+// Synthesizes a whole utterance from frames of tract and glottis parameters.
+// ****************************************************************************
+
+int vtlSynthesizeTrajectory(double *tractFrames, double *glottisFrames,
+  int numFrames, int samplesPerFrame, double *audio)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+
+  if ((numFrames < 2) || (samplesPerFrame < 1))
+  {
+    return 2;
+  }
+
+  int numGlottisParams = (int)glottises[selectedGlottis]->controlParams.size();
+  vector<double> chunk;
+  int i, k;
+
+  synthesizer->reset();
+  synthesizer->addChunk(glottisFrames, tractFrames, 0, chunk);
+
+  for (i = 1; i < numFrames; i++)
+  {
+    synthesizer->addChunk(&glottisFrames[i*numGlottisParams],
+      &tractFrames[i*VocalTract::NUM_PARAMS], samplesPerFrame, chunk);
+    for (k = 0; k < samplesPerFrame; k++)
+    {
+      audio[(i - 1)*samplesPerFrame + k] = chunk[k];
+    }
   }
 
   return 0;

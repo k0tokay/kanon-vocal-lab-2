@@ -26,3 +26,7 @@ vtlGesScoreSubstituteGlottalShapes
 vtlGesScoreChangeSubglottalPressure
 vtlGesScoreChangeDuration
 vtlGesScoreChangeTimeConstants
+vtlGetAnatomyParamInfo
+vtlSetAnatomyParams
+vtlSynthesizeTrajectory
+vtlGesturalScoreToParamFrames

@@ -303,6 +303,66 @@ C_EXPORT int vtlSynthesisAddTube(int numNewSamples, double *audio,
 
 
 // ****************************************************************************
+// Returns the 13 anatomy parameters of the current vocal tract (see 
+// AnatomyParams.h). names receives the space-separated short names
+// (W0 H5 H4 H3 H2 D0 W1 W2 H0 H1 W4 W3 A0; reserve at least 64 chars).
+// The units are cm, except for A0 (degree).
+// Function return value: the number of anatomy parameters, or -1 if the API
+// has not been initialized.
+// ****************************************************************************
+
+C_EXPORT int vtlGetAnatomyParamInfo(char *names, double *paramMin, double *paramMax, double *paramValue);
+
+
+// ****************************************************************************
+// Sets the 13 anatomy parameters. The anatomy is always derived from the
+// vocal tract of the speaker file passed to vtlInitialize(), so the call is
+// absolute and repeatable. The values are restricted to their ranges and the
+// restricted values are written back to params. The vocal tract parameter
+// ranges, the neutral values and the stored shapes are transformed to the new
+// anatomy. The tract synthesis is reset.
+// Function return value:
+// 0: success.
+// 1: The API has not been initialized.
+// ****************************************************************************
+
+C_EXPORT int vtlSetAnatomyParams(double *params);
+
+
+// ****************************************************************************
+// Synthesizes one utterance from frames of vocal tract and glottis parameters
+// with the current anatomy. tractFrames holds numFrames*numVocalTractParams
+// values and glottisFrames numFrames*numGlottisParams values (frame-major).
+// Neighbouring frames are samplesPerFrame samples apart and are linearly
+// interpolated. audio must hold (numFrames-1)*samplesPerFrame values.
+// Function return value:
+// 0: success.
+// 1: The API has not been initialized.
+// 2: numFrames < 2 or samplesPerFrame < 1.
+// ****************************************************************************
+
+C_EXPORT int vtlSynthesizeTrajectory(double *tractFrames, double *glottisFrames,
+  int numFrames, int samplesPerFrame, double *audio);
+
+
+// ****************************************************************************
+// Samples the vocal tract and glottis parameters of a gestural score with the
+// current anatomy every samplesPerFrame audio samples (frame k at time
+// k*samplesPerFrame/audioSamplingRate). The arrays must hold
+// maxFrames*numVocalTractParams and maxFrames*numGlottisParams values.
+// numFrames receives the number of frames that the score needs.
+// Function return value:
+// 0: success.
+// 1: The API has not been initialized.
+// 2: Loading the gestural score file failed.
+// 3: The score needs more than maxFrames frames (numFrames is still set).
+// ****************************************************************************
+
+C_EXPORT int vtlGesturalScoreToParamFrames(const char *gesFileName, int samplesPerFrame,
+  double *tractFrames, double *glottisFrames, int maxFrames, int *numFrames);
+
+
+// ****************************************************************************
 // Test function for this API.
 // Audio should contain at least 48000 double values.
 // Run this WITHOUT calling vtlInitialize() !
