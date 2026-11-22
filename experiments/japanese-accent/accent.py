@@ -18,7 +18,7 @@ from scipy.io.wavfile import write
 from gestures import Score
 
 ROOT = Path(__file__).resolve().parents[2]
-SPEAKER = ROOT / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.speaker"
+SPEAKER = Path(os.environ.get("VTL_SPEAKER", ROOT / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.speaker"))
 LIB = Path(os.environ.get("VTL_LIB", ROOT / "build-mac/gui/libVocalTractLabApi.dylib"))
 
 
@@ -115,11 +115,17 @@ ONSET = {
     "ry": ["4", "j"], "by": ["b", "j"], "py": ["p", "j"], "dy": ["d", "j"],
     "ty": ["t", "j"],
 }
+# Japanese-specific symbols, supported natively by this VTL build:
+# alveolo-palatal s\ z\ ts\ dz\ and the unrounded vowel M.
+JA_ONSET = {"sh": ["s\\"], "ch": ["ts\\"], "j": ["dz\\"], "w": ["M"]}
+# Onsets that get a short palatal glide before /i/ when palatal_i=True.
+PALATALIZE = {"k", "g", "n", "m", "b", "p", "r"}
 BASE = {"p": .055, "b": .045, "t": .055, "d": .045, "k": .06, "g": .045,
         "s": .085, "z": .06, "S": .09, "C": .08, "h": .065, "f": .07, "v": .05,
         "ts": .08, "tS": .085, "dZ": .065, "m": .05, "n": .045, "N": .05,
-        "4": .022, "j": .035, "u": .04}
-FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS"}
+        "4": .022, "j": .035, "u": .04, "M": .04,
+        "s\\": .09, "z\\": .06, "ts\\": .085, "dz\\": .065}
+FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS", "s\\", "ts\\"}
 
 
 @dataclass
@@ -139,27 +145,35 @@ def moraic_nasal(next_onset):
     return "N"
 
 
-def onset(consonant, vowel, japanese):
+def onset(consonant, vowel, japanese, palatal_i=False):
     """VTL segments for a mora onset, tagged for later score edits."""
     if not consonant:
         return []
     if japanese and consonant == "h" and vowel in "iI":
         names = ["C"]                       # hi = [çi]
-    elif japanese and consonant == "w":
-        names = ["M"]                       # unrounded glide
+    elif japanese and consonant in JA_ONSET:
+        names = JA_ONSET[consonant]
     else:
         names = ONSET.get(consonant, [])
-    tag = {"f": "phi", "sh": "alveolopalatal", "ch": "alveolopalatal",
-           "j": "alveolopalatal"}.get(consonant, "") if japanese else ""
-    return [Segment(n, BASE.get(n, .04), tag=tag if k == 0 else "") for k, n in enumerate(names)]
+    if japanese and palatal_i and consonant in PALATALIZE and vowel in "iI":
+        names = names + ["j"]               # ki = [kʲi]
+    tag = "phi" if japanese and consonant == "f" else ""
+    return [Segment(n, BASE.get(n, .04) if n != "j" or len(names) == 1 else .025,
+                    tag=tag if k == 0 else "") for k, n in enumerate(names)]
 
 
-def to_segments(units, mora=0.135, rate=1.0, japanese=True):
+def vowel_symbol(v, japanese):
+    return "M" if japanese and v == "u" else v
+
+
+def to_segments(units, mora=0.135, rate=1.0, japanese=True, palatal_i=False,
+                devoice="keep"):
     """Mora-timed durations.
 
-    Devoiced vowels: with japanese=True the vowel is kept (shortened) and
-    later made voiceless in the score; otherwise it is dropped and folded
-    into a voiceless onset.
+    Devoiced vowels: with devoice="keep" (and japanese=True) the vowel is
+    kept, shortened, and later made voiceless in the score; with "drop" it
+    is removed and folded into a voiceless onset.
+    palatal_i adds a short /j/ after k g n m b p r before /i/.
 
     Returns the segment list and, per unit, its (start, end) time.
     """
@@ -177,12 +191,13 @@ def to_segments(units, mora=0.135, rate=1.0, japanese=True):
             elif u.vowel == "N":
                 seg = [Segment(moraic_nasal(nxt.consonant if isinstance(nxt, Mora) else ""), mora * stretch)]
             else:
-                seg = onset(u.consonant, u.vowel, japanese)
+                seg = onset(u.consonant, u.vowel, japanese, palatal_i)
                 for s in seg:
                     s.duration /= rate
                 vowel_time = max(.04 / rate, mora * stretch - sum(s.duration for s in seg))
-                if u.vowel.isupper() and japanese:
-                    seg.append(Segment(u.vowel.lower(), .75 * vowel_time, tag="devoiced"))
+                if u.vowel.isupper() and japanese and devoice == "keep":
+                    seg.append(Segment(vowel_symbol(u.vowel.lower(), japanese), .75 * vowel_time,
+                                       tag="devoiced"))
                     for s in seg[:-1]:
                         s.tag = s.tag or "devoiced-onset"
                 elif u.vowel.isupper():
@@ -193,7 +208,7 @@ def to_segments(units, mora=0.135, rate=1.0, japanese=True):
                     else:
                         seg.append(Segment("h", .6 * vowel_time))
                 else:
-                    seg.append(Segment(u.vowel, vowel_time))
+                    seg.append(Segment(vowel_symbol(u.vowel, japanese), vowel_time))
         segments += seg
         owned.append(seg)
     # Geminate closure becomes extra duration of the following consonant;
@@ -279,18 +294,17 @@ def write_seg(segments, path):
     path.write_text("\n".join(lines) + "\n")
 
 
-def patch_score(ges, segments, shi="tip"):
+def patch_score(ges, segments):
     """Japanese edits that the seg format cannot express.
 
     - devoiced vowels keep their tract shape but get an open glottis,
       together with their voiceless onset
     - fu: bilabial instead of labiodental fricative
-    - u: unrounded [ɯ] (speaker shape "M")
-    - shi/chi/ji: with shi="body", a palatal tongue-body gesture is added
-      to the postalveolar tongue-tip gesture
+
+    [ɯ] (M) and the alveolo-palatals (s\\ z\\ ts\\ dz\\) are handled by
+    VTL itself and need no edit here.
     """
     score = Score(ges)
-    score["vowel-gestures"].map_values(0, 1e9, lambda v: "M" if v == "u" else v)
     for i, s in enumerate(segments):
         t1 = s.t0 + s.duration
         if s.tag == "devoiced":
@@ -303,26 +317,36 @@ def patch_score(ges, segments, shi="tip"):
         elif s.tag == "phi":
             score["lip-gestures"].map_values(s.t0 - .03, t1 + .03,
                 lambda v: v.replace("ll-dental-fricative", "ll-labial-fricative"))
-        elif s.tag == "alveolopalatal" and shi == "body":
-            score["tongue-body-gestures"].paint(s.t0, t1, "tb-palatal-fricative")
     score.save()
 
 
 _lib = None
 
 
-def synthesize(seg, wav, segments=None, shi="tip"):
+def use_speaker(speaker):
+    """Load the API once and (re)initialise it when the speaker changes."""
     global _lib
     if _lib is None:
         _lib = ct.CDLL(str(LIB))
-        assert _lib.vtlInitialize(bytes(SPEAKER)) == 0
+        _lib.speaker = None
+    if _lib.speaker != Path(speaker):
+        if _lib.speaker is not None:
+            _lib.vtlClose()
+        assert _lib.vtlInitialize(bytes(Path(speaker))) == 0
         constants = [ct.c_int() for _ in range(4)]
         assert _lib.vtlGetConstants(*map(ct.byref, constants)) == 0
         _lib.rate = constants[0].value      # 48 kHz for VTL 2.4
+        _lib.tube_sections = constants[1].value
+        _lib.speaker = Path(speaker)
+    return _lib
+
+
+def synthesize(seg, wav, segments=None, speaker=SPEAKER):
+    use_speaker(speaker)
     ges = seg.with_suffix(".ges")
     assert _lib.vtlSegmentSequenceToGesturalScore(bytes(seg), bytes(ges)) == 0
     if segments is not None:
-        patch_score(ges, segments, shi)
+        patch_score(ges, segments)
     count = ct.c_int()
     assert _lib.vtlGesturalScoreToAudio(bytes(ges), b"", b"", None, ct.byref(count), 0, 0) == 0
     buf = (ct.c_double * count.value)()
@@ -334,9 +358,10 @@ def synthesize(seg, wav, segments=None, shi="tip"):
 
 
 def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
-           japanese=True, shi="tip"):
+           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER):
     units = parse(text)
-    segments, spans = to_segments(units, rate=rate, japanese=japanese)
+    segments, spans = to_segments(units, rate=rate, japanese=japanese,
+                                  palatal_i=palatal_i, devoice=devoice)
     phrases, accents = commands(units, spans, params)
     if not accent:
         accents = []
@@ -346,7 +371,7 @@ def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
     out_stem.parent.mkdir(parents=True, exist_ok=True)
     seg = out_stem.with_suffix(".seg")
     write_seg(segments, seg)
-    synthesize(seg, out_stem.with_suffix(".wav"), segments if japanese else None, shi)
+    synthesize(seg, out_stem.with_suffix(".wav"), segments if japanese else None, speaker)
     t = np.arange(0, segments[-1].t0 + segments[-1].duration, .005)
     return dict(text=text, units=units, segments=segments, spans=spans, phrases=phrases,
                 accents=accents, t=t, f0=f0_curve(t, phrases, accents, params))

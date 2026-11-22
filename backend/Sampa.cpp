@@ -27,6 +27,8 @@ const string Sampa::PHONEME[NUM_PHONEMES] =
   "a:", "e:", "i:", "o:", "u:", "E:", "2:", "y:",
   "a", "e", "i", "o", "u", "E", "2", "y",
   "I", "O", "U", "9", "Y", "@", "6",
+  // Japanese unrounded close back vowel [ɯ] (speaker shape "M")
+  "M",
   // Diphthongs
   "aI", "aU", "OY",
   "i:6", "i6", "I6", "y:6", "y6", "Y6", "e:6", "e6", "E6", "E:6", 
@@ -35,8 +37,12 @@ const string Sampa::PHONEME[NUM_PHONEMES] =
   "?", "p", "b", "t", "d", "k", "g",
   // Fricatives
   "f", "v", "T", "D", "s", "z", "S", "Z", "C", "j", "x", "r", "R", "h",
+  // Alveolo-palatal fricatives [ɕ] [ʑ] (X-SAMPA s\ z\)
+  "s\\", "z\\",
   // Affricates
   "pf", "ts", "tS", "dZ",
+  // Alveolo-palatal affricates [tɕ] [dʑ]
+  "ts\\", "dz\\",
   // Nasals and lateral
   "m", "n", "N", "l", "4"
 };
@@ -129,7 +135,8 @@ bool Sampa::isFricative(const string &symbol)
       (symbol == "S") || (symbol == "Z") ||
       (symbol == "C") || (symbol == "j") || 
       (symbol == "x") || (symbol == "R") || 
-      (symbol == "r") || (symbol == "h")) 
+      (symbol == "r") || (symbol == "h") ||
+      (symbol == "s\\") || (symbol == "z\\"))
   { 
     return true; 
   }
@@ -214,7 +221,7 @@ bool Sampa::isVoiced(const string& symbol)
     (symbol == "v") || (symbol == "D") || (symbol == "z") || 
     (symbol == "Z") || (symbol == "j") || (symbol == "R") || (symbol == "r") ||
     (symbol == "m") || (symbol == "n") || (symbol == "N") || 
-    (symbol == "l") || (symbol == "4")) 
+    (symbol == "l") || (symbol == "4") || (symbol == "z\\"))
   {
     return true;
   }
@@ -235,6 +242,7 @@ string Sampa::getVoicelessVersion(const string& symbol)
   else if (symbol == "z") { x = "s"; }
   else if (symbol == "Z") { x = "S"; }
   else if (symbol == "j") { x = "C"; }
+  else if (symbol == "z\\") { x = "s\\"; }
   else if (symbol == "R") { x = "x"; }
   else if (symbol == "b") { x = "p"; }
   else if (symbol == "d") { x = "t"; }
@@ -272,6 +280,10 @@ string Sampa::getPlaceOfArticulation(const string& symbol)
   else if (symbol == "S" || symbol == "Z")
   {
     placeOfArticulation = "postalveolar";
+  }
+  else if (symbol == "s\\" || symbol == "z\\")
+  {
+    placeOfArticulation = "alveolo-palatal";
   }
   else if (symbol == "C" || symbol == "j")
   {
@@ -346,7 +358,8 @@ Sampa::Articulator Sampa::getPrimaryArticulator(const string& symbol)
   
   if (symbol == "t" || symbol == "d" || symbol == "T" || symbol == "D" || 
     symbol == "s" || symbol == "z" || symbol == "S" || symbol == "Z" || 
-    symbol == "ts" || symbol == "tS" || symbol == "dZ" || symbol == "n" || symbol == "l" || symbol == "4")
+    symbol == "ts" || symbol == "tS" || symbol == "dZ" || symbol == "n" || symbol == "l" || symbol == "4" ||
+    symbol == "s\\" || symbol == "z\\" || symbol == "ts\\" || symbol == "dz\\")
   {
     articulator = ARTICULATOR_TONGUE_TIP;
   }

@@ -54,8 +54,11 @@ def main():
     # Devoicing: vowels between voiceless consonants.
     text = "私は菊が少し好きです。"
     dev = {}
-    for name, japanese in [("drop", False), ("patched", True)]:
-        r = render(text, OUT / f"devoicing-{name}", japanese=japanese)
+    variants = {"drop": dict(devoice="drop"), "keep": dict(devoice="keep"),
+                "drop-palatal": dict(devoice="drop", palatal_i=True),
+                "keep-palatal": dict(devoice="keep", palatal_i=True)}
+    for name, kw in variants.items():
+        r = render(text, OUT / f"devoicing-{name}", **kw)
         sr, x = read(OUT / f"devoicing-{name}.wav")
         x = x / 32767
         voiced = [s for s in r["segments"] if s.name in ("a", "e", "o")]
@@ -74,18 +77,20 @@ def main():
 
     # Fricatives in /a_a/ frames, VTL default versus Japanese edits.
     fric = {}
-    for word, label in [("アシア", "shi"), ("アシャア", "sha"), ("アフア", "fu"),
-                        ("アヒア", "hi"), ("アサア", "sa"), ("アスア", "su")]:
+    for word, label in [("アシア", "shi"), ("アシャア", "sha"), ("アシュア", "shu"),
+                        ("アチア", "chi"), ("アフア", "fu"), ("アヒア", "hi"),
+                        ("アサア", "sa"), ("アスア", "su")]:
         variants = [("vtl", dict(japanese=False)), ("japanese", dict(japanese=True))]
-        if label in ("shi", "sha"):
-            variants.append(("tongue-body", dict(japanese=True, shi="body")))
         fric[label] = {}
         for name, kw in variants:
             r = render(word, OUT / f"{label}-{name}", **kw)
             sr, x = read(OUT / f"{label}-{name}.wav")
             x = x / 32767
-            seg = next(s for s in r["segments"] if s.name in ("S", "C", "f", "s", "h"))
-            part = frames(x, sr, seg.t0, seg.t0 + seg.duration)
+            seg = next(s for s in r["segments"]
+                       if s.name in ("S", "C", "f", "s", "h", "s\\", "tS", "ts\\"))
+            # Affricates: measure only the fricative part (after the 33% closure).
+            start = seg.t0 + (.33 * seg.duration if seg.name in ("tS", "ts\\") else 0)
+            part = frames(x, sr, start, seg.t0 + seg.duration)
             cog, peak = spectrum_stats(part, sr)
             vowel = next(s for s in r["segments"] if s.name == "a")
             fric[label][name] = dict(
