@@ -23,9 +23,9 @@ import spectrum
 eps = .01
 
 
-def init(lib, band):
+def init(lib, vowel, band):
     global eps
-    sample.load(lib)
+    sample.load(lib, vowel)
     eps = band
 
 
@@ -88,14 +88,16 @@ if __name__ == "__main__":
     here = Path(__file__).resolve().parent
     parser = argparse.ArgumentParser()
     parser.add_argument("--samples", type=Path, default=here / "results/kanon-a/samples.npz")
-    parser.add_argument("--edges", type=Path, default=here / "results/kanon-a/samples-edges-0.01.npz")
+    parser.add_argument("--edges", type=Path, help="default: samples-edges-<eps>.npz next to the samples")
     parser.add_argument("--eps", type=float, default=.01)
     parser.add_argument("--lib", type=Path, default=sample.root / "build-mac/measure.so")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
     parser.add_argument("--targets", type=int, default=3, help="retry targets per failed component")
     parser.add_argument("--fresh", action="store_true", help="redo the first pass even if saved")
     args = parser.parse_args()
+    args.edges = args.edges or args.samples.with_name(f"samples-edges-{args.eps}.npz")
     data, graph = np.load(args.samples), np.load(args.edges)
+    vowel = str(data["vowel"]) if "vowel" in data else "a"
     points = data["points"][data["errors"] <= args.eps]
     edges, path = graph["edges"], graph["path_errors"]
     assert edges.max() < len(points), "edge file was built for a different band"
@@ -107,7 +109,7 @@ if __name__ == "__main__":
     core = points[label == giant]
     print(f"eps={args.eps} points={n} components={count} largest={sizes[giant]}", flush=True)
     saved = args.edges.with_name(f"connect-{args.eps}.npz")
-    pool = mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), args.eps))
+    pool = mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), vowel, args.eps))
     start = perf_counter()
     if saved.exists() and not args.fresh:
         rows = [tuple(r) for r in np.load(saved)["rows"]]

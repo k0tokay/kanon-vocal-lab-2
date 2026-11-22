@@ -21,8 +21,8 @@ import sample
 step = 1e-3
 
 
-def init(lib):
-    sample.load(lib)
+def init(lib, vowel):
+    sample.load(lib, vowel)
 
 
 def log_formants(z):
@@ -58,6 +58,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     data = np.load(args.samples)
     points, errors, names = data["points"], data["errors"], data["names"]
+    vowel = str(data["vowel"]) if "vowel" in data else "a"
     out = args.samples.parent
 
     fig, axes = plt.subplots(1, 2, figsize=(11, 3.8), constrained_layout=True)
@@ -73,7 +74,7 @@ if __name__ == "__main__":
 
     rng = np.random.default_rng(0)
     chosen = points[errors <= .01][rng.choice(np.sum(errors <= .01), args.jacobians, replace=False)]
-    with mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(),)) as pool:
+    with mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), vowel)) as pool:
         Js = [J for J in pool.map(jacobian, chosen) if J is not None]
     Js = np.array(Js)
     normals = [np.linalg.svd(J, full_matrices=False)[2] for J in Js]   # 3 x 16 orthonormal rows

@@ -21,9 +21,9 @@ import sample
 
 
 
-def init(lib, edge_cap, edge_order, cloud):
+def init(lib, vowel, edge_cap, edge_order, cloud):
     global cap, order, points
-    sample.load(lib)
+    sample.load(lib, vowel)
     cap, order, points = edge_cap, edge_order, cloud
 
 
@@ -89,6 +89,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     order = bisection(args.interior)
     data = np.load(args.samples)
+    vowel = str(data["vowel"]) if "vowel" in data else "a"
     keep = data["errors"] <= args.cap
     points, errors = data["points"][keep][:args.limit], data["errors"][keep][:args.limit]
     out = args.out or args.samples.with_name(args.samples.stem + "-edges.npz")
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     lengths = np.linalg.norm(points[edges[:, 0]]-points[edges[:, 1]], axis=1)
     print(f"points={len(points)} edges={len(edges)} spanning_tree_edges={mst} interior={order}", flush=True)
     start = perf_counter()
-    with mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), args.cap, order, points)) as pool:
+    with mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), vowel, args.cap, order, points)) as pool:
         worst = np.array(pool.map(check, map(tuple, edges), chunksize=64))
     print(f"edge_seconds={perf_counter()-start:.0f}", flush=True)
     path = np.maximum(worst, np.maximum(errors[edges[:, 0]], errors[edges[:, 1]]))

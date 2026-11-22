@@ -19,16 +19,20 @@ speaker = root / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vowel-variation.sp
 xml = ET.parse(speaker)
 params = sorted(xml.findall(".//vocal_tract_model/anatomy/param"), key=lambda p: int(p.get("index")))
 names = np.array([p.get("name") for p in params])
-vowel = {p.get("name"): float(p.get("value")) for p in xml.findall(".//vocal_tract_model/shapes/shape[@name='a']/param")}
-base = np.array([vowel[n] for n in names])
 low, high = [np.array([float(p.get(k)) for p in params]) for k in ("min", "max")]
 active = (high > low) & ~np.isin(names, ["VO", "TRX", "TRY"])
-lib = target = None
+lib = target = base = None
 
 
-def load(path):
-    # Each process owns its native tract and acoustic model.
-    global lib, target
+def shape(vowel):
+    values = {p.get("name"): float(p.get("value")) for p in xml.findall(f".//vocal_tract_model/shapes/shape[@name='{vowel}']/param")}
+    return np.array([values[n] for n in names])
+
+
+def load(path, vowel="a"):
+    """Each process owns its native tract and acoustic model; the target is the speaker's static vowel."""
+    global lib, target, base
+    base = shape(vowel)
     lib = ctypes.CDLL(str(path))
     pointer = np.ctypeslib.ndpointer(np.float64, ndim=1, flags="C_CONTIGUOUS")
     lib.evaluate.argtypes = [pointer, pointer]
@@ -86,35 +90,39 @@ def run(job):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Running again with the same --out continues every saved chain and adds new seeds.")
     parser.add_argument("--lib", type=Path, default=root / "build-mac/measure.so")
-    parser.add_argument("--out", type=Path, default=Path(__file__).resolve().parent / "results/kanon-a/samples.npz")
+    parser.add_argument("--vowel", default="a", help="vocal-tract shape in the speaker file")
+    parser.add_argument("--out", type=Path, help="default: results/kanon-<vowel>/samples.npz")
     parser.add_argument("--seeds", type=int, nargs="+", default=[42, 43, 44])
     parser.add_argument("--steps", type=int, default=600, help="steps added to each chain in this run")
     parser.add_argument("--keep", type=float, default=.05, help="largest error stored")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
     parser.add_argument("--fresh", action="store_true", help="ignore saved chains and samples")
     args = parser.parse_args()
+    args.out = args.out or Path(__file__).resolve().parent / f"results/kanon-{args.vowel}/samples.npz"
     args.out.parent.mkdir(parents=True, exist_ok=True)
     chains_file = args.out.with_suffix(".chains.json")
     chains, points = {}, np.empty((0, int(active.sum())))
     if args.out.exists() and not args.fresh:
         chains = {int(k): v for k, v in json.loads(chains_file.read_text()).items()}
-        points = np.load(args.out)["points"]
+        saved = np.load(args.out)
+        assert (str(saved["vowel"]) if "vowel" in saved else "a") == args.vowel, "saved samples are for another vowel"
+        points = saved["points"]
     seeds = sorted(set(args.seeds) | set(chains))
     start = perf_counter()
     jobs = [(seed, args.steps, args.keep, chains.get(seed)) for seed in seeds]
     found, evaluations, busy = [], 0, 0.
-    with mp.get_context("spawn").Pool(min(args.workers, len(jobs)), load, (args.lib.resolve(),)) as pool:
+    with mp.get_context("spawn").Pool(min(args.workers, len(jobs)), load, (args.lib.resolve(), args.vowel)) as pool:
         for seed, samples, chain, count, seconds in pool.imap_unordered(run, jobs):
             found += samples
             chains[seed] = chain
             evaluations += count
             busy += seconds
     wall = perf_counter()-start
-    load(args.lib.resolve())
+    load(args.lib.resolve(), args.vowel)
     before = len(points)
     points = np.unique(np.vstack([points, *found]) if found else points, axis=0)
     errors = np.array([error(z) for z in points])
-    np.savez(args.out, points=points, errors=errors, names=names[active])
+    np.savez(args.out, points=points, errors=errors, names=names[active], vowel=args.vowel)
     chains_file.write_text(json.dumps(chains))
     new = len(points)-before
     print(f"chains={len(chains)} steps={[chains[s]['step'] for s in seeds]} evaluations={evaluations} "
