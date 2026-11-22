@@ -1,0 +1,462 @@
+{
+ "devoicing": {
+  "text": "私は菊が少し好きです。",
+  "drop": {
+   "segments": [
+    [
+     "",
+     0.12,
+     ""
+    ],
+    [
+     "u",
+     0.04,
+     ""
+    ],
+    [
+     "a",
+     0.095,
+     ""
+    ],
+    [
+     "t",
+     0.055,
+     ""
+    ],
+    [
+     "a",
+     0.08,
+     ""
+    ],
+    [
+     "S",
+     0.09,
+     ""
+    ],
+    [
+     "i",
+     0.045,
+     ""
+    ],
+    [
+     "u",
+     0.04,
+     ""
+    ],
+    [
+     "a",
+     0.095,
+     ""
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "h",
+     0.045,
+     ""
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "u",
+     0.075,
+     ""
+    ],
+    [
+     "g",
+     0.045,
+     ""
+    ],
+    [
+     "a",
+     0.09,
+     ""
+    ],
+    [
+     "s",
+     0.12,
+     ""
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "o",
+     0.075,
+     ""
+    ],
+    [
+     "S",
+     0.121,
+     ""
+    ],
+    [
+     "s",
+     0.085,
+     ""
+    ],
+    [
+     "u",
+     0.05,
+     ""
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "i",
+     0.075,
+     ""
+    ],
+    [
+     "d",
+     0.045,
+     ""
+    ],
+    [
+     "e",
+     0.09,
+     ""
+    ],
+    [
+     "s",
+     0.153,
+     ""
+    ],
+    [
+     "",
+     0.12,
+     ""
+    ]
+   ],
+   "devoiced_moras": [
+    {
+     "mora": "ki",
+     "t": 0.66,
+     "low_band_re_vowel_db": -31.8,
+     "rms_db": -30.9
+    },
+    {
+     "mora": "su",
+     "t": 1.035,
+     "low_band_re_vowel_db": -31.3,
+     "rms_db": -26.8
+    },
+    {
+     "mora": "shi",
+     "t": 1.29,
+     "low_band_re_vowel_db": -28.2,
+     "rms_db": -18.9
+    },
+    {
+     "mora": "su",
+     "t": 1.816,
+     "low_band_re_vowel_db": -36.5,
+     "rms_db": -30.8
+    }
+   ]
+  },
+  "patched": {
+   "segments": [
+    [
+     "",
+     0.12,
+     ""
+    ],
+    [
+     "M",
+     0.04,
+     ""
+    ],
+    [
+     "a",
+     0.095,
+     ""
+    ],
+    [
+     "t",
+     0.055,
+     ""
+    ],
+    [
+     "a",
+     0.08,
+     ""
+    ],
+    [
+     "S",
+     0.09,
+     "alveolopalatal"
+    ],
+    [
+     "i",
+     0.045,
+     ""
+    ],
+    [
+     "M",
+     0.04,
+     ""
+    ],
+    [
+     "a",
+     0.095,
+     ""
+    ],
+    [
+     "k",
+     0.06,
+     "devoiced-onset"
+    ],
+    [
+     "i",
+     0.056,
+     "devoiced"
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "u",
+     0.075,
+     ""
+    ],
+    [
+     "g",
+     0.045,
+     ""
+    ],
+    [
+     "a",
+     0.09,
+     ""
+    ],
+    [
+     "s",
+     0.085,
+     "devoiced-onset"
+    ],
+    [
+     "u",
+     0.038,
+     "devoiced"
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "o",
+     0.075,
+     ""
+    ],
+    [
+     "S",
+     0.09,
+     "alveolopalatal"
+    ],
+    [
+     "i",
+     0.034,
+     "devoiced"
+    ],
+    [
+     "s",
+     0.085,
+     ""
+    ],
+    [
+     "u",
+     0.05,
+     ""
+    ],
+    [
+     "k",
+     0.06,
+     ""
+    ],
+    [
+     "i",
+     0.075,
+     ""
+    ],
+    [
+     "d",
+     0.045,
+     ""
+    ],
+    [
+     "e",
+     0.09,
+     ""
+    ],
+    [
+     "s",
+     0.085,
+     "devoiced-onset"
+    ],
+    [
+     "u",
+     0.073,
+     "devoiced"
+    ],
+    [
+     "",
+     0.12,
+     ""
+    ]
+   ],
+   "devoiced_moras": [
+    {
+     "mora": "ki",
+     "t": 0.66,
+     "low_band_re_vowel_db": -25.9,
+     "rms_db": -25.7
+    },
+    {
+     "mora": "su",
+     "t": 1.046,
+     "low_band_re_vowel_db": -28.4,
+     "rms_db": -26.2
+    },
+    {
+     "mora": "shi",
+     "t": 1.304,
+     "low_band_re_vowel_db": -20.6,
+     "rms_db": -22.5
+    },
+    {
+     "mora": "su",
+     "t": 1.833,
+     "low_band_re_vowel_db": -33.1,
+     "rms_db": -28.6
+    }
+   ]
+  }
+ },
+ "fricatives": {
+  "shi": {
+   "vtl": {
+    "segment": "S",
+    "cog_hz": 6176,
+    "peak_hz": 7061,
+    "level_re_vowel_db": -12.4,
+    "low_band_re_vowel_db": -28.4
+   },
+   "japanese": {
+    "segment": "S",
+    "cog_hz": 6176,
+    "peak_hz": 7061,
+    "level_re_vowel_db": -12.4,
+    "low_band_re_vowel_db": -28.4
+   },
+   "tongue-body": {
+    "segment": "S",
+    "cog_hz": 6227,
+    "peak_hz": 7072,
+    "level_re_vowel_db": -12.3,
+    "low_band_re_vowel_db": -28.5
+   }
+  },
+  "sha": {
+   "vtl": {
+    "segment": "S",
+    "cog_hz": 3396,
+    "peak_hz": 3287,
+    "level_re_vowel_db": -14.5,
+    "low_band_re_vowel_db": -27.0
+   },
+   "japanese": {
+    "segment": "S",
+    "cog_hz": 3396,
+    "peak_hz": 3287,
+    "level_re_vowel_db": -14.5,
+    "low_band_re_vowel_db": -27.0
+   },
+   "tongue-body": {
+    "segment": "S",
+    "cog_hz": 3440,
+    "peak_hz": 3305,
+    "level_re_vowel_db": -13.0,
+    "low_band_re_vowel_db": -25.8
+   }
+  },
+  "fu": {
+   "vtl": {
+    "segment": "f",
+    "cog_hz": 4068,
+    "peak_hz": 1406,
+    "level_re_vowel_db": -26.7,
+    "low_band_re_vowel_db": -33.2
+   },
+   "japanese": {
+    "segment": "f",
+    "cog_hz": 3593,
+    "peak_hz": 1242,
+    "level_re_vowel_db": -23.1,
+    "low_band_re_vowel_db": -29.5
+   }
+  },
+  "hi": {
+   "vtl": {
+    "segment": "h",
+    "cog_hz": 3629,
+    "peak_hz": 2584,
+    "level_re_vowel_db": -11.6,
+    "low_band_re_vowel_db": -16.2
+   },
+   "japanese": {
+    "segment": "C",
+    "cog_hz": 4087,
+    "peak_hz": 4500,
+    "level_re_vowel_db": -19.6,
+    "low_band_re_vowel_db": -29.6
+   }
+  },
+  "sa": {
+   "vtl": {
+    "segment": "s",
+    "cog_hz": 7121,
+    "peak_hz": 6135,
+    "level_re_vowel_db": -14.2,
+    "low_band_re_vowel_db": -25.1
+   },
+   "japanese": {
+    "segment": "s",
+    "cog_hz": 7121,
+    "peak_hz": 6135,
+    "level_re_vowel_db": -14.2,
+    "low_band_re_vowel_db": -25.1
+   }
+  },
+  "su": {
+   "vtl": {
+    "segment": "s",
+    "cog_hz": 5623,
+    "peak_hz": 5953,
+    "level_re_vowel_db": -17.8,
+    "low_band_re_vowel_db": -28.4
+   },
+   "japanese": {
+    "segment": "s",
+    "cog_hz": 5789,
+    "peak_hz": 5039,
+    "level_re_vowel_db": -16.9,
+    "low_band_re_vowel_db": -26.9
+   }
+  }
+ }
+}
