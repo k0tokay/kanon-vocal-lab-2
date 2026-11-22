@@ -230,6 +230,9 @@ def main():
     parser.add_argument("--lambda-anatomy", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--workers", type=int, default=None, help="synthesis processes (default: all CPUs)")
+    parser.add_argument("--synth-crop", type=int, default=None,
+                        help="synthesize only a random segment of this many frames per utterance (training uses "
+                             f"{CROP}-frame crops, so long real utterances need not be synthesized whole)")
     parser.add_argument("--resume", action="store_true", help="continue from RUN_DIR/checkpoint.pt")
     args = parser.parse_args()
     args.run.mkdir(parents=True, exist_ok=True)
@@ -297,6 +300,9 @@ def main():
                          for s, v in per_speaker.items()}
                 anatomy_u = [drawn[c["speaker"]] for c in chosen]
 
+            if args.synth_crop:
+                starts = [rng.integers(0, max(1, len(f) - args.synth_crop + 1)) for f in frames_hat]
+                frames_hat = [f[t:t + args.synth_crop] for f, t in zip(frames_hat, starts)]
             frames_u = [np.clip(f + smooth_noise(rng, len(f), N_FRAME, sigma), -1, 1) for f in frames_hat]
             anatomy_abs = [norm.anatomy_inv(a) for a in anatomy_u]
             ranges = pool.ranges(anatomy_abs)
