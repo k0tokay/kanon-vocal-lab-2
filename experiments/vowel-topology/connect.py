@@ -1,10 +1,11 @@
-"""Try to join every split component of the checked eps graph to the largest.
+"""Join the split components of the checked eps graph by paths on the band.
 
-For each smaller component, the closest pair (one vertex in it, one in the
-largest component) is joined by a path whose interior points are pulled back
-onto the band by minimum-norm Gauss-Newton steps on the log formants. Each
-segment between consecutive projected points is checked at interior points
-and split again where it leaves the band. A failure only means this path
+Boruvka-style rounds: every component tries the closest untried pair
+(one vertex inside, one outside) and walks between them; the walk's interior
+points are pulled back onto the band by minimum-norm Gauss-Newton steps on
+the log formants and every segment between consecutive points is checked.
+Successful walks merge components; a component gives up after `--attempts`
+failed pairs since its last merge. A failure only means this path
 construction failed; it does not prove the components are separate.
 """
 import argparse
@@ -14,8 +15,7 @@ from pathlib import Path
 from time import perf_counter
 
 import numpy as np
-from scipy.sparse import coo_matrix
-from scipy.sparse.csgraph import connected_components
+from scipy.cluster.hierarchy import DisjointSet
 
 import sample
 import spectrum
@@ -92,8 +92,7 @@ if __name__ == "__main__":
     parser.add_argument("--eps", type=float, default=.01)
     parser.add_argument("--lib", type=Path, default=sample.root / "build-mac/measure.so")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
-    parser.add_argument("--targets", type=int, default=3, help="retry targets per failed component")
-    parser.add_argument("--fresh", action="store_true", help="redo the first pass even if saved")
+    parser.add_argument("--attempts", type=int, default=6, help="failed pairs before a component gives up")
     args = parser.parse_args()
     args.edges = args.edges or args.samples.with_name(f"samples-edges-{args.eps}.npz")
     data, graph = np.load(args.samples), np.load(args.edges)
@@ -101,50 +100,63 @@ if __name__ == "__main__":
     points = data["points"][data["errors"] <= args.eps]
     edges, path = graph["edges"], graph["path_errors"]
     assert edges.max() < len(points), "edge file was built for a different band"
-    ok = path <= args.eps
     n = len(points)
-    count, label = connected_components(coo_matrix((np.ones(ok.sum()), (edges[ok, 0], edges[ok, 1])), shape=(n, n)), directed=False)
-    sizes = np.bincount(label)
-    giant = sizes.argmax()
-    core = points[label == giant]
-    print(f"eps={args.eps} points={n} components={count} largest={sizes[giant]}", flush=True)
-    saved = args.edges.with_name(f"connect-{args.eps}.npz")
+    sets = DisjointSet(range(n))
+    for i, j in edges[path <= args.eps]:
+        sets.merge(int(i), int(j))
+    D = np.linalg.norm(points[:, None, :]-points[None, :, :], axis=2)
+    def summary():
+        sizes = sorted((len(c) for c in sets.subsets()), reverse=True)
+        return f"components={len(sizes)} largest={sizes[:5]} singletons={sizes.count(1)}"
+    print(f"eps={args.eps} points={n} checked edges: {summary()}", flush=True)
     pool = mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), vowel, args.eps))
-    start = perf_counter()
-    if saved.exists() and not args.fresh:
-        rows = [tuple(r) for r in np.load(saved)["rows"]]
-    else:
-        # First pass: closest pair between each component and the largest one.
-        jobs, members = [], []
-        for c in np.flatnonzero(np.arange(count) != giant):
-            mine = points[label == c]
-            d = np.linalg.norm(mine[:, None, :]-core[None, :, :], axis=2)
-            i, j = np.unravel_index(d.argmin(), d.shape)
-            jobs.append((mine[i], core[j]))
-            members.append((c, sizes[c], d[i, j]))
-        rows = [(c, size, gap, *r) for (c, size, gap), r in zip(members, pool.map(connect, jobs, chunksize=1))]
-    # Retry failures against the grown core: several targets, both directions.
-    grown = np.isin(label, [giant] + [int(r[0]) for r in rows if r[3]])
-    jobs, owners = [], []
-    for k, r in enumerate(rows):
-        if r[3]:
-            continue
-        mine, core = points[label == int(r[0])], points[grown]
-        d = np.linalg.norm(mine[:, None, :]-core[None, :, :], axis=2)
-        for flat in np.argsort(d, axis=None)[:args.targets]:
-            i, j = np.unravel_index(flat, d.shape)
-            jobs += [(mine[i], core[j]), (core[j], mine[i])]
-            owners += [k, k]
-    for k, result in zip(owners, pool.map(connect, jobs, chunksize=1)):
-        if result[0] and not rows[k][3]:
-            rows[k] = (*rows[k][:3], *result)
+    start, tried, fails, rows, done = perf_counter(), set(), {}, [], set()
+    for step in range(1, 100):
+        jobs, seen = [], set()
+        for members in sets.subsets():
+            idx = np.array(sorted(members))
+            root = sets[idx[0]]
+            if len(idx) == n or fails.get(root, 0) >= args.attempts:
+                continue
+            outside = np.setdiff1d(np.arange(n), idx)
+            sub = D[np.ix_(idx, outside)]
+            for flat in np.argsort(sub, axis=None):
+                i, j = int(idx[flat // len(outside)]), int(outside[flat % len(outside)])
+                if (i, j) not in tried:
+                    break
+            else:
+                continue
+            if frozenset((i, j)) in seen:
+                continue
+            seen.add(frozenset((i, j)))
+            tried.add((i, j))
+            jobs.append((i, j, root))
+        if not jobs:
+            break
+        results = pool.map(connect, [(points[i], points[j]) for i, j, _ in jobs], chunksize=1)
+        for (i, j, root), r in zip(jobs, results):
+            rows.append((i, j, D[i, j], *r, step))
+            if r[0]:
+                if not sets.connected(i, j):
+                    sets.merge(i, j)
+                    fails.pop(root, None)
+                    fails.pop(sets[j], None)
+            else:
+                fails[root] = fails.get(root, 0)+1
+        # a merged component starts afresh
+        fails = {sets[r]: f for r, f in fails.items() if sets[r] == r}
+        print(f"round {step}: paths={len(jobs)} joined={sum(r[0] for r in results)} "
+              f"seconds={perf_counter()-start:.0f} {summary()}", flush=True)
     pool.close()
-    print(f"seconds={perf_counter()-start:.0f} retried_paths={len(jobs)}", flush=True)
-    joined = sum(size for c, size, gap, good, *_ in rows if good)
-    failed = [(c, size, gap) for c, size, gap, good, *_ in rows if not good]
-    print(f"joined {sum(bool(r[3]) for r in rows)}/{len(rows)} components; points in largest after joining: {sizes[giant]+joined:.0f}/{n}")
-    ratio = np.array([length/gap for _, _, gap, good, length, *_ in rows if good])
-    if len(ratio):
-        print(f"  corrected path length / straight gap: median {np.median(ratio):.2f}, max {ratio.max():.2f}")
-    print(f"  failed: {len(failed)} components, sizes {np.bincount(np.array([s for _, s, _ in failed], int)).tolist() if failed else []} (index = size), straight gaps median {np.median([g for *_, g in failed]) if failed else 0:.3f}")
-    np.savez(saved, rows=np.array(rows, float))
+    rows = np.array(rows, float)
+    good = rows[rows[:, 3] > 0]
+    print(f"paths tried={len(rows)} succeeded={len(good)}; length / straight gap median "
+          f"{np.median(good[:, 4]/good[:, 2]):.2f}, max {np.max(good[:, 4]/good[:, 2]):.2f}")
+    print("final", summary())
+    rest = [sorted(c) for c in sets.subsets() if len(c) < n/2]
+    errors = data["errors"][data["errors"] <= args.eps]
+    for c in rest:
+        print(f"  left out: size={len(c)} worst error={errors[c].max():.4f} "
+              f"at box edge={bool(np.any((points[c] < .01) | (points[c] > .99)))}")
+    np.savez(args.edges.with_name(f"connect-{args.eps}.npz"), rows=rows,
+             columns=np.array(["i", "j", "gap", "ok", "length", "npoints", "worst", "round"]))
