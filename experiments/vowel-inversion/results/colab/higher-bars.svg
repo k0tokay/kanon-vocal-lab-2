@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="690" height="360" viewBox="0 0 690 360"><rect width="100%" height="100%" fill="white"/><g font-family="sans-serif" font-size="15" fill="#202020">
+<path d="M65 12v292" stroke="#ddd"/><text x="65" y="325" text-anchor="middle">0.00</text>
+<path d="M180 12v292" stroke="#ddd"/><text x="180" y="325" text-anchor="middle">0.01</text>
+<path d="M295 12v292" stroke="#ddd"/><text x="295" y="325" text-anchor="middle">0.02</text>
+<path d="M410 12v292" stroke="#ddd"/><text x="410" y="325" text-anchor="middle">0.03</text>
+<path d="M525 12v292" stroke="#ddd"/><text x="525" y="325" text-anchor="middle">0.04</text>
+<path d="M640 12v292" stroke="#ddd"/><text x="640" y="325" text-anchor="middle">0.05</text>
+<path d="M257.0680503176261 16H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 13l6 3 -6 3z" fill="#245883"/>
+<path d="M279.2672020420089 24H315.1663537656724" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M306.6987130419186 32H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 29l6 3 -6 3z" fill="#245883"/>
+<path d="M316.77359582215115 40H317.28730027002194" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M318.16107959784745 48H318.95226986700186" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M325.9376137592241 56H416.4977830120115" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M328.5277951021454 64H421.269110981283" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M354.34671485431176 72H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 69l6 3 -6 3z" fill="#245883"/>
+<path d="M364.27654439823374 80H400.6533475185015" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M385.0018158268091 88H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 85l6 3 -6 3z" fill="#245883"/>
+<path d="M397.91109233078805 96H524.4768634068316" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M398.372080915969 104H423.3783411367272" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M412.0703955085116 112H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 109l6 3 -6 3z" fill="#245883"/>
+<path d="M438.1338312962522 120H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 117l6 3 -6 3z" fill="#245883"/>
+<path d="M474.075512387026 128H491.40743596731215" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M482.49226919015933 136H509.61851262608593" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M515.987700909403 144H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 141l6 3 -6 3z" fill="#245883"/>
+<path d="M517.991692548316 152H520.622732412609" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M518.6964665400025 160H528.8743029925733" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M536.5267526865719 168H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 165l6 3 -6 3z" fill="#245883"/>
+<path d="M559.0212720960818 176H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 173l6 3 -6 3z" fill="#245883"/>
+<path d="M559.823815627746 184H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 181l6 3 -6 3z" fill="#245883"/>
+<path d="M575.2190437101892 192H579.6443039525386" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M583.0420212057278 200H586.339148410675" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M588.7014877610683 208H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 205l6 3 -6 3z" fill="#245883"/>
+<path d="M589.0673500719864 216H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 213l6 3 -6 3z" fill="#245883"/>
+<path d="M591.047078155287 224H603.6307564481191" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M591.4555533196025 232H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 229l6 3 -6 3z" fill="#245883"/>
+<path d="M627.0336157880307 240H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 237l6 3 -6 3z" fill="#245883"/>
+<path d="M635.0289634667829 248H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 245l6 3 -6 3z" fill="#245883"/>
+<path d="M635.0289634667829 256H640.0" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<path d="M640.0 253l6 3 -6 3z" fill="#245883"/>
+<path d="M529.8505799798365 288H549.1398973020846" stroke="#245883" stroke-width="3" stroke-linecap="round"/>
+<text x="12" y="26">H1</text><text x="12" y="293">H2</text><text x="345" y="352" text-anchor="middle">Maximum absolute log-formant error</text></g></svg>
