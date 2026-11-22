@@ -83,6 +83,7 @@ if __name__ == "__main__":
     parser.add_argument("--neighbours", type=int, default=8)
     parser.add_argument("--interior", type=int, default=7, help="interior points per edge")
     parser.add_argument("--cap", type=float, default=.05)
+    parser.add_argument("--out", type=Path, help="edge file (default: <samples>-edges.npz)")
     parser.add_argument("--limit", type=int, help="use only the first points (for testing)")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
     args = parser.parse_args()
@@ -90,7 +91,7 @@ if __name__ == "__main__":
     data = np.load(args.samples)
     keep = data["errors"] <= args.cap
     points, errors = data["points"][keep][:args.limit], data["errors"][keep][:args.limit]
-    out = args.samples.with_name(args.samples.stem + "-edges.npz")
+    out = args.out or args.samples.with_name(args.samples.stem + "-edges.npz")
     tree = cKDTree(points)
     _, nn = tree.query(points, args.neighbours+1)
     edges = {tuple(sorted((i, int(j)))) for i, row in enumerate(nn) for j in row[1:]}
