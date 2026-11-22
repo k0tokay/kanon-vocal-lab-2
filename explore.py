@@ -1,5 +1,8 @@
 """Replica exchange on static /a/ and sampled connectivity of straight paths."""
 import ctypes
+import multiprocessing as mp
+import os
+from time import perf_counter
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -55,23 +58,37 @@ def run(seed):
             samples.extend(states[errors <= .05].copy())
     return samples
 
-samples = []
-for seed in (42, 43, 44):
-    samples.extend(run(seed))
-    np.save("samples.npy", np.unique(samples, axis=0))
-points = np.load("samples.npy")
-errors = np.array([error(p) for p in points])
-tree = cKDTree(points)
-edges = set()
-for i, p in enumerate(points):
-    for j in np.atleast_1d(tree.query(p, k=min(6,len(points)))[1]):
-        if i != j:
-            edges.add(tuple(sorted((i, int(j)))))
-paths = [(i,j,max(errors[i],errors[j],*(error(points[i]+t*(points[j]-points[i])) for t in np.linspace(0,1,17)[1:-1]))) for i,j in sorted(edges)]
-for tolerance in (.005,.01,.02,.05):
-    selected = errors <= tolerance
-    pairs = [(i,j) for i,j,e in paths if e <= tolerance]
-    rows, cols = zip(*pairs) if pairs else ([], [])
-    graph = coo_matrix((np.ones(len(rows)),(rows,cols)),shape=(len(points),)*2).tocsr()
-    count = connected_components(graph[selected][:,selected], directed=False, return_labels=False)
-    print(f"tolerance={tolerance} points={selected.sum()} sampled_graph_components={count}", flush=True)
+def measure_edge(pair):
+    i, j = pair
+    interior = (error(points[i]+t*(points[j]-points[i])) for t in np.linspace(0,1,17)[1:-1])
+    return i, j, max(errors[i], errors[j], *interior)
+
+if __name__ == "__main__":
+    # Separate processes isolate the mutable native tract and acoustic model.
+    workers = max(1, min(int(os.getenv("VTL_WORKERS", "3")), len(os.sched_getaffinity(0))))
+    ctx = mp.get_context("fork")
+    start = perf_counter()
+    samples = []
+    with ctx.Pool(min(workers, 3)) as pool:
+        for batch in pool.imap(run, (42, 43, 44)):
+            samples.extend(batch)
+            np.save("samples.npy", np.unique(samples, axis=0))
+    print(f"workers={workers} sampling_seconds={perf_counter()-start:.2f}", flush=True)
+    points = np.load("samples.npy")
+    errors = np.array([error(p) for p in points])
+    tree = cKDTree(points)
+    edges = set()
+    for i, p in enumerate(points):
+        for j in np.atleast_1d(tree.query(p, k=min(6,len(points)))[1]):
+            if i != j:
+                edges.add(tuple(sorted((i, int(j)))))
+    with ctx.Pool(workers) as pool:
+        paths = pool.map(measure_edge, sorted(edges), chunksize=4)
+    print(f"total_seconds={perf_counter()-start:.2f}", flush=True)
+    for tolerance in (.005,.01,.02,.05):
+        selected = errors <= tolerance
+        pairs = [(i,j) for i,j,e in paths if e <= tolerance]
+        rows, cols = zip(*pairs) if pairs else ([], [])
+        graph = coo_matrix((np.ones(len(rows)),(rows,cols)),shape=(len(points),)*2).tocsr()
+        count = connected_components(graph[selected][:,selected], directed=False, return_labels=False)
+        print(f"tolerance={tolerance} points={selected.sum()} sampled_graph_components={count}", flush=True)
