@@ -92,6 +92,8 @@ if __name__ == "__main__":
     parser.add_argument("--eps", type=float, default=.01)
     parser.add_argument("--lib", type=Path, default=sample.root / "build-mac/measure.so")
     parser.add_argument("--workers", type=int, default=os.cpu_count())
+    parser.add_argument("--targets", type=int, default=3, help="retry targets per failed component")
+    parser.add_argument("--fresh", action="store_true", help="redo the first pass even if saved")
     args = parser.parse_args()
     data, graph = np.load(args.samples), np.load(args.edges)
     points = data["points"][data["errors"] <= args.eps]
@@ -104,23 +106,43 @@ if __name__ == "__main__":
     giant = sizes.argmax()
     core = points[label == giant]
     print(f"eps={args.eps} points={n} components={count} largest={sizes[giant]}", flush=True)
-    jobs, members = [], []
-    for c in np.flatnonzero(np.arange(count) != giant):
-        mine = points[label == c]
-        d = np.linalg.norm(mine[:, None, :]-core[None, :, :], axis=2)
-        i, j = np.unravel_index(d.argmin(), d.shape)
-        jobs.append((mine[i], core[j]))
-        members.append((c, sizes[c], d[i, j]))
+    saved = args.edges.with_name(f"connect-{args.eps}.npz")
+    pool = mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), args.eps))
     start = perf_counter()
-    with mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), args.eps)) as pool:
-        results = pool.map(connect, jobs, chunksize=1)
-    print(f"seconds={perf_counter()-start:.0f}", flush=True)
-    rows = [(c, size, gap, *r) for (c, size, gap), r in zip(members, results)]
+    if saved.exists() and not args.fresh:
+        rows = [tuple(r) for r in np.load(saved)["rows"]]
+    else:
+        # First pass: closest pair between each component and the largest one.
+        jobs, members = [], []
+        for c in np.flatnonzero(np.arange(count) != giant):
+            mine = points[label == c]
+            d = np.linalg.norm(mine[:, None, :]-core[None, :, :], axis=2)
+            i, j = np.unravel_index(d.argmin(), d.shape)
+            jobs.append((mine[i], core[j]))
+            members.append((c, sizes[c], d[i, j]))
+        rows = [(c, size, gap, *r) for (c, size, gap), r in zip(members, pool.map(connect, jobs, chunksize=1))]
+    # Retry failures against the grown core: several targets, both directions.
+    grown = np.isin(label, [giant] + [int(r[0]) for r in rows if r[3]])
+    jobs, owners = [], []
+    for k, r in enumerate(rows):
+        if r[3]:
+            continue
+        mine, core = points[label == int(r[0])], points[grown]
+        d = np.linalg.norm(mine[:, None, :]-core[None, :, :], axis=2)
+        for flat in np.argsort(d, axis=None)[:args.targets]:
+            i, j = np.unravel_index(flat, d.shape)
+            jobs += [(mine[i], core[j]), (core[j], mine[i])]
+            owners += [k, k]
+    for k, result in zip(owners, pool.map(connect, jobs, chunksize=1)):
+        if result[0] and not rows[k][3]:
+            rows[k] = (*rows[k][:3], *result)
+    pool.close()
+    print(f"seconds={perf_counter()-start:.0f} retried_paths={len(jobs)}", flush=True)
     joined = sum(size for c, size, gap, good, *_ in rows if good)
     failed = [(c, size, gap) for c, size, gap, good, *_ in rows if not good]
-    print(f"joined {sum(r[3] for r in rows)}/{len(rows)} components; points in largest after joining: {sizes[giant]+joined}/{n}")
-    lengths = np.array([(gap, length) for _, _, gap, good, length, *_ in rows if good])
-    if len(lengths):
-        print(f"  straight gap median {np.median(lengths[:, 0]):.3f}, corrected path/gap ratio median {np.median(lengths[:, 1]/lengths[:, 0]):.2f}, max {lengths[:, 1].max()/lengths[lengths[:, 1].argmax(), 0]:.2f}")
-    print("  failed (component, size, straight gap):", [(int(c), int(s), round(float(g), 3)) for c, s, g in failed][:30])
-    np.savez(args.edges.with_name(f"connect-{args.eps}.npz"), rows=np.array([(c, s, g, ok_, L, m, w) for c, s, g, ok_, L, m, w in rows], float))
+    print(f"joined {sum(bool(r[3]) for r in rows)}/{len(rows)} components; points in largest after joining: {sizes[giant]+joined:.0f}/{n}")
+    ratio = np.array([length/gap for _, _, gap, good, length, *_ in rows if good])
+    if len(ratio):
+        print(f"  corrected path length / straight gap: median {np.median(ratio):.2f}, max {ratio.max():.2f}")
+    print(f"  failed: {len(failed)} components, sizes {np.bincount(np.array([s for _, s, _ in failed], int)).tolist() if failed else []} (index = size), straight gaps median {np.median([g for *_, g in failed]) if failed else 0:.3f}")
+    np.savez(saved, rows=np.array(rows, float))
