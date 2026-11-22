@@ -1,0 +1,2602 @@
+[
+ {
+  "label": "reference",
+  "formants": {
+   "a": [
+    896.0,
+    1541.0,
+    3727.0
+   ],
+   "i": [
+    475.0,
+    2578.0,
+    3721.0
+   ],
+   "M": [
+    615.0,
+    1570.0,
+    3129.0
+   ],
+   "e": [
+    738.0,
+    2133.0,
+    3270.0
+   ],
+   "o": [
+    650.0,
+    1295.0,
+    3504.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.33120960526184984
+  }
+ },
+ {
+  "label": "spk000",
+  "formants": {
+   "a": [
+    691.0,
+    1230.0,
+    2836.0
+   ],
+   "i": [
+    293.0,
+    2232.0,
+    2689.0
+   ],
+   "M": [
+    504.0,
+    1605.0,
+    2479.0
+   ],
+   "e": [
+    521.0,
+    1805.0,
+    2473.0
+   ],
+   "o": [
+    533.0,
+    1061.0,
+    2701.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.05655928409932733,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.5605209684458485
+  }
+ },
+ {
+  "label": "spk001",
+  "formants": {
+   "a": [
+    703.0,
+    1383.0,
+    3193.0
+   ],
+   "i": [
+    393.0,
+    2256.0,
+    2982.0
+   ],
+   "M": [
+    434.0,
+    1178.0,
+    2795.0
+   ],
+   "e": [
+    574.0,
+    1734.0,
+    2818.0
+   ],
+   "o": [
+    521.0,
+    1137.0,
+    3070.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.003618656378136069,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.6030337487374671
+  }
+ },
+ {
+  "label": "spk002",
+  "formants": {
+   "a": [
+    756.0,
+    1512.0,
+    3146.0
+   ],
+   "i": [
+    375.0,
+    2238.0,
+    3346.0
+   ],
+   "M": [
+    492.0,
+    1506.0,
+    2613.0
+   ],
+   "e": [
+    604.0,
+    2045.0,
+    2889.0
+   ],
+   "o": [
+    551.0,
+    1295.0,
+    2877.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.10789993722895588,
+   "tb-velar-closure(i)": 0.01132252610433982,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.5014904843321824
+  }
+ },
+ {
+  "label": "spk003",
+  "formants": {
+   "a": [
+    703.0,
+    1160.0,
+    2877.0
+   ],
+   "i": [
+    352.0,
+    2215.0,
+    2689.0
+   ],
+   "M": [
+    533.0,
+    1324.0,
+    2590.0
+   ],
+   "e": [
+    586.0,
+    1600.0,
+    2643.0
+   ],
+   "o": [
+    539.0,
+    1002.0,
+    2812.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.011555480784278566,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.3454773043929402
+  }
+ },
+ {
+  "label": "spk004",
+  "formants": {
+   "a": [
+    791.0,
+    1406.0,
+    3293.0
+   ],
+   "i": [
+    381.0,
+    2455.0,
+    3826.0
+   ],
+   "M": [
+    609.0,
+    1893.0,
+    2701.0
+   ],
+   "e": [
+    650.0,
+    2074.0,
+    2801.0
+   ],
+   "o": [
+    609.0,
+    1271.0,
+    2924.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.44591461416382716
+  }
+ },
+ {
+  "label": "spk005",
+  "formants": {
+   "a": [
+    932.0,
+    1377.0,
+    2842.0
+   ],
+   "i": [
+    305.0,
+    2027.0,
+    2467.0
+   ],
+   "M": [
+    545.0,
+    1184.0,
+    2314.0
+   ],
+   "e": [
+    627.0,
+    1506.0,
+    2215.0
+   ],
+   "o": [
+    650.0,
+    1348.0,
+    2684.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.03206433684701058,
+   "tt-alveolar-flap(a)": 0.2596083743940352,
+   "tt-alveolar-fricative(a)": 0.16439067451425987,
+   "tt-postalveolar-fricative(a)": 1.873079131645482
+  }
+ },
+ {
+  "label": "spk006",
+  "formants": {
+   "a": [
+    639.0,
+    1102.0,
+    2959.0
+   ],
+   "i": [
+    369.0,
+    1916.0,
+    2994.0
+   ],
+   "M": [
+    551.0,
+    1418.0,
+    2209.0
+   ],
+   "e": [
+    592.0,
+    1676.0,
+    2326.0
+   ],
+   "o": [
+    533.0,
+    1002.0,
+    2578.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.04559454355576653,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.9475488591928094
+  }
+ },
+ {
+  "label": "spk007",
+  "formants": {
+   "a": [
+    973.0,
+    2672.0,
+    3955.0
+   ],
+   "i": [
+    316.0,
+    674.0,
+    1441.0
+   ],
+   "M": [
+    510.0,
+    1113.0,
+    2197.0
+   ],
+   "e": [
+    574.0,
+    1541.0,
+    2244.0
+   ],
+   "o": [
+    492.0,
+    797.0,
+    2525.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.6308330281531231
+  }
+ },
+ {
+  "label": "spk008",
+  "formants": {
+   "a": [
+    650.0,
+    1008.0,
+    3229.0
+   ],
+   "i": [
+    322.0,
+    1963.0,
+    2531.0
+   ],
+   "M": [
+    498.0,
+    1025.0,
+    2572.0
+   ],
+   "e": [
+    627.0,
+    1582.0,
+    2713.0
+   ],
+   "o": [
+    533.0,
+    826.0,
+    3111.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.04095030560364883,
+   "tt-alveolar-flap(a)": 0.15,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.9706894569516893
+  }
+ },
+ {
+  "label": "spk009",
+  "formants": {
+   "a": [
+    732.0,
+    1242.0,
+    2982.0
+   ],
+   "i": [
+    422.0,
+    2197.0,
+    2877.0
+   ],
+   "M": [
+    533.0,
+    1406.0,
+    2502.0
+   ],
+   "e": [
+    604.0,
+    1676.0,
+    2520.0
+   ],
+   "o": [
+    557.0,
+    1107.0,
+    2801.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.22996293109089558,
+   "tb-velar-closure(i)": 0.0611626750456618,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.1900946089401696
+  }
+ },
+ {
+  "label": "spk010",
+  "formants": {
+   "a": [
+    574.0,
+    973.0,
+    2777.0
+   ],
+   "i": [
+    334.0,
+    2051.0,
+    2572.0
+   ],
+   "M": [
+    562.0,
+    1271.0,
+    2326.0
+   ],
+   "e": [
+    609.0,
+    1547.0,
+    2303.0
+   ],
+   "o": [
+    527.0,
+    844.0,
+    2619.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.013392928708738296,
+   "tt-alveolar-flap(a)": 0.14839313889766745,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.5435875371310093
+  }
+ },
+ {
+  "label": "spk011",
+  "formants": {
+   "a": [
+    627.0,
+    1154.0,
+    3281.0
+   ],
+   "i": [
+    375.0,
+    2326.0,
+    3088.0
+   ],
+   "M": [
+    510.0,
+    1418.0,
+    2900.0
+   ],
+   "e": [
+    604.0,
+    1693.0,
+    3117.0
+   ],
+   "o": [
+    480.0,
+    850.0,
+    3193.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.01360775861618766,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.7043794734719923
+  }
+ },
+ {
+  "label": "spk012",
+  "formants": {
+   "a": [
+    674.0,
+    1137.0,
+    2842.0
+   ],
+   "i": [
+    334.0,
+    2180.0,
+    3258.0
+   ],
+   "M": [
+    598.0,
+    1605.0,
+    2350.0
+   ],
+   "e": [
+    615.0,
+    1828.0,
+    2438.0
+   ],
+   "o": [
+    574.0,
+    1061.0,
+    2525.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.014850438232276412,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.7722494327883331
+  }
+ },
+ {
+  "label": "spk013",
+  "formants": {
+   "a": [
+    598.0,
+    984.0,
+    2549.0
+   ],
+   "i": [
+    299.0,
+    1939.0,
+    2520.0
+   ],
+   "M": [
+    504.0,
+    1336.0,
+    2104.0
+   ],
+   "e": [
+    527.0,
+    1506.0,
+    2098.0
+   ],
+   "o": [
+    498.0,
+    932.0,
+    2355.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.2395138900537828,
+   "tb-velar-closure(i)": 0.05373908342453498,
+   "tt-alveolar-flap(a)": 0.2988511750691488,
+   "tt-alveolar-fricative(a)": 0.2615110519368423,
+   "tt-postalveolar-fricative(a)": 2.0000006747912704
+  }
+ },
+ {
+  "label": "spk014",
+  "formants": {
+   "a": [
+    732.0,
+    1236.0,
+    3199.0
+   ],
+   "i": [
+    428.0,
+    2408.0,
+    2988.0
+   ],
+   "M": [
+    557.0,
+    1512.0,
+    2801.0
+   ],
+   "e": [
+    604.0,
+    1729.0,
+    2766.0
+   ],
+   "o": [
+    551.0,
+    1049.0,
+    3076.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.2982466941718724,
+   "tb-velar-closure(i)": 0.05634340785812063,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.21761842855837088,
+   "tt-postalveolar-fricative(a)": 1.1670352993078525
+  }
+ },
+ {
+  "label": "spk015",
+  "formants": {
+   "a": [
+    697.0,
+    1600.0,
+    3094.0
+   ],
+   "i": [
+    328.0,
+    2338.0,
+    3240.0
+   ],
+   "M": [
+    434.0,
+    1459.0,
+    2678.0
+   ],
+   "e": [
+    551.0,
+    2027.0,
+    2842.0
+   ],
+   "o": [
+    492.0,
+    1324.0,
+    2895.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.005343184169636743,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.26531871414814434
+  }
+ },
+ {
+  "label": "spk016",
+  "formants": {
+   "a": [
+    768.0,
+    1412.0,
+    3141.0
+   ],
+   "i": [
+    316.0,
+    2238.0,
+    3662.0
+   ],
+   "M": [
+    592.0,
+    1705.0,
+    2672.0
+   ],
+   "e": [
+    592.0,
+    1998.0,
+    2766.0
+   ],
+   "o": [
+    580.0,
+    1260.0,
+    2865.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.24856527147842875,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.41156419786815834,
+   "tt-alveolar-fricative(a)": 0.4913124825421251,
+   "tt-postalveolar-fricative(a)": 1.2860250593993805
+  }
+ },
+ {
+  "label": "spk017",
+  "formants": {
+   "a": [
+    727.0,
+    1523.0,
+    3064.0
+   ],
+   "i": [
+    322.0,
+    2350.0,
+    3311.0
+   ],
+   "M": [
+    434.0,
+    1359.0,
+    2537.0
+   ],
+   "e": [
+    551.0,
+    1980.0,
+    2713.0
+   ],
+   "o": [
+    545.0,
+    1330.0,
+    2824.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.19307679796709126
+  }
+ },
+ {
+  "label": "spk018",
+  "formants": {
+   "a": [
+    697.0,
+    1395.0,
+    2895.0
+   ],
+   "i": [
+    293.0,
+    2197.0,
+    3117.0
+   ],
+   "M": [
+    422.0,
+    1424.0,
+    2408.0
+   ],
+   "e": [
+    527.0,
+    1881.0,
+    2555.0
+   ],
+   "o": [
+    521.0,
+    1301.0,
+    2648.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.08496733136493977,
+   "tb-velar-closure(i)": 0.04619009770666689,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.8789548681784565
+  }
+ },
+ {
+  "label": "spk019",
+  "formants": {
+   "a": [
+    943.0,
+    2900.0,
+    3562.0
+   ],
+   "i": [
+    369.0,
+    2057.0,
+    2637.0
+   ],
+   "M": [
+    545.0,
+    1359.0,
+    2332.0
+   ],
+   "e": [
+    592.0,
+    1559.0,
+    2291.0
+   ],
+   "o": [
+    492.0,
+    803.0,
+    2777.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.06357762245837982,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.3599626778768636
+  }
+ },
+ {
+  "label": "spk020",
+  "formants": {
+   "a": [
+    768.0,
+    1424.0,
+    3229.0
+   ],
+   "i": [
+    393.0,
+    2490.0,
+    3252.0
+   ],
+   "M": [
+    557.0,
+    1658.0,
+    2947.0
+   ],
+   "e": [
+    609.0,
+    1922.0,
+    2982.0
+   ],
+   "o": [
+    557.0,
+    1178.0,
+    3135.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.013786005973911488,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.8266757392027295
+  }
+ },
+ {
+  "label": "spk021",
+  "formants": {
+   "a": [
+    510.0,
+    861.0,
+    2678.0
+   ],
+   "i": [
+    299.0,
+    1570.0,
+    2080.0
+   ],
+   "M": [
+    434.0,
+    896.0,
+    2180.0
+   ],
+   "e": [
+    551.0,
+    1371.0,
+    2209.0
+   ],
+   "o": [
+    457.0,
+    732.0,
+    2602.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.17534831560234476,
+   "tb-velar-closure(i)": 0.062339430048802484,
+   "tt-alveolar-flap(a)": 0.33265462385912187,
+   "tt-alveolar-fricative(a)": 0.270636733233156,
+   "tt-postalveolar-fricative(a)": 2.31032735516662
+  }
+ },
+ {
+  "label": "spk022",
+  "formants": {
+   "a": [
+    721.0,
+    1324.0,
+    3193.0
+   ],
+   "i": [
+    439.0,
+    2162.0,
+    3252.0
+   ],
+   "M": [
+    592.0,
+    1670.0,
+    2631.0
+   ],
+   "e": [
+    650.0,
+    1863.0,
+    2689.0
+   ],
+   "o": [
+    574.0,
+    1107.0,
+    2877.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.1512902198237412,
+   "tt-postalveolar-fricative(a)": 0.6691733550061563
+  }
+ },
+ {
+  "label": "spk023",
+  "formants": {
+   "a": [
+    639.0,
+    1043.0,
+    2678.0
+   ],
+   "i": [
+    357.0,
+    1975.0,
+    2684.0
+   ],
+   "M": [
+    545.0,
+    1436.0,
+    2268.0
+   ],
+   "e": [
+    586.0,
+    1605.0,
+    2262.0
+   ],
+   "o": [
+    533.0,
+    949.0,
+    2479.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0036620641446463427,
+   "tb-velar-closure(i)": 0.02687580852261968,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.152514971053707
+  }
+ },
+ {
+  "label": "spk024",
+  "formants": {
+   "a": [
+    762.0,
+    1629.0,
+    3158.0
+   ],
+   "i": [
+    328.0,
+    2484.0,
+    3609.0
+   ],
+   "M": [
+    533.0,
+    1922.0,
+    2824.0
+   ],
+   "e": [
+    568.0,
+    2227.0,
+    2977.0
+   ],
+   "o": [
+    551.0,
+    1371.0,
+    2930.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.22824571379475914
+  }
+ },
+ {
+  "label": "spk025",
+  "formants": {
+   "a": [
+    750.0,
+    1617.0,
+    3609.0
+   ],
+   "i": [
+    393.0,
+    2842.0,
+    3668.0
+   ],
+   "M": [
+    504.0,
+    1670.0,
+    3234.0
+   ],
+   "e": [
+    568.0,
+    2080.0,
+    3293.0
+   ],
+   "o": [
+    539.0,
+    1330.0,
+    3510.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.05778735414674083,
+   "tb-velar-closure(i)": 0.059229632193714736,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.5964368471612783
+  }
+ },
+ {
+  "label": "spk026",
+  "formants": {
+   "a": [
+    580.0,
+    1107.0,
+    3463.0
+   ],
+   "i": [
+    381.0,
+    2209.0,
+    2924.0
+   ],
+   "M": [
+    416.0,
+    961.0,
+    2818.0
+   ],
+   "e": [
+    568.0,
+    1576.0,
+    2789.0
+   ],
+   "o": [
+    480.0,
+    902.0,
+    3340.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.03352695469320639,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.6933210021739138
+  }
+ },
+ {
+  "label": "spk027",
+  "formants": {
+   "a": [
+    668.0,
+    1143.0,
+    2953.0
+   ],
+   "i": [
+    398.0,
+    2203.0,
+    2678.0
+   ],
+   "M": [
+    521.0,
+    1383.0,
+    2584.0
+   ],
+   "e": [
+    580.0,
+    1582.0,
+    2590.0
+   ],
+   "o": [
+    516.0,
+    949.0,
+    2895.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.18881618429365582,
+   "tb-velar-closure(i)": 0.0395609637031574,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.16235234124280398,
+   "tt-postalveolar-fricative(a)": 1.4373011347505964
+  }
+ },
+ {
+  "label": "spk028",
+  "formants": {
+   "a": [
+    680.0,
+    1564.0,
+    2982.0
+   ],
+   "i": [
+    316.0,
+    674.0,
+    1447.0
+   ],
+   "M": [
+    463.0,
+    1729.0,
+    2654.0
+   ],
+   "e": [
+    533.0,
+    2045.0,
+    2719.0
+   ],
+   "o": [
+    475.0,
+    1166.0,
+    2848.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.09645881189808951
+  }
+ },
+ {
+  "label": "spk029",
+  "formants": {
+   "a": [
+    750.0,
+    1336.0,
+    2912.0
+   ],
+   "i": [
+    316.0,
+    2191.0,
+    3797.0
+   ],
+   "M": [
+    574.0,
+    1752.0,
+    2479.0
+   ],
+   "e": [
+    586.0,
+    1922.0,
+    2549.0
+   ],
+   "o": [
+    574.0,
+    1260.0,
+    2561.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.19789024065879363,
+   "tb-velar-closure(i)": 0.01668224208644124,
+   "tt-alveolar-flap(a)": 0.09065574297199407,
+   "tt-alveolar-fricative(a)": 0.3210490945006331,
+   "tt-postalveolar-fricative(a)": 1.0804053097624622
+  }
+ },
+ {
+  "label": "spk030",
+  "formants": {
+   "a": [
+    703.0,
+    1225.0,
+    2994.0
+   ],
+   "i": [
+    363.0,
+    1986.0,
+    2695.0
+   ],
+   "M": [
+    492.0,
+    1184.0,
+    2584.0
+   ],
+   "e": [
+    598.0,
+    1629.0,
+    2637.0
+   ],
+   "o": [
+    516.0,
+    996.0,
+    2871.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.07246461823110831,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.7132568321348345
+  }
+ },
+ {
+  "label": "spk031",
+  "formants": {
+   "a": [
+    656.0,
+    1260.0,
+    2795.0
+   ],
+   "i": [
+    322.0,
+    1992.0,
+    2760.0
+   ],
+   "M": [
+    504.0,
+    1553.0,
+    2350.0
+   ],
+   "e": [
+    545.0,
+    1764.0,
+    2373.0
+   ],
+   "o": [
+    521.0,
+    1061.0,
+    2537.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.4284489843386564
+  }
+ },
+ {
+  "label": "spk032",
+  "formants": {
+   "a": [
+    691.0,
+    1230.0,
+    2918.0
+   ],
+   "i": [
+    387.0,
+    2127.0,
+    2842.0
+   ],
+   "M": [
+    521.0,
+    1436.0,
+    2596.0
+   ],
+   "e": [
+    586.0,
+    1705.0,
+    2619.0
+   ],
+   "o": [
+    516.0,
+    1020.0,
+    2818.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.17562899595415032,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.0438725919669898
+  }
+ },
+ {
+  "label": "spk033",
+  "formants": {
+   "a": [
+    721.0,
+    1389.0,
+    3193.0
+   ],
+   "i": [
+    328.0,
+    2203.0,
+    2971.0
+   ],
+   "M": [
+    428.0,
+    1184.0,
+    2871.0
+   ],
+   "e": [
+    557.0,
+    1775.0,
+    2959.0
+   ],
+   "o": [
+    516.0,
+    1148.0,
+    3141.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.04102628952481082,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.8037869454993866
+  }
+ },
+ {
+  "label": "spk034",
+  "formants": {
+   "a": [
+    738.0,
+    1389.0,
+    3082.0
+   ],
+   "i": [
+    346.0,
+    2133.0,
+    3053.0
+   ],
+   "M": [
+    486.0,
+    1389.0,
+    2549.0
+   ],
+   "e": [
+    592.0,
+    1910.0,
+    2701.0
+   ],
+   "o": [
+    533.0,
+    1189.0,
+    2818.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.12675140659621703,
+   "tb-velar-closure(i)": 0.018837611837651022,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.8378333471380025
+  }
+ },
+ {
+  "label": "spk035",
+  "formants": {
+   "a": [
+    732.0,
+    1576.0,
+    2971.0
+   ],
+   "i": [
+    322.0,
+    2244.0,
+    3404.0
+   ],
+   "M": [
+    510.0,
+    1922.0,
+    2631.0
+   ],
+   "e": [
+    574.0,
+    2104.0,
+    2842.0
+   ],
+   "o": [
+    533.0,
+    1406.0,
+    2730.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.29423139413205485
+  }
+ },
+ {
+  "label": "spk036",
+  "formants": {
+   "a": [
+    797.0,
+    1512.0,
+    3012.0
+   ],
+   "i": [
+    322.0,
+    2191.0,
+    3709.0
+   ],
+   "M": [
+    592.0,
+    1910.0,
+    2713.0
+   ],
+   "e": [
+    627.0,
+    2010.0,
+    2971.0
+   ],
+   "o": [
+    598.0,
+    1400.0,
+    2602.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.3504847814765272
+  }
+ },
+ {
+  "label": "spk037",
+  "formants": {
+   "a": [
+    744.0,
+    1307.0,
+    2988.0
+   ],
+   "i": [
+    363.0,
+    2238.0,
+    3176.0
+   ],
+   "M": [
+    539.0,
+    1541.0,
+    2514.0
+   ],
+   "e": [
+    604.0,
+    1898.0,
+    2643.0
+   ],
+   "o": [
+    568.0,
+    1201.0,
+    2736.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.025947737689707474,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.5924992987774509
+  }
+ },
+ {
+  "label": "spk038",
+  "formants": {
+   "a": [
+    732.0,
+    1184.0,
+    2824.0
+   ],
+   "i": [
+    305.0,
+    1969.0,
+    3287.0
+   ],
+   "M": [
+    434.0,
+    1359.0,
+    2086.0
+   ],
+   "e": [
+    615.0,
+    1740.0,
+    2607.0
+   ],
+   "o": [
+    551.0,
+    1184.0,
+    2379.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.06201607392342896,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.8645630392746498
+  }
+ },
+ {
+  "label": "spk039",
+  "formants": {
+   "a": [
+    674.0,
+    1154.0,
+    2742.0
+   ],
+   "i": [
+    316.0,
+    1887.0,
+    2379.0
+   ],
+   "M": [
+    404.0,
+    1072.0,
+    2332.0
+   ],
+   "e": [
+    557.0,
+    1600.0,
+    2402.0
+   ],
+   "o": [
+    492.0,
+    1043.0,
+    2584.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.04964746419493967,
+   "tt-alveolar-flap(a)": 0.1896585167895091,
+   "tt-alveolar-fricative(a)": 0.33546364499977105,
+   "tt-postalveolar-fricative(a)": 1.777192091039083
+  }
+ },
+ {
+  "label": "spk040",
+  "formants": {
+   "a": [
+    668.0,
+    1154.0,
+    3117.0
+   ],
+   "i": [
+    328.0,
+    2314.0,
+    3111.0
+   ],
+   "M": [
+    533.0,
+    1559.0,
+    2631.0
+   ],
+   "e": [
+    551.0,
+    1758.0,
+    2613.0
+   ],
+   "o": [
+    533.0,
+    979.0,
+    2947.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.04355750842826791,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.1070196829098833
+  }
+ },
+ {
+  "label": "spk041",
+  "formants": {
+   "a": [
+    697.0,
+    1295.0,
+    2912.0
+   ],
+   "i": [
+    322.0,
+    2145.0,
+    2719.0
+   ],
+   "M": [
+    498.0,
+    1412.0,
+    2613.0
+   ],
+   "e": [
+    557.0,
+    1746.0,
+    2660.0
+   ],
+   "o": [
+    533.0,
+    1084.0,
+    2812.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.5440492111080869
+  }
+ },
+ {
+  "label": "spk042",
+  "formants": {
+   "a": [
+    750.0,
+    1395.0,
+    3281.0
+   ],
+   "i": [
+    340.0,
+    2232.0,
+    3035.0
+   ],
+   "M": [
+    469.0,
+    1312.0,
+    2748.0
+   ],
+   "e": [
+    592.0,
+    1863.0,
+    2877.0
+   ],
+   "o": [
+    545.0,
+    1201.0,
+    3064.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.1438846767628577,
+   "tb-velar-closure(i)": 0.012850304558267146,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.9124275964023971
+  }
+ },
+ {
+  "label": "spk043",
+  "formants": {
+   "a": [
+    850.0,
+    1646.0,
+    3082.0
+   ],
+   "i": [
+    486.0,
+    2191.0,
+    3363.0
+   ],
+   "M": [
+    633.0,
+    1945.0,
+    2672.0
+   ],
+   "e": [
+    703.0,
+    2098.0,
+    2900.0
+   ],
+   "o": [
+    604.0,
+    1406.0,
+    2771.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.2647347109589824,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.17575965272123611,
+   "tt-alveolar-fricative(a)": 0.3536461362258657,
+   "tt-postalveolar-fricative(a)": 0.6059115390307839
+  }
+ },
+ {
+  "label": "spk044",
+  "formants": {
+   "a": [
+    709.0,
+    1283.0,
+    2982.0
+   ],
+   "i": [
+    322.0,
+    2086.0,
+    3117.0
+   ],
+   "M": [
+    562.0,
+    1676.0,
+    2391.0
+   ],
+   "e": [
+    598.0,
+    1852.0,
+    2525.0
+   ],
+   "o": [
+    580.0,
+    1154.0,
+    2596.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.013762452450437779,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.24931718029064526
+  }
+ },
+ {
+  "label": "spk045",
+  "formants": {
+   "a": [
+    703.0,
+    1260.0,
+    2824.0
+   ],
+   "i": [
+    363.0,
+    2221.0,
+    3141.0
+   ],
+   "M": [
+    521.0,
+    1670.0,
+    2408.0
+   ],
+   "e": [
+    557.0,
+    1863.0,
+    2455.0
+   ],
+   "o": [
+    533.0,
+    1160.0,
+    2602.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.12781319483513878,
+   "tb-velar-closure(i)": 0.05783764716104497,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.0185432834872883
+  }
+ },
+ {
+  "label": "spk046",
+  "formants": {
+   "a": [
+    709.0,
+    1178.0,
+    3094.0
+   ],
+   "i": [
+    369.0,
+    2127.0,
+    2695.0
+   ],
+   "M": [
+    486.0,
+    1113.0,
+    2555.0
+   ],
+   "e": [
+    609.0,
+    1623.0,
+    2596.0
+   ],
+   "o": [
+    545.0,
+    984.0,
+    2930.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0344644833534026,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.6321908030879257
+  }
+ },
+ {
+  "label": "spk047",
+  "formants": {
+   "a": [
+    762.0,
+    1330.0,
+    3193.0
+   ],
+   "i": [
+    322.0,
+    2250.0,
+    3393.0
+   ],
+   "M": [
+    568.0,
+    1570.0,
+    2514.0
+   ],
+   "e": [
+    609.0,
+    1904.0,
+    2637.0
+   ],
+   "o": [
+    586.0,
+    1225.0,
+    2836.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.03892033590419971,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.7447340653635867
+  }
+ },
+ {
+  "label": "spk048",
+  "formants": {
+   "a": [
+    756.0,
+    1506.0,
+    3322.0
+   ],
+   "i": [
+    340.0,
+    2443.0,
+    3410.0
+   ],
+   "M": [
+    521.0,
+    1652.0,
+    2889.0
+   ],
+   "e": [
+    598.0,
+    2021.0,
+    3041.0
+   ],
+   "o": [
+    533.0,
+    1172.0,
+    3158.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.12392827066156073
+  }
+ },
+ {
+  "label": "spk049",
+  "formants": {
+   "a": [
+    697.0,
+    1143.0,
+    2801.0
+   ],
+   "i": [
+    357.0,
+    2115.0,
+    3170.0
+   ],
+   "M": [
+    574.0,
+    1611.0,
+    2268.0
+   ],
+   "e": [
+    598.0,
+    1770.0,
+    2314.0
+   ],
+   "o": [
+    562.0,
+    1107.0,
+    2473.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.17147576431955247,
+   "tb-velar-closure(i)": 0.04737130638881378,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.0467409842227073
+  }
+ },
+ {
+  "label": "spk050",
+  "formants": {
+   "a": [
+    779.0,
+    1623.0,
+    3498.0
+   ],
+   "i": [
+    346.0,
+    2672.0,
+    3662.0
+   ],
+   "M": [
+    545.0,
+    1869.0,
+    3094.0
+   ],
+   "e": [
+    580.0,
+    2262.0,
+    3205.0
+   ],
+   "o": [
+    568.0,
+    1348.0,
+    3316.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.18938665404035052
+  }
+ },
+ {
+  "label": "spk051",
+  "formants": {
+   "a": [
+    732.0,
+    1266.0,
+    2801.0
+   ],
+   "i": [
+    381.0,
+    2027.0,
+    3029.0
+   ],
+   "M": [
+    586.0,
+    1641.0,
+    2250.0
+   ],
+   "e": [
+    621.0,
+    1822.0,
+    2414.0
+   ],
+   "o": [
+    580.0,
+    1160.0,
+    2432.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.00315680753278405,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.6210386335153287
+  }
+ },
+ {
+  "label": "spk052",
+  "formants": {
+   "a": [
+    668.0,
+    1184.0,
+    3275.0
+   ],
+   "i": [
+    369.0,
+    2209.0,
+    3082.0
+   ],
+   "M": [
+    475.0,
+    1096.0,
+    2842.0
+   ],
+   "e": [
+    604.0,
+    1688.0,
+    3094.0
+   ],
+   "o": [
+    521.0,
+    955.0,
+    3199.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.10139378037180526,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.8240505980476449
+  }
+ },
+ {
+  "label": "spk053",
+  "formants": {
+   "a": [
+    680.0,
+    1436.0,
+    2818.0
+   ],
+   "i": [
+    299.0,
+    2115.0,
+    3053.0
+   ],
+   "M": [
+    475.0,
+    1676.0,
+    2326.0
+   ],
+   "e": [
+    521.0,
+    1934.0,
+    2520.0
+   ],
+   "o": [
+    510.0,
+    1254.0,
+    2543.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.18192492388916726
+  }
+ },
+ {
+  "label": "spk054",
+  "formants": {
+   "a": [
+    680.0,
+    1248.0,
+    3029.0
+   ],
+   "i": [
+    305.0,
+    2191.0,
+    2936.0
+   ],
+   "M": [
+    533.0,
+    1605.0,
+    2578.0
+   ],
+   "e": [
+    557.0,
+    1887.0,
+    2607.0
+   ],
+   "o": [
+    545.0,
+    1037.0,
+    2789.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.36458461162499
+  }
+ },
+ {
+  "label": "spk055",
+  "formants": {
+   "a": [
+    744.0,
+    1371.0,
+    3135.0
+   ],
+   "i": [
+    369.0,
+    2068.0,
+    2854.0
+   ],
+   "M": [
+    498.0,
+    1271.0,
+    2783.0
+   ],
+   "e": [
+    615.0,
+    1740.0,
+    2865.0
+   ],
+   "o": [
+    510.0,
+    1125.0,
+    3035.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.15,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.4164977034393846
+  }
+ },
+ {
+  "label": "spk056",
+  "formants": {
+   "a": [
+    258.0,
+    891.0,
+    2514.0
+   ],
+   "i": [
+    316.0,
+    1893.0,
+    2297.0
+   ],
+   "M": [
+    551.0,
+    1277.0,
+    2062.0
+   ],
+   "e": [
+    586.0,
+    1447.0,
+    2086.0
+   ],
+   "o": [
+    521.0,
+    814.0,
+    2332.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.026623475228726365,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.238252672612289
+  }
+ },
+ {
+  "label": "spk057",
+  "formants": {
+   "a": [
+    727.0,
+    1635.0,
+    3334.0
+   ],
+   "i": [
+    311.0,
+    2613.0,
+    3697.0
+   ],
+   "M": [
+    498.0,
+    1939.0,
+    2977.0
+   ],
+   "e": [
+    545.0,
+    2297.0,
+    3123.0
+   ],
+   "o": [
+    527.0,
+    1365.0,
+    3199.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.0001,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.06707144209631577
+  }
+ },
+ {
+  "label": "spk058",
+  "formants": {
+   "a": [
+    662.0,
+    1160.0,
+    2812.0
+   ],
+   "i": [
+    322.0,
+    1834.0,
+    3170.0
+   ],
+   "M": [
+    527.0,
+    1541.0,
+    2203.0
+   ],
+   "e": [
+    568.0,
+    1658.0,
+    2355.0
+   ],
+   "o": [
+    533.0,
+    1090.0,
+    2373.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.050720470203396505,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.813410684856591
+  }
+ },
+ {
+  "label": "spk059",
+  "formants": {
+   "a": [
+    744.0,
+    1236.0,
+    2930.0
+   ],
+   "i": [
+    428.0,
+    2139.0,
+    2766.0
+   ],
+   "M": [
+    574.0,
+    1465.0,
+    2537.0
+   ],
+   "e": [
+    639.0,
+    1717.0,
+    2537.0
+   ],
+   "o": [
+    557.0,
+    1043.0,
+    2742.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.008458602542914667,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.7310041630371797
+  }
+ },
+ {
+  "label": "spk060",
+  "formants": {
+   "a": [
+    715.0,
+    1236.0,
+    2918.0
+   ],
+   "i": [
+    334.0,
+    2314.0,
+    2801.0
+   ],
+   "M": [
+    533.0,
+    1477.0,
+    2713.0
+   ],
+   "e": [
+    568.0,
+    1682.0,
+    2801.0
+   ],
+   "o": [
+    539.0,
+    1020.0,
+    2889.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.1419291394755574,
+   "tb-velar-closure(i)": 0.010175782710036267,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.0958046411486615
+  }
+ },
+ {
+  "label": "spk061",
+  "formants": {
+   "a": [
+    686.0,
+    1113.0,
+    2549.0
+   ],
+   "i": [
+    340.0,
+    2186.0,
+    2631.0
+   ],
+   "M": [
+    533.0,
+    1424.0,
+    2391.0
+   ],
+   "e": [
+    568.0,
+    1605.0,
+    2443.0
+   ],
+   "o": [
+    533.0,
+    1008.0,
+    2490.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.19672812059391745,
+   "tb-velar-closure(i)": 0.015653053299534397,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.2932049138784474
+  }
+ },
+ {
+  "label": "spk062",
+  "formants": {
+   "a": [
+    445.0,
+    984.0,
+    2930.0
+   ],
+   "i": [
+    387.0,
+    2156.0,
+    2625.0
+   ],
+   "M": [
+    533.0,
+    1166.0,
+    2555.0
+   ],
+   "e": [
+    615.0,
+    1488.0,
+    2619.0
+   ],
+   "o": [
+    486.0,
+    785.0,
+    2889.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.15,
+   "tb-velar-closure(i)": 0.018294820470659407,
+   "tt-alveolar-flap(a)": 0.14743012080898613,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 1.3395443875306015
+  }
+ },
+ {
+  "label": "spk063",
+  "formants": {
+   "a": [
+    703.0,
+    1471.0,
+    3117.0
+   ],
+   "i": [
+    387.0,
+    2256.0,
+    3229.0
+   ],
+   "M": [
+    527.0,
+    1775.0,
+    2713.0
+   ],
+   "e": [
+    592.0,
+    2051.0,
+    2736.0
+   ],
+   "o": [
+    521.0,
+    1172.0,
+    2947.0
+   ]
+  },
+  "min_area_cm2": {
+   "ll-labial-closure(a)": 0.0001,
+   "tt-alveolar-closure(a)": 0.0001,
+   "tb-velar-closure(a)": 0.0001,
+   "tt-alveolar-closure(i)": 0.0001,
+   "tb-velar-closure(i)": 0.01687323750095545,
+   "tt-alveolar-flap(a)": 0.0001,
+   "tt-alveolar-fricative(a)": 0.15,
+   "tt-postalveolar-fricative(a)": 0.23128390608797816
+  }
+ }
+]
