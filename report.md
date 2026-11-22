@@ -42,3 +42,9 @@ cmake --build build-mac/gui --target VocalTractLabApi
 clang++ -O2 -std=c++14 -Ibackend -Wl,-rpath,build-mac/gui experiments/vowel-inversion/fiber_path.cpp build-mac/gui/libVocalTractLabApi.dylib -o build-mac/fiber-path
 python3 experiments/vowel-inversion/run_fiber_paths.py
 ```
+
+### 基準 /a/ の0次パーシステントホモロジー
+
+嘉音の F1–F3 = (852.857, 1528.300, 3652.045) Hz を固定し、上記4経路の開いた実測形状2047点を使用した。経路上の隣接点を結んだ2048辺のグラフに最大絶対対数フォルマント誤差の lower-star filtration を入れると、誤差 0.001, 0.003, 0.01, 0.02, 0.04 で成分数は順に18, 9, 7, 3, 1となった。
+
+別に各誤差帯内の点群に対し、話者の各パラメータの可動幅で正規化した19次元ユークリッド距離で Vietoris–Rips の H0 を計算した。誤差 0.01 の739点では接続距離 0.01, 0.02, 0.05 で5, 4, 1成分。距離だけで張った辺の途中の音響は未評価であり、厳密な等値面の連結を保証しない。また点群は4経路に偏る。全持続区間と成分数曲線は experiments/vowel-inversion/results/fiber-persistence/ に保存した。再計算は NumPy, SciPy, Matplotlib のある Python で experiments/vowel-inversion/fiber_persistence.py を実行する。
