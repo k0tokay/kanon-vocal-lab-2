@@ -8,7 +8,7 @@ results = Path(__file__).resolve().parent / "results"
 folder = results / "fiber-paths"
 folder.mkdir(exist_ok=True)
 speaker = root / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vowel-variation.speaker"
-with (results / "manual/shapes.csv").open() as source:
+with (root / "experiments/vowel-inversion/results/manual/shapes.csv").open() as source:
     rows = [row for row in csv.DictReader(source) if row["vowel"] == "a"]
 reference = next(row for row in rows if row["stage"] == "reference")
 labels = list(reference)[list(reference).index("HX"):]

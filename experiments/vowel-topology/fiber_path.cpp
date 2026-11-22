@@ -1,5 +1,5 @@
 // Read two parameter vectors from stdin. Write validated path samples as CSV.
-#include "vowel_measurement.h"
+#include "../vowel-inversion/vowel_measurement.h"
 
 int main(int argc, char **argv) {
   if (argc != 3) return 1;
