@@ -1,0 +1,5 @@
+max_abs_log_formant_error,sampled_points,sampled_graph_components
+0.005,4,4
+0.01,26,18
+0.02,87,19
+0.05,244,9
