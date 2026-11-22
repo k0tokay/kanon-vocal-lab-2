@@ -11,7 +11,7 @@ import numpy as np
 import torch
 from scipy.fft import dct
 
-from emjem import N_TRACT, Inference, Normalizer, infer, load_corpus, log_mel
+from emjem import N_TRACT, Inference, Normalizer, infer, load_corpus, log_mel, pick_device
 from synth import Pool
 
 
@@ -46,7 +46,7 @@ def main():
     norm = Normalizer(meta)
     stats = np.load(args.run / "mel_stats.npz")
     mel_stats = (stats["mean"], stats["std"])
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    device = pick_device()
     model = Inference(mode != "fix").to(device)
     model.load_state_dict(torch.load(args.run / "model.pt", map_location=device))
 

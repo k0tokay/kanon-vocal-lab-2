@@ -1,7 +1,10 @@
 """EmJEm training of an articulatory inference network with VTL (Sun, Huang & Wu, Interspeech 2022).
 
 Run from this directory:
-  python3 emjem.py DATA_DIR RUN_DIR --mode {fix,ut,sp,oracle} [--iterations 120]
+  python3 emjem.py DATA_DIR RUN_DIR --mode {fix,ut,sp,oracle} [--iterations 120] [--resume]
+
+DATA_DIR is either synthetic (gen_dataset.py, with ground truth) or real speech (prep_jvs.py, meta "real": true).
+For real speech the synthesized audio is brought to the corpus level and noise floor before the mel features.
 
 --mode oracle skips EmJEm and trains on the true parameters of the training speakers
 (a supervised upper bound for how much of the anatomy the audio reveals).
@@ -69,6 +72,31 @@ class Normalizer:
 
 _mel = torchaudio.transforms.MelSpectrogram(sample_rate=16000, n_fft=1024, win_length=400, hop_length=160,
                                             n_mels=N_MELS, f_min=50, f_max=8000, center=True)
+
+
+def pick_device():
+    if torch.cuda.is_available():
+        return torch.device("cuda")
+    return torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+
+
+def active_rms(audio, rate=16000, range_db=40.0):
+    """RMS over the 10 ms frames within range_db of the loudest frame."""
+    hop = rate // 100
+    n = len(audio) // hop
+    if n == 0:
+        return float(np.sqrt(np.mean(np.square(audio)) + 1e-20))
+    energy = np.mean(np.square(audio[: n * hop].reshape(n, hop)), axis=1)
+    active = energy >= energy.max() * 10 ** (-range_db / 10)
+    return float(np.sqrt(energy[active].mean() + 1e-20))
+
+
+def match_level(audio, meta, rng):
+    """Scales synthesized audio to the corpus level and adds its noise floor (real corpora only)."""
+    if "level_rms" not in meta:
+        return audio
+    audio = audio * (meta["level_rms"] / max(active_rms(audio), 1e-9))
+    return (audio + meta["noise_floor"] * rng.standard_normal(len(audio))).astype(np.float32)
 
 
 def log_mel(audio, frames):
@@ -153,8 +181,13 @@ def infer(model, mels, device, mel_stats):
 # ---------------------------------------------------------------------------
 
 def load_corpus(data_dir, norm):
+    """Utterances with log-mel features; true_frames/true_anatomy only for synthetic corpora.
+
+    Synthetic corpora hold out the last speakers as test speakers; real corpora have no test split.
+    """
     speakers = sorted(data_dir.glob("spk*.npz"))
-    n_test = min(TEST_SPEAKERS, max(1, len(speakers) // 4))
+    real = json.loads((data_dir / "meta.json").read_text()).get("real", False)
+    n_test = 0 if real else min(TEST_SPEAKERS, max(1, len(speakers) // 4))
     corpus = []
     for s, path in enumerate(speakers):
         d = np.load(path)
@@ -162,12 +195,13 @@ def load_corpus(data_dir, norm):
         frame_off = np.concatenate([[0], np.cumsum(d["frames"])])
         for u in range(len(d["frames"])):
             n = int(d["frames"][u])
-            tract, glottis = d["tract"][frame_off[u]:frame_off[u + 1]], d["glottis"][frame_off[u]:frame_off[u + 1]]
-            corpus.append({
-                "speaker": s, "test": s >= len(speakers) - n_test,
-                "mel": log_mel(d["audio"][audio_off[u]:audio_off[u + 1]], n),
-                "true_frames": norm.frames(tract, glottis, d["tract_min"], d["tract_max"]),
-                "true_anatomy": norm.anatomy(d["anatomy"]).astype(np.float32)})
+            item = {"speaker": s, "test": s >= len(speakers) - n_test, "utterance": u,
+                    "mel": log_mel(d["audio"][audio_off[u]:audio_off[u + 1]], n)}
+            if not real:
+                tract, glottis = d["tract"][frame_off[u]:frame_off[u + 1]], d["glottis"][frame_off[u]:frame_off[u + 1]]
+                item["true_frames"] = norm.frames(tract, glottis, d["tract_min"], d["tract_max"])
+                item["true_anatomy"] = norm.anatomy(d["anatomy"]).astype(np.float32)
+            corpus.append(item)
     return corpus
 
 
@@ -194,15 +228,22 @@ def main():
     parser.add_argument("--decay", type=float, default=0.98)
     parser.add_argument("--lambda-anatomy", type=float, default=0.1)
     parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument("--workers", type=int, default=None, help="synthesis processes (default: all CPUs)")
+    parser.add_argument("--resume", action="store_true", help="continue from RUN_DIR/checkpoint.pt")
     args = parser.parse_args()
     args.run.mkdir(parents=True, exist_ok=True)
     (args.run / "args.json").write_text(json.dumps({k: str(v) for k, v in vars(args).items()}, indent=1))
 
     meta = json.loads((args.data / "meta.json").read_text())
     norm = Normalizer(meta)
-    rng = np.random.default_rng(args.seed)
-    torch.manual_seed(args.seed)
-    device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
+    if args.mode == "oracle" and meta.get("real", False):
+        raise SystemExit("--mode oracle needs a synthetic corpus")
+    start_it = 0
+    if args.resume and (args.run / "checkpoint.pt").exists():
+        start_it = len((args.run / "log.jsonl").read_text().splitlines())
+    rng = np.random.default_rng(args.seed + start_it)
+    torch.manual_seed(args.seed + start_it)
+    device = pick_device()
 
     corpus = load_corpus(args.data, norm)
     train = [c for c in corpus if not c["test"]]
@@ -215,7 +256,16 @@ def main():
     reference = norm.anatomy(np.array(meta["anatomy_reference"]))
     model = Inference(with_anatomy).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=5e-4, betas=(0.5, 0.999))
-    pool = Pool()
+    if start_it:
+        checkpoint = torch.load(args.run / "checkpoint.pt", map_location=device)
+        model.load_state_dict(checkpoint["model"])
+        optimizer.load_state_dict(checkpoint["optimizer"])
+        # Drop log lines written after the checkpoint.
+        start_it = checkpoint["iteration"] + 1
+        lines = (args.run / "log.jsonl").read_text().splitlines()[:start_it]
+        (args.run / "log.jsonl").write_text("".join(l + "\n" for l in lines))
+        print(f"resuming at iteration {start_it}", flush=True)
+    pool = Pool(args.workers)
     buffer = []
     log = open(args.run / "log.jsonl", "a")
 
@@ -223,7 +273,7 @@ def main():
         buffer = [(((c["mel"] - mel_stats[0]) / mel_stats[1]).astype(np.float32), c["true_frames"], c["true_anatomy"])
                   for c in train]
 
-    for it in range(args.iterations):
+    for it in range(start_it, args.iterations):
         t0 = time.time()
         sigma = args.sigma0 * args.decay ** it
         t_synth, new = 0.0, 0
@@ -260,7 +310,7 @@ def main():
             for a_n, f, wav in zip(anatomy_u, frames_u, audio):
                 if wav is None or not np.all(np.isfinite(wav)) or np.max(np.abs(wav)) >= 1.0:
                     continue
-                mel = (log_mel(wav, len(f)) - mel_stats[0]) / mel_stats[1]
+                mel = (log_mel(match_level(wav, meta, rng), len(f)) - mel_stats[0]) / mel_stats[1]
                 buffer.append((mel.astype(np.float32), f.astype(np.float32), a_n.astype(np.float32)))
                 new += 1
             buffer = buffer[-args.buffer:]
@@ -294,8 +344,10 @@ def main():
                   "synth_s": t_synth, "total_s": time.time() - t0}
         log.write(json.dumps(record) + "\n"); log.flush()
         print(json.dumps(record), flush=True)
-        if (it + 1) % 10 == 0 or it == args.iterations - 1:
+        if (it + 1) % 5 == 0 or it == args.iterations - 1:
             torch.save(model.state_dict(), args.run / "model.pt")
+            torch.save({"model": model.state_dict(), "optimizer": optimizer.state_dict(), "iteration": it},
+                       args.run / "checkpoint.pt")
 
     pool.close()
 

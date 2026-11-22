@@ -1,12 +1,18 @@
-"""Thin ctypes wrapper around the macOS VocalTractLab API (build-mac/gui)."""
+"""Thin ctypes wrapper around the VocalTractLab API.
+
+The library is build-mac/gui/libVocalTractLabApi.dylib on macOS and build-linux/libVocalTractLabApi.so
+elsewhere (cmake -S . -B build-linux -DVTL_BUILD_GUI=OFF); VTL_LIBRARY overrides it.
+"""
 import ctypes as ct
 import os
+import sys
 from pathlib import Path
 
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
-LIBRARY = ROOT / "build-mac/gui/libVocalTractLabApi.dylib"
+LIBRARY = Path(os.environ.get("VTL_LIBRARY") or ROOT / ("build-mac/gui/libVocalTractLabApi.dylib" if sys.platform == "darwin"
+                                                       else "build-linux/libVocalTractLabApi.so"))
 SPEAKER = ROOT / "speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.speaker"
 
 
@@ -63,6 +69,15 @@ class Vtl:
         mag, phase = np.empty(n), np.empty(n)
         self._call("vtlGetTransferFunction", _ptr(np.ascontiguousarray(tract, dtype=float)), n, _ptr(mag), _ptr(phase))
         return mag[: n // 2]
+
+    def tube(self, tract):
+        """Tube section lengths and areas (cm, cm^2) from the glottis to the lips."""
+        lengths, areas = np.empty(self.sections), np.empty(self.sections)
+        arts = (ct.c_int * self.sections)()
+        scalars = [ct.c_double() for _ in range(3)]
+        self._call("vtlTractToTube", _ptr(np.ascontiguousarray(tract, dtype=float)), _ptr(lengths), _ptr(areas),
+                   arts, *map(ct.byref, scalars))
+        return lengths, areas
 
     def export_svg(self, tract, path):
         self._call("vtlExportTractSvg", _ptr(np.ascontiguousarray(tract, dtype=float)), str(path).encode())
