@@ -6,6 +6,7 @@ acoustically, so the classes describe the sample, not the exact level set.
 """
 import argparse
 import csv
+import warnings
 from pathlib import Path
 
 import matplotlib
@@ -14,10 +15,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ripser import ripser
 
+# ripser's greedy permutation goes through sklearn and emits harmless matmul warnings.
+warnings.filterwarnings("ignore", category=RuntimeWarning)
+warnings.filterwarnings("ignore", message=".*more columns than rows.*")
+
 parser = argparse.ArgumentParser()
 parser.add_argument("samples", type=Path, nargs="?", default=Path(__file__).resolve().parent / "results/kanon-a/samples.npz")
 parser.add_argument("--tolerances", type=float, nargs="+", default=[.01, .02, .05])
 parser.add_argument("--maxdim", type=int, default=2)
+parser.add_argument("--landmarks", type=int, default=600, help="greedy farthest-point subsample size for larger bands")
 args = parser.parse_args()
 data = np.load(args.samples)
 points, errors = data["points"], data["errors"]
@@ -29,7 +35,13 @@ for tolerance in args.tolerances:
     if len(cloud) < 2:
         print(f"tolerance={tolerance} points={len(cloud)} skipped", flush=True)
         continue
-    results[tolerance] = cloud, ripser(cloud, maxdim=args.maxdim)["dgms"]
+    # Farthest-point landmarks keep H2 tractable; every sample lies within
+    # r_cover of a landmark, so bars much shorter than r_cover are unreliable.
+    n_perm = args.landmarks if len(cloud) > args.landmarks else None
+    result = ripser(cloud, maxdim=args.maxdim, n_perm=n_perm)
+    cover = result["r_cover"] if n_perm else 0.
+    print(f"tolerance={tolerance} points={len(cloud)} landmarks={n_perm or len(cloud)} r_cover={cover:.3f}", flush=True)
+    results[tolerance] = cloud, result["dgms"]
 finite = [b[np.isfinite(b)] for _, dgms in results.values() for b in dgms]
 reach = max((b.max() for b in finite if b.size), default=1.0)
 radii = np.linspace(0, 1.1*reach, 400)
