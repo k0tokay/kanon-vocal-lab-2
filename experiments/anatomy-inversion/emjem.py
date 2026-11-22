@@ -190,7 +190,8 @@ def load_corpus(data_dir, norm):
     n_test = 0 if real else min(TEST_SPEAKERS, max(1, len(speakers) // 4))
     corpus = []
     for s, path in enumerate(speakers):
-        d = np.load(path)
+        # Decompress each array once (indexing an NpzFile decompresses the whole array every time).
+        d = dict(np.load(path))
         audio_off = np.concatenate([[0], np.cumsum(d["audio_len"])])
         frame_off = np.concatenate([[0], np.cumsum(d["frames"])])
         for u in range(len(d["frames"])):
