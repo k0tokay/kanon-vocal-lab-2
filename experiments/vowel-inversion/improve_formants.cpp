@@ -1,37 +1,7 @@
 // Headless vowel experiment using the GUI's step sizes, area floor and native formant estimator.
 // Build from the repository root: clang++ -std=c++14 -Ibackend -Wl,-rpath,build-mac/gui experiments/vowel-inversion/improve_formants.cpp build-mac/gui/libVocalTractLabApi.dylib -o build-mac/improve-formants
 // Run: build-mac/improve-formants SPEAKER_FILE MIN_AREA_CM2 [VOWEL] (0.01 for recorded results).
-#include "VocalTract.h"
-#include "TlModel.h"
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <iomanip>
-#include <iostream>
-
-using Shape = std::array<double, VocalTract::NUM_PARAMS>;
-struct Measurement {
-  std::array<double, 3> f{};
-  double area = 1e6;
-  bool valid = false;
-};
-
-Measurement measure(VocalTract &tract, TlModel &model, Shape x) {
-  x[VocalTract::VO] = std::min(0.0, x[VocalTract::VO]);
-  tract.setParams(x.data());
-  tract.calculateAll();
-  Measurement result;
-  for (const auto &section : tract.tubeSection)
-    result.area = std::min(result.area, section.area);
-  tract.getTube(&model.tube);
-  model.tube.resetGlottisSections(0.0);
-  double bandwidth[3];
-  int count;
-  bool friction, closure, nasal;
-  model.getFormants(result.f.data(), bandwidth, count, 3, friction, closure, nasal);
-  result.valid = count == 3;
-  return result;
-}
+#include "vowel_measurement.h"
 
 double error(const Measurement &m, const Measurement &target) {
   if (!m.valid) return INFINITY;
