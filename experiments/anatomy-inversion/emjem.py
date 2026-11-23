@@ -73,16 +73,20 @@ def start_memory_guard(limit_gb):
     threading.Thread(target=watch, daemon=True).start()
 
 
-def use_run_speaker(run, meta, speaker=None, glottis_model=None):
+def use_run_speaker(run, meta, speaker=None, glottis_model=None, glottis_from=None):
     """Makes VTL (here and in synthesis workers) use the run's speaker file and refreshes the speaker-dependent meta.
 
-    With SPEAKER, the file is copied to RUN/speaker.speaker (optionally selecting GLOTTIS_MODEL, e.g.
-    "Geometric glottis 2019"); a run that already has that file keeps it, so --resume and evaluation reuse it.
+    With SPEAKER, the file is copied to RUN/speaker.speaker, optionally with the glottis models of the speaker
+    file GLOTTIS_FROM (so that only the vocal tract changes) and with GLOTTIS_MODEL (e.g. "Geometric glottis
+    2019") selected; a run that already has that file keeps it, so --resume and evaluation reuse it.
     Without either, the default speaker (vtl.SPEAKER) and the corpus meta are used unchanged.
     """
     own = Path(run) / "speaker.speaker"
     if speaker and not own.exists():
         text = Path(speaker).read_text()
+        if glottis_from:
+            block = re.compile(r"<glottis_models>.*</glottis_models>", re.S)
+            text = block.sub(lambda _: block.search(Path(glottis_from).read_text()).group(0), text)
         if glottis_model:
             if f'type="{glottis_model}"' not in text:
                 raise SystemExit(f"{speaker} has no glottis model {glottis_model!r}")
@@ -303,6 +307,8 @@ def main():
                         help="VTL speaker file to synthesize with (default: the corpus/vtl.py default); "
                              "its anatomy is the FIX-AM reference")
     parser.add_argument("--glottis-model", default=None, help="glottis model to select in --speaker")
+    parser.add_argument("--glottis-from", type=Path, default=None,
+                        help="take the glottis models of this speaker file (default: those of --speaker)")
     parser.add_argument("--max-memory-gb", type=float, default=10.0,
                         help="stop (resumable) if the run and its workers exceed this resident memory; 0 disables")
     args = parser.parse_args()
@@ -313,7 +319,7 @@ def main():
     meta = json.loads((args.data / "meta.json").read_text())
     if args.speaker and not meta.get("real", False):
         raise SystemExit("--speaker only applies to real corpora (a synthetic corpus fixes its speaker)")
-    meta = use_run_speaker(args.run, meta, args.speaker, args.glottis_model)
+    meta = use_run_speaker(args.run, meta, args.speaker, args.glottis_model, args.glottis_from)
     norm = Normalizer(meta)
     if args.mode == "oracle" and meta.get("real", False):
         raise SystemExit("--mode oracle needs a synthetic corpus")

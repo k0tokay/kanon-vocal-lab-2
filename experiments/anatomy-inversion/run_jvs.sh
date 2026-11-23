@@ -2,7 +2,8 @@
 # EmJEm on the JVS corpus: prepares the data (once), trains each mode (resuming if interrupted) and evaluates.
 # Run from this directory: ./run_jvs.sh JVS_ROOT DATA_DIR RUNS_DIR
 # Environment: MODES (default "sp fix"), ITERATIONS (120), PER_ITERATION (600), SYNTH_CROP (300 frames),
-# WORKERS (all CPUs), SPEAKER (VTL speaker file; default: vtl.py's) and GLOTTIS_MODEL (glottis model to select in it).
+# WORKERS (all CPUs), SPEAKER (VTL speaker file; default: vtl.py's), GLOTTIS_FROM (speaker file whose glottis
+# models replace SPEAKER's) and GLOTTIS_MODEL (glottis model to select).
 set -euo pipefail
 jvs=$1 data=$2 runs=$3
 modes=${MODES:-sp fix}
@@ -12,6 +13,7 @@ synth_crop=${SYNTH_CROP:-300}
 workers=${WORKERS:-$(python3 -c "import os; print(os.cpu_count())")}
 speaker_args=()
 [[ -n ${SPEAKER:-} ]] && speaker_args+=(--speaker "$SPEAKER")
+[[ -n ${GLOTTIS_FROM:-} ]] && speaker_args+=(--glottis-from "$GLOTTIS_FROM")
 [[ -n ${GLOTTIS_MODEL:-} ]] && speaker_args+=(--glottis-model "$GLOTTIS_MODEL")
 filter() { grep -v --line-buffered "Creating a gestural\|ATTENTION\|UserWarning\|warnings.warn\|Cholesky" || true; }
 if [[ ! -f $data/meta.json ]]; then
