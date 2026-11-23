@@ -233,13 +233,15 @@ def batches(items, size, rng, crop=CROP):
 
 
 @torch.no_grad()
-def infer(model, mels, device, mel_stats):
+def infer(model, mels, device, mel_stats, dtype=np.float32):
     model.eval()
     out_frames, out_anatomy = [], []
-    for mel in mels:
+    for k, mel in enumerate(mels):
+        if device.type == "mps" and k % 256 == 255:
+            torch.mps.empty_cache()
         x = torch.from_numpy(((mel - mel_stats[0]) / mel_stats[1]).astype(np.float32)).unsqueeze(0).to(device)
         frames, anatomy = model(x, torch.tensor([len(mel)], device=device))
-        out_frames.append(frames[0].cpu().numpy())
+        out_frames.append(frames[0].cpu().numpy().astype(dtype))
         out_anatomy.append(None if anatomy is None else anatomy[0].cpu().numpy())
     return out_frames, out_anatomy
 

@@ -41,7 +41,7 @@ def main():
     model.load_state_dict(torch.load(args.run / "model.pt", map_location=device))
 
     corpus = load_corpus(args.data, norm)
-    frames_hat, anatomy_hat = infer(model, [c["mel"] for c in corpus], device, mel_stats)
+    frames_hat, anatomy_hat = infer(model, [c["mel"] for c in corpus], device, mel_stats, np.float16)
     reference = norm.anatomy(np.array(meta["anatomy_reference"]))
     names = meta["anatomy_names"]
     speakers = sorted({c["speaker"] for c in corpus})
@@ -62,7 +62,7 @@ def main():
     for s, a in zip(speakers, speaker_hat):
         f0s = []
         for i in ids_of[s]:
-            _, g = norm.frames_inv(frames_hat[i], np.zeros(19), np.ones(19))
+            _, g = norm.frames_inv(frames_hat[i].astype(np.float32), np.zeros(19), np.ones(19))
             voiced = g[:, 1] > 0.5 * max(g[:, 1].max(), 1e-9)
             f0s.append(g[voiced, norm.f0])
         f0_hat.append(float(np.median(np.concatenate(f0s))))
@@ -104,7 +104,7 @@ def main():
                              (anatomy_hat[i] if mode == "ut" else speaker_of[corpus[i]["speaker"]])) for i in chosen]
     pool = Pool(args.workers)
     ranges = pool.ranges(anat)
-    jobs = [(a, *norm.frames_inv(frames_hat[i], lo, hi)) for i, a, (lo, hi) in zip(chosen, anat, ranges)]
+    jobs = [(a, *norm.frames_inv(frames_hat[i].astype(np.float32), lo, hi)) for i, a, (lo, hi) in zip(chosen, anat, ranges)]
     audio = pool.render(jobs)
     pool.close()
     out = args.run / "examples"
