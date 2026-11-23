@@ -1,0 +1,127 @@
+{
+ "mode": "sp",
+ "speakers": 100,
+ "female": 51,
+ "male": 49,
+ "reference_length_a_cm": 12.05436592135601,
+ "anatomy": {
+  "W0": {
+   "mean_female": -0.6660974025726318,
+   "mean_male": -0.6426869034767151,
+   "cohen_d_female_minus_male": -0.5084781050682068,
+   "between_speaker_std": 0.047501090914011,
+   "within_speaker_std": 0.03223991394042969,
+   "r_with_tag_f0": -0.28111840530997567
+  },
+  "H5": {
+   "mean_female": -0.4705304801464081,
+   "mean_male": -0.4522547125816345,
+   "cohen_d_female_minus_male": -0.4020285904407501,
+   "between_speaker_std": 0.046539340168237686,
+   "within_speaker_std": 0.02612767182290554,
+   "r_with_tag_f0": -0.204279246718769
+  },
+  "H4": {
+   "mean_female": 0.8742494583129883,
+   "mean_male": 0.8669428825378418,
+   "cohen_d_female_minus_male": 0.2385616898536682,
+   "between_speaker_std": 0.030819140374660492,
+   "within_speaker_std": 0.01853008382022381,
+   "r_with_tag_f0": 0.14873926051737404
+  },
+  "H3": {
+   "mean_female": -0.5047492384910583,
+   "mean_male": -0.3986871540546417,
+   "cohen_d_female_minus_male": -1.6464362144470215,
+   "between_speaker_std": 0.08313706517219543,
+   "within_speaker_std": 0.03280982747673988,
+   "r_with_tag_f0": -0.5794043373022723
+  },
+  "H2": {
+   "mean_female": -0.5750191807746887,
+   "mean_male": -0.7523974776268005,
+   "cohen_d_female_minus_male": 0.8858423829078674,
+   "between_speaker_std": 0.22017145156860352,
+   "within_speaker_std": 0.06044904887676239,
+   "r_with_tag_f0": 0.377456346618602
+  },
+  "D0": {
+   "mean_female": -0.0837901309132576,
+   "mean_male": 0.12211983650922775,
+   "cohen_d_female_minus_male": -1.7276490926742554,
+   "between_speaker_std": 0.15738248825073242,
+   "within_speaker_std": 0.055082812905311584,
+   "r_with_tag_f0": -0.6768384846438239
+  },
+  "W1": {
+   "mean_female": 0.16654476523399353,
+   "mean_male": 0.21489714086055756,
+   "cohen_d_female_minus_male": -0.4975036382675171,
+   "between_speaker_std": 0.10037146508693695,
+   "within_speaker_std": 0.053884390741586685,
+   "r_with_tag_f0": -0.21653280900036892
+  },
+  "W2": {
+   "mean_female": -0.6696069836616516,
+   "mean_male": -0.6228607892990112,
+   "cohen_d_female_minus_male": -0.6784351468086243,
+   "between_speaker_std": 0.07273474335670471,
+   "within_speaker_std": 0.03339938074350357,
+   "r_with_tag_f0": -0.3678093972474313
+  },
+  "H0": {
+   "mean_female": -0.4926903247833252,
+   "mean_male": -0.6019821763038635,
+   "cohen_d_female_minus_male": 1.7553082704544067,
+   "between_speaker_std": 0.08272414654493332,
+   "within_speaker_std": 0.046564556658267975,
+   "r_with_tag_f0": 0.6359237716822407
+  },
+  "H1": {
+   "mean_female": -0.2868274748325348,
+   "mean_male": -0.08666498959064484,
+   "cohen_d_female_minus_male": -1.9690191745758057,
+   "between_speaker_std": 0.14268758893013,
+   "within_speaker_std": 0.054617222398519516,
+   "r_with_tag_f0": -0.7154537871473665
+  },
+  "W4": {
+   "mean_female": 0.10662677139043808,
+   "mean_male": 0.113457590341568,
+   "cohen_d_female_minus_male": -0.03938641771674156,
+   "between_speaker_std": 0.173561230301857,
+   "within_speaker_std": 0.07974619418382645,
+   "r_with_tag_f0": -0.03519711008012728
+  },
+  "W3": {
+   "mean_female": -0.9167776107788086,
+   "mean_male": -0.941898763179779,
+   "cohen_d_female_minus_male": 0.6178672909736633,
+   "between_speaker_std": 0.04277310520410538,
+   "within_speaker_std": 0.015496627427637577,
+   "r_with_tag_f0": 0.29294760907008455
+  },
+  "A0": {
+   "mean_female": 0.3898445963859558,
+   "mean_male": 0.11831197887659073,
+   "cohen_d_female_minus_male": 1.7765928506851196,
+   "between_speaker_std": 0.20450973510742188,
+   "within_speaker_std": 0.07123769074678421,
+   "r_with_tag_f0": 0.6455035596622656
+  }
+ },
+ "length_a_cm": {
+  "female_mean": 13.481599168697267,
+  "male_mean": 13.651944868228899,
+  "female_std": 0.16540471512991498,
+  "male_std": 0.17836839517039538
+ },
+ "f0": {
+  "r_log_inferred_vs_tag": 0.9683651955404601,
+  "median_ratio_inferred_to_tag": 1.0935385516344374
+ },
+ "resynthesis": {
+  "utterances": 208,
+  "cepstral_distance_db": 7.7931344819141515
+ }
+}

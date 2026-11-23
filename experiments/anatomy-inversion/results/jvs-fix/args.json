@@ -1,0 +1,17 @@
+{
+ "data": "data/jvs-v1",
+ "run": "data/runs-jvs/fix",
+ "mode": "fix",
+ "iterations": "120",
+ "per_iteration": "200",
+ "buffer": "6000",
+ "steps": "150",
+ "batch": "32",
+ "sigma0": "0.5",
+ "decay": "0.98",
+ "lambda_anatomy": "0.1",
+ "seed": "0",
+ "workers": "12",
+ "synth_crop": "300",
+ "resume": "True"
+}

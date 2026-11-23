@@ -1,0 +1,21 @@
+{
+ "mode": "fix",
+ "speakers": 100,
+ "female": 51,
+ "male": 49,
+ "reference_length_a_cm": 12.05436592135601,
+ "length_a_cm": {
+  "female_mean": 12.054365921356014,
+  "male_mean": 12.054365921356013,
+  "female_std": 3.552713678800501e-15,
+  "male_std": 1.7763568394002505e-15
+ },
+ "f0": {
+  "r_log_inferred_vs_tag": 0.9622112941447596,
+  "median_ratio_inferred_to_tag": 1.0398633028275541
+ },
+ "resynthesis": {
+  "utterances": 208,
+  "cepstral_distance_db": 8.00211847041429
+ }
+}
