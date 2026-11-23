@@ -281,6 +281,7 @@ def main():
         t0 = time.time()
         sigma = args.sigma0 * args.decay ** it
         t_synth, new = 0.0, 0
+        rejected = {"nan": 0, "clip": 0}
         if args.mode == "oracle":
             chosen = []
         else:
@@ -315,7 +316,11 @@ def main():
 
             new = 0
             for a_n, f, wav in zip(anatomy_u, frames_u, audio):
-                if wav is None or not np.all(np.isfinite(wav)) or np.max(np.abs(wav)) >= 1.0:
+                if wav is None or not np.all(np.isfinite(wav)):
+                    rejected["nan"] += 1
+                    continue
+                if np.max(np.abs(wav)) >= 1.0:
+                    rejected["clip"] += 1
                     continue
                 mel = (log_mel(match_level(wav, meta, rng), len(f)) - mel_stats[0]) / mel_stats[1]
                 buffer.append((mel.astype(np.float32), f.astype(np.float32), a_n.astype(np.float32)))
@@ -345,7 +350,7 @@ def main():
                 if step >= args.steps:
                     break
 
-        record = {"iteration": it, "sigma": sigma, "new": new, "buffer": len(buffer),
+        record = {"iteration": it, "sigma": sigma, "new": new, "rejected": rejected, "buffer": len(buffer),
                   "loss_frames": float(np.mean([l[0] for l in losses])),
                   "loss_anatomy": float(np.mean([l[1] for l in losses])),
                   "synth_s": t_synth, "total_s": time.time() - t0}
