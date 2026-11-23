@@ -112,7 +112,7 @@ python3 ctune.py fit "tt-alveolopalatal-fricative(u)" --area 0.12 --pos 10.2 --f
 - `y=j:0.06`：`j` を 35 ms から 60 ms にすると、ya・yu・yo とも 0.15 cm² に達する。
 - `w=u:0.05`：円唇の `u` を 50 ms 置く。唇が 0.15 cm² まで狭まり、F2 が 1216 Hz から /a/ へ上がる。日本語の /w/ は円唇が弱いので、これは近似である。唇を丸めずに狭める形状を作るには、backend に `w` の記号を足す必要がある。
 
-この2つは `--map` で試しただけで、japanese-accent の `accent.py` には入れていない。
+この2つは japanese-accent の `accent.py` に入れた（`JA_ONSET["w"] = ["u"]`、`BASE` の `j` = 0.06 s、`u` = 0.05 s）。そのため `--map` を付けなくても、上と同じ値になる。拗音の渡り（kya などの `j`）は 25 ms のまま。japanese-accent の例文 WAV（`results/*.wav`）は pyopenjtalk がないので作り直していない。
 
 ## 結果
 
@@ -152,8 +152,8 @@ python3 ctune.py show sh k tb-velar-closure --params
 # 編集して合成・測定する。音節を省くと 45 音節すべてを合成する（約 1 分）
 python3 ctune.py run out/try1 -e "tb-velar-closure(*):TBX+=0.1" -s ka,ki,ku --compare results/baseline
 
-# 編集をファイルにまとめ、音素対応も替える
-python3 ctune.py run out/try2 --edits edits/alveolopalatal.json --map y=j:0.06 --map w=u:0.05
+# 編集をファイルにまとめ、音素対応も替える（例：ワを M の 70 ms に戻す）
+python3 ctune.py run out/try2 --edits edits/alveolopalatal.json --map w=M:0.07
 
 # 狭めの断面積と位置を目標に、形状を fit する（結果は edits の形で出る）
 python3 ctune.py fit "tt-alveolar-fricative(u)" --area 0.15 --pos 10.9 --append edits/mine.json
@@ -182,4 +182,4 @@ python3 ctune.py ab results/baseline out/try1 out/ab -s ka,ki,ku
 - chi・ji の閉鎖部は `tt-alveolar-closure`（10.3〜10.8 cm）である。`ts\` を `tt-postalveolar-closure` で閉じるには backend の変更が要る。ɕ を狭めたので、chi の摩擦の重心は 4.4 → 5.6 kHz に上がった。
 - `noise`（摩擦の強さ）は、ɕ の断面積を 0.31 → 0.10 cm² と変えても 1 dB ほどしか変わらない。無声摩擦の声門ジェスチャによる気息雑音が支配的だからである。摩擦の強さを調整する手段は、形状ではなく声門の形状や声門下圧になる。
 - `ll-labial-fricative(i)` が閉じている（「フィ」が破裂音になる）。この音節セットには入れていないので、まだ直していない。
-- ヤ・ワの対応の変更は、japanese-accent の `accent.py` にはまだ入れていない。
+- japanese-accent の例文 WAV は、ヤ・ワの変更後にまだ作り直していない。

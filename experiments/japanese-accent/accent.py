@@ -117,13 +117,17 @@ ONSET = {
 }
 # Japanese-specific symbols, supported natively by this VTL build:
 # alveolo-palatal s\ z\ ts\ dz\ and the unrounded vowel M.
-JA_ONSET = {"sh": ["s\\"], "ch": ["ts\\"], "j": ["dz\\"], "w": ["M"]}
+# w: VTL has no /w/; a short M left the lips open (0.44 cm^2) and F2 flat,
+# a 50 ms rounded u narrows the lips to 0.15 cm^2 and starts F2 ~300 Hz
+# lower (experiments/consonant-tuning).
+JA_ONSET = {"sh": ["s\\"], "ch": ["ts\\"], "j": ["dz\\"], "w": ["u"]}
 # Onsets that get a short palatal glide before /i/ when palatal_i=True.
 PALATALIZE = {"k", "g", "n", "m", "b", "p", "r"}
 BASE = {"p": .055, "b": .045, "t": .055, "d": .045, "k": .06, "g": .045,
         "s": .085, "z": .06, "S": .09, "C": .08, "h": .065, "f": .07, "v": .05,
         "ts": .08, "tS": .085, "dZ": .065, "m": .05, "n": .045, "N": .05,
-        "4": .022, "j": .035, "u": .04, "M": .04,
+        "4": .022, "j": .06, "u": .05, "M": .04,     # j: 35 ms did not reach
+                                                     # its target in ya/yo
         "s\\": .09, "z\\": .06, "ts\\": .085, "dz\\": .065}
 FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS", "s\\", "ts\\"}
 
