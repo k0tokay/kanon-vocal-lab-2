@@ -122,6 +122,16 @@ def frame(syl: str, f0=220.0, vowel_s=0.24, carrier_s=0.2, onset_map=None) -> Fr
 
 NOISE_SCALING = True   # VTL noise-source constants scaled to the speaker's size
 NOISE_EXPONENTS = (1.0, 2.0, -1.0)   # of the size for lengths, areas, cutoff frequencies
+GLOTTAL_NOISE = (1.0, 1000.0)   # gain factor, cutoff Hz of the aspiration source
+LUNG_PRESSURE = None   # dPa; replaces VTL's fixed 8000 dPa lung-pressure gestures
+
+
+def _set_lung_pressure(ges: Path, dpa: float):
+    t = ges.read_text()
+    i = t.index('type="lung-pressure-gestures"')
+    j = t.index("</gesture_sequence>", i)
+    seq = re.sub(r'value="8000\.0+"', f'value="{dpa:.6f}"', t[i:j])
+    ges.write_text(t[:i] + seq + t[j:])
 
 
 def render(speaker, syllables, out_dir: Path, **kw):
@@ -138,7 +148,20 @@ def render(speaker, syllables, out_dir: Path, **kw):
             lib.vtlScaleNoiseToAnatomy(int(NOISE_SCALING))
             lib.vtlSetNoiseScalingExponents.argtypes = [ctypes.c_double] * 3
             lib.vtlSetNoiseScalingExponents(*NOISE_EXPONENTS)
-        accent.synthesize(seg, out_dir / f"{syl}.wav", fr.segments, speaker)
+        if hasattr(lib, "vtlSetGlottalNoise"):
+            lib.vtlSetGlottalNoise.argtypes = [ctypes.c_double] * 2
+            lib.vtlSetGlottalNoise(*GLOTTAL_NOISE)
+        patch = accent.patch_score
+        if LUNG_PRESSURE is not None:
+            def patch(ges, segments, _orig=accent.patch_score):
+                if segments is not None:
+                    _orig(ges, segments)
+                _set_lung_pressure(Path(ges), LUNG_PRESSURE)
+        saved, accent.patch_score = accent.patch_score, patch
+        try:
+            accent.synthesize(seg, out_dir / f"{syl}.wav", fr.segments, speaker)
+        finally:
+            accent.patch_score = saved
         fr.track = tract_sequence(speaker, seg.with_suffix(".ges"))
         seg.unlink()
         seg.with_suffix(".ges").unlink()
@@ -629,6 +652,10 @@ def main(argv=None):
                    help="VTL's original noise-source constants (JD2 sizes)")
     a.add_argument("--noise-exponents", default="1,2,-1",
                    help="exponents of the size scale for lengths, areas, cutoffs")
+    a.add_argument("--glottal-noise", default="1,1000",
+                   help="aspiration source gain factor and cutoff Hz (VTL: 1,1000)")
+    a.add_argument("--lung-pressure", type=float,
+                   help="lung pressure in dPa instead of VTL's fixed 8000 (glottis clamps at 16000)")
 
     a = sub.add_parser("fit", help="fit one shape's constriction area/position; prints edits")
     a.add_argument("shape", help="shape name; (*) fits all three contexts")
@@ -667,6 +694,10 @@ def main(argv=None):
         NOISE_SCALING = not args.no_noise_scaling
         global NOISE_EXPONENTS
         NOISE_EXPONENTS = tuple(float(v) for v in args.noise_exponents.split(","))
+        global LUNG_PRESSURE
+        LUNG_PRESSURE = args.lung_pressure
+        global GLOTTAL_NOISE
+        GLOTTAL_NOISE = tuple(float(v) for v in args.glottal_noise.split(","))
         s = run(edits, args.syll.split(","), Path(args.out), args.base, onset_map=omap or None)
         print(table(s, _summary(args.compare) if args.compare else None))
         print("locus:", json.dumps(s["locus"]))

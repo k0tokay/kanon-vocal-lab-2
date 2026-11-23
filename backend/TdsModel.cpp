@@ -57,6 +57,8 @@ TdsModel::TdsModel()
   options.noiseLengthExponent = 1.0;
   options.noiseAreaExponent = 2.0;
   options.noiseFrequencyExponent = -1.0;
+  options.glottalNoiseGainFactor = 1.0;
+  options.glottalNoiseCutoff_Hz = 1000.0;
   options.radiationCharacteristic = HEAD_TORSO_RADIATION_CHARACTERISTIC;
 
   // ****************************************************************
@@ -1455,8 +1457,8 @@ void TdsModel::calcNoiseSources()
       // According to Badin et al. (1994), the aspiration noise source
       // spectrum is essentially flat -> high f_c, but not too high.
       // f_c > 6 kHz sounds increasingly worse.
-      cons->gain = 0.2e-6;
-      cons->cutoffFreq = 1000.0;
+      cons->gain = 0.2e-6 * options.glottalNoiseGainFactor;
+      cons->cutoffFreq = options.glottalNoiseCutoff_Hz;
     }
     else
 

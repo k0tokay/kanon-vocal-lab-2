@@ -343,6 +343,23 @@ int vtlSetNoiseScalingExponents(double length, double area, double frequency)
 }
 
 
+int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  if ((gainFactor < 0.0) || (cutoff_Hz <= 0.0))
+  {
+    return 2;
+  }
+  tdsModel->options.glottalNoiseGainFactor = gainFactor;
+  tdsModel->options.glottalNoiseCutoff_Hz = cutoff_Hz;
+  return 0;
+}
+
+
 int vtlGetConstants(int *audioSamplingRate, int *numTubeSections,
   int *numVocalTractParams, int *numGlottisParams)
 {

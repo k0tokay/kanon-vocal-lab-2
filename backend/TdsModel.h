@@ -106,6 +106,10 @@ public:
     double noiseLengthExponent;
     double noiseAreaExponent;
     double noiseFrequencyExponent;
+    // Aspiration noise right above the glottis: gain factor (1 = VTL's 0.2e-6)
+    // and lowpass cutoff (VTL: 1000 Hz).
+    double glottalNoiseGainFactor;
+    double glottalNoiseCutoff_Hz;
     RadiationCharacteristic radiationCharacteristic;
   };
 

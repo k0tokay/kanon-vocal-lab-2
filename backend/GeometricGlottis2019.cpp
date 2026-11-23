@@ -44,7 +44,10 @@ GeometricGlottis2019::GeometricGlottis2019()
     { "Upper displacement", "x_top", "cm", 10.0, "mm", -0.05, 0.3, 0.02, 0.0 },
     { "Chink area", "chink_area", "cm^2", 100.0, "mm^2", -0.25, 0.25, 0.03, 0.0 },
     { "Phase lag", "lag", "rad", 57.296, "deg", 0.0, 3.1415, 1.22, 0.0 },
-    { "Relative amplitude", "rel_amp", "", 1.0, "", -1.0, 1.0, 1.0, 1.0 },
+    // Max raised from 1.0: the amplitude scales with the rest length, so a
+    // short-fold speaker cannot reach closure from a breathy rest opening.
+    // Values up to 1.0 behave as before.
+    { "Relative amplitude", "rel_amp", "", 1.0, "", -1.0, 4.0, 1.0, 1.0 },
     { "Double pulsing", "double_pulsing", "", 1.0, "", 0.0, 1.0, 0.05, 0.0 },
     { "Pulse skewness", "pulse_skewness", "", 1.0, "", -0.5, 0.5, 0.0, 0.0 },
     { "Flutter", "flutter", "%", 1.0, "%", 0.0, 100.0, 25.0, 25.0 }

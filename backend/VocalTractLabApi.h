@@ -112,6 +112,9 @@ C_EXPORT int vtlScaleNoiseToAnatomy(int enable);
 // Exponents of sizeScale for the lengths, areas and cutoff frequencies of the
 // noise sources (default 1, 2, -1).
 C_EXPORT int vtlSetNoiseScalingExponents(double length, double area, double frequency);
+// Aspiration noise source above the glottis: gain factor (default 1) and
+// lowpass cutoff in Hz (default 1000).
+C_EXPORT int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz);
 
 
 // ****************************************************************************
