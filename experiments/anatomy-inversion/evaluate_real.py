@@ -15,7 +15,7 @@ import numpy as np
 import torch
 from scipy.io.wavfile import write
 
-from emjem import Inference, Normalizer, infer, load_corpus, log_mel, match_level, pick_device, use_run_speaker
+from emjem import Inference, Normalizer, infer, load_corpus, log_mel, match_level, pick_device, start_memory_guard, use_run_speaker
 from evaluate import mel_cepstral_distance, pearson
 from synth import AUDIO_RATE, Pool
 from vtl import Vtl
@@ -28,7 +28,9 @@ def main():
     parser.add_argument("--resynth", type=int, default=200)
     parser.add_argument("--examples", type=int, default=8, help="speakers to write example wavs for")
     parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument("--max-memory-gb", type=float, default=10.0, help="0 disables the memory guard")
     args = parser.parse_args()
+    start_memory_guard(args.max_memory_gb)
     meta = use_run_speaker(args.run, json.loads((args.data / "meta.json").read_text()))
     mode = json.loads((args.run / "args.json").read_text())["mode"]
     norm = Normalizer(meta)

@@ -6,6 +6,7 @@ Frames are 10 ms apart; audio is returned at 16 kHz.
 import ctypes as ct
 import multiprocessing as mp
 import os
+import sys
 import tempfile
 
 import numpy as np
@@ -78,7 +79,16 @@ def _ranges(anatomy):
 
 class Pool:
     def __init__(self, workers=None):
-        self.pool = mp.get_context("spawn").Pool(workers or os.cpu_count(), initializer=_init)
+        # Spawned workers normally re-import the main script; for emjem.py that means torch (~0.2 GB per
+        # worker), and a script without a __main__ guard would rerun entirely in every worker. The workers need
+        # only this module, so hide the script path while they start.
+        main = sys.modules["__main__"]
+        path = main.__dict__.pop("__file__", None) if getattr(main, "__spec__", None) is None else None
+        try:
+            self.pool = mp.get_context("spawn").Pool(workers or os.cpu_count(), initializer=_init)
+        finally:
+            if path is not None:
+                main.__file__ = path
 
     def score_frames(self, jobs):
         return self.pool.map(_score_frames, jobs, chunksize=1)

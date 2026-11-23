@@ -27,6 +27,7 @@ def mel_cepstral_distance(mel_a, mel_b, order=25):
     The cepstrum is not SPTK's mel-cepstrum, so absolute values are not comparable with published MCD;
     use it only to compare runs.
     """
+    mel_a, mel_b = np.asarray(mel_a, np.float64), np.asarray(mel_b, np.float64)
     m = mel_a.shape[1]
     ca = dct(0.5 * mel_a, type=2, norm="ortho", axis=1)[:, 1:order] / np.sqrt(m / 2)
     cb = dct(0.5 * mel_b, type=2, norm="ortho", axis=1)[:, 1:order] / np.sqrt(m / 2)

@@ -18,6 +18,8 @@ import argparse
 import json
 import os
 import re
+import sys
+import threading
 import time
 from pathlib import Path
 
@@ -39,6 +41,37 @@ TEST_SPEAKERS = 8
 # ---------------------------------------------------------------------------
 # Parameter normalization to [-1, 1]
 # ---------------------------------------------------------------------------
+
+def start_memory_guard(limit_gb):
+    """Exits (status 75) if this process and its children use more than LIMIT_GB of resident memory.
+
+    Swapping a large run on a laptop can stall the whole machine; a run stopped this way resumes with --resume.
+    """
+    if not limit_gb:
+        return
+    import psutil
+    me = psutil.Process()
+
+    def watch():
+        while True:
+            used = 0
+            for p in [me] + me.children(recursive=True):
+                try:
+                    used += p.memory_info().rss
+                except psutil.Error:
+                    pass
+            if used > limit_gb * 2**30:
+                print(f"memory guard: {used / 2**30:.1f} GB > {limit_gb} GB, stopping", file=sys.stderr, flush=True)
+                for p in me.children(recursive=True):
+                    try:
+                        p.kill()
+                    except psutil.Error:
+                        pass
+                os._exit(75)
+            time.sleep(2)
+
+    threading.Thread(target=watch, daemon=True).start()
+
 
 def use_run_speaker(run, meta, speaker=None, glottis_model=None):
     """Makes VTL (here and in synthesis workers) use the run's speaker file and refreshes the speaker-dependent meta.
@@ -191,7 +224,7 @@ def batches(items, size, rng, crop=CROP):
             anatomies.append(anatomy); lengths.append(len(mels[-1]))
         n = max(lengths)
         pad = lambda xs: np.stack([np.pad(x, ((0, n - len(x)), (0, 0))) for x in xs])
-        yield (torch.from_numpy(pad(mels)), torch.from_numpy(pad(targets)),
+        yield (torch.from_numpy(pad(mels)).float(), torch.from_numpy(pad(targets)),
                torch.from_numpy(np.stack(anatomies).astype(np.float32)), torch.tensor(lengths))
 
 
@@ -200,7 +233,7 @@ def infer(model, mels, device, mel_stats):
     model.eval()
     out_frames, out_anatomy = [], []
     for mel in mels:
-        x = torch.from_numpy((mel - mel_stats[0]) / mel_stats[1]).unsqueeze(0).to(device)
+        x = torch.from_numpy(((mel - mel_stats[0]) / mel_stats[1]).astype(np.float32)).unsqueeze(0).to(device)
         frames, anatomy = model(x, torch.tensor([len(mel)], device=device))
         out_frames.append(frames[0].cpu().numpy())
         out_anatomy.append(None if anatomy is None else anatomy[0].cpu().numpy())
@@ -228,7 +261,8 @@ def load_corpus(data_dir, norm):
         for u in range(len(d["frames"])):
             n = int(d["frames"][u])
             item = {"speaker": s, "test": s >= len(speakers) - n_test, "utterance": u,
-                    "mel": log_mel(d["audio"][audio_off[u]:audio_off[u + 1]], n)}
+                    # float16 halves the corpus in memory (JVS: 4.5 -> 2.2 GB); log-mel needs no more precision.
+                    "mel": log_mel(d["audio"][audio_off[u]:audio_off[u + 1]], n).astype(np.float16)}
             if not real:
                 tract, glottis = d["tract"][frame_off[u]:frame_off[u + 1]], d["glottis"][frame_off[u]:frame_off[u + 1]]
                 item["true_frames"] = norm.frames(tract, glottis, d["tract_min"], d["tract_max"])
@@ -269,8 +303,11 @@ def main():
                         help="VTL speaker file to synthesize with (default: the corpus/vtl.py default); "
                              "its anatomy is the FIX-AM reference")
     parser.add_argument("--glottis-model", default=None, help="glottis model to select in --speaker")
+    parser.add_argument("--max-memory-gb", type=float, default=10.0,
+                        help="stop (resumable) if the run and its workers exceed this resident memory; 0 disables")
     args = parser.parse_args()
     args.run.mkdir(parents=True, exist_ok=True)
+    start_memory_guard(args.max_memory_gb)
     (args.run / "args.json").write_text(json.dumps({k: str(v) for k, v in vars(args).items()}, indent=1))
 
     meta = json.loads((args.data / "meta.json").read_text())
@@ -289,9 +326,17 @@ def main():
 
     corpus = load_corpus(args.data, norm)
     train = [c for c in corpus if not c["test"]]
-    all_mel = np.concatenate([c["mel"] for c in train])
-    mel_stats = (all_mel.mean(0).astype(np.float32), all_mel.std(0).astype(np.float32) + 1e-5)
-    np.savez(args.run / "mel_stats.npz", mean=mel_stats[0], std=mel_stats[1])
+    if start_it and (args.run / "mel_stats.npz").exists():
+        # A resumed model must keep the normalization it was trained with.
+        stats = np.load(args.run / "mel_stats.npz")
+        mel_stats = (stats["mean"], stats["std"])
+    else:
+        # Accumulated per utterance so that the corpus is not copied into one array.
+        total = sum(len(c["mel"]) for c in train)
+        mean = sum(c["mel"].astype(np.float64).sum(0) for c in train) / total
+        var = sum(((c["mel"].astype(np.float64) - mean) ** 2).sum(0) for c in train) / total
+        mel_stats = (mean.astype(np.float32), np.sqrt(var).astype(np.float32) + 1e-5)
+        np.savez(args.run / "mel_stats.npz", mean=mel_stats[0], std=mel_stats[1])
     print(f"corpus: {len(train)} train / {len(corpus) - len(train)} test utterances", flush=True)
 
     with_anatomy = args.mode != "fix"
@@ -363,7 +408,7 @@ def main():
                     rejected["clip"] += 1
                     continue
                 mel = (log_mel(match_level(wav, meta, rng), len(f)) - mel_stats[0]) / mel_stats[1]
-                buffer.append((mel.astype(np.float32), f.astype(np.float32), a_n.astype(np.float32)))
+                buffer.append((mel.astype(np.float16), f.astype(np.float32), a_n.astype(np.float32)))
                 new += 1
             buffer = buffer[-args.buffer:]
 
