@@ -115,6 +115,9 @@ C_EXPORT int vtlSetNoiseScalingExponents(double length, double area, double freq
 // Aspiration noise source above the glottis: gain factor (default 1) and
 // lowpass cutoff in Hz (default 1000).
 C_EXPORT int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz);
+// Cycle-to-cycle jitter and shimmer of Geometric glottis 2019 (standard
+// deviations in percent; default 0 = strictly periodic).
+C_EXPORT int vtlSetGlottalAperiodicity(double jitter_percent, double shimmer_percent);
 
 
 // ****************************************************************************

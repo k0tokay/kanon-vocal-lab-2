@@ -24,6 +24,7 @@
 
 #include "Glottis.h"
 #include "IirFilter.h"
+#include <random>
 
 
 // ****************************************************************************
@@ -92,6 +93,12 @@ public:
   void getTubeData(double *length_cm, double *area_cm2);
   int getApertureParamIndex();
 
+  // Cycle-to-cycle aperiodicity, drawn once per glottal cycle (standard
+  // deviations in percent of f0 and of the vibration amplitude). Shared by
+  // all instances; 0 (the default) gives VTL's strictly periodic pulses.
+  static double jitter_percent;
+  static double shimmer_percent;
+
   // **************************************************************************
   // Private data.
   // **************************************************************************
@@ -102,6 +109,11 @@ private:
   double supraglottalPressure_dPa;
 
   IirFilter supraglottalPressureFilter;
+
+  long cycleIndex;
+  double jitterFactor;
+  double shimmerFactor;
+  std::mt19937 rng;
 };
 
 #endif

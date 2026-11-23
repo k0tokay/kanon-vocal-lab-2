@@ -343,6 +343,18 @@ int vtlSetNoiseScalingExponents(double length, double area, double frequency)
 }
 
 
+int vtlSetGlottalAperiodicity(double jitter_percent, double shimmer_percent)
+{
+  if ((jitter_percent < 0.0) || (shimmer_percent < 0.0))
+  {
+    return 2;
+  }
+  GeometricGlottis2019::jitter_percent = jitter_percent;
+  GeometricGlottis2019::shimmer_percent = shimmer_percent;
+  return 0;
+}
+
+
 int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz)
 {
   if (!vtlApiInitialized)

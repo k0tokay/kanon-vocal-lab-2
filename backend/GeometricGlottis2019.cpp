@@ -24,6 +24,9 @@
 #include <cmath>
 #include <iostream>
 
+double GeometricGlottis2019::jitter_percent = 0.0;
+double GeometricGlottis2019::shimmer_percent = 0.0;
+
 // ****************************************************************************
 // Constructor.
 // ****************************************************************************
@@ -146,6 +149,11 @@ void GeometricGlottis2019::resetMotion()
   time_s = 0.0;
   phase = 0.0;
   supraglottalPressure_dPa = 0.0;
+
+  cycleIndex = 0;
+  jitterFactor = 1.0;
+  shimmerFactor = 1.0;
+  rng.seed(12345);
 }
 
 
@@ -290,7 +298,7 @@ void GeometricGlottis2019::calcGeometry()
   {
     relAmp = 0.0;
   }
-  amplitude *= relAmp;
+  amplitude *= relAmp * shimmerFactor;
 
 
   // ****************************************************************
@@ -413,6 +421,19 @@ void GeometricGlottis2019::incTime(const double timeIncrement_s, const double pr
 
   F0 += (flutter_percent / 50.0) * (F0 / 100.0) * 
     (sin(2.0*M_PI*12.7*time_s) + sin(2.0*M_PI*7.1*time_s) + sin(2.0*M_PI*4.7*time_s));
+
+  // Cycle-to-cycle jitter and shimmer: new random factors at each cycle start.
+  long cycle = (long)(phase / (2.0 * M_PI));
+  if (cycle != cycleIndex)
+  {
+    cycleIndex = cycle;
+    std::normal_distribution<double> gauss(0.0, 1.0);
+    jitterFactor = 1.0 + 0.01 * jitter_percent * gauss(rng);
+    shimmerFactor = 1.0 + 0.01 * shimmer_percent * gauss(rng);
+    if (jitterFactor < 0.5) { jitterFactor = 0.5; }
+    if (shimmerFactor < 0.0) { shimmerFactor = 0.0; }
+  }
+  F0 *= jitterFactor;
 
   phase += F0*timeIncrement_s*2.0*M_PI;
   time_s+= timeIncrement_s;

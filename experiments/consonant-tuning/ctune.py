@@ -123,6 +123,7 @@ def frame(syl: str, f0=220.0, vowel_s=0.24, carrier_s=0.2, onset_map=None) -> Fr
 NOISE_SCALING = True   # VTL noise-source constants scaled to the speaker's size
 NOISE_EXPONENTS = (1.0, 2.0, -1.0)   # of the size for lengths, areas, cutoff frequencies
 GLOTTAL_NOISE = (1.0, 1000.0)   # gain factor, cutoff Hz of the aspiration source
+APERIODICITY = (0.0, 0.0)   # jitter %, shimmer % per glottal cycle
 LUNG_PRESSURE = None   # dPa; replaces VTL's fixed 8000 dPa lung-pressure gestures
 
 
@@ -151,6 +152,9 @@ def render(speaker, syllables, out_dir: Path, **kw):
         if hasattr(lib, "vtlSetGlottalNoise"):
             lib.vtlSetGlottalNoise.argtypes = [ctypes.c_double] * 2
             lib.vtlSetGlottalNoise(*GLOTTAL_NOISE)
+        if hasattr(lib, "vtlSetGlottalAperiodicity"):
+            lib.vtlSetGlottalAperiodicity.argtypes = [ctypes.c_double] * 2
+            lib.vtlSetGlottalAperiodicity(*APERIODICITY)
         patch = accent.patch_score
         if LUNG_PRESSURE is not None:
             def patch(ges, segments, _orig=accent.patch_score):
@@ -654,6 +658,8 @@ def main(argv=None):
                    help="exponents of the size scale for lengths, areas, cutoffs")
     a.add_argument("--glottal-noise", default="1,1000",
                    help="aspiration source gain factor and cutoff Hz (VTL: 1,1000)")
+    a.add_argument("--aperiodicity", default="0,0",
+                   help="glottal jitter and shimmer in percent per cycle (VTL: 0,0)")
     a.add_argument("--lung-pressure", type=float,
                    help="lung pressure in dPa instead of VTL's fixed 8000 (glottis clamps at 16000)")
 
@@ -696,6 +702,8 @@ def main(argv=None):
         NOISE_EXPONENTS = tuple(float(v) for v in args.noise_exponents.split(","))
         global LUNG_PRESSURE
         LUNG_PRESSURE = args.lung_pressure
+        global APERIODICITY
+        APERIODICITY = tuple(float(v) for v in args.aperiodicity.split(","))
         global GLOTTAL_NOISE
         GLOTTAL_NOISE = tuple(float(v) for v in args.glottal_noise.split(","))
         s = run(edits, args.syll.split(","), Path(args.out), args.base, onset_map=omap or None)

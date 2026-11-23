@@ -304,6 +304,27 @@ Geometric glottis 2019 には chink area（披裂軟骨の間の隙間）があ�
 - `--lung-pressure` は、生成した .ges の lung-pressure-gestures の値を書き換える。声門の形状にある pressure の値は、f0 と同じく合成時に score の値で上書きされるので使わない。
 - 試聴：[listening-aspiration/](results/listening-aspiration)。1 現状、2 前の 6、3 肺圧 16000 + rel_amp 1、4 rel_amp 2、5 rel_amp 2 + 雑音 ×4、6 rel_amp 2 + 雑音 ×8、7 rel_amp 2 + 雑音 ×8・4 kHz、8 7 に flutter 25。話者は [glottis-variants/](results/glottis-variants) の `A_ra2`、`A_ra2_fl25`。
 
+### 滑らかさ：閉じ方と周期ごとのゆらぎ
+
+試聴の 8（rel_amp 2、flutter 25、声門の雑音 ×8・4 kHz）が今のところ一番よい。ただ、まだ滑らかな声にはならない。
+
+母音区間の長時間スペクトル（0–1 kHz の帯域に対する dB、/a/ の平均）：
+
+| | H1−H2 | 1–2 kHz | 2–4 kHz | 4–8 kHz |
+|---|---|---|---|---|
+| JD2 | 4.8 | −5.2 | −21.3 | −32.2 |
+| 8 | 10.1 | 0.6 | −26.5 | −21.6 |
+| 8 + phase lag 1.22 | 8.8 | 1.3 | −26.2 | −21.8 |
+| 8 + phase lag 1.6 | 7.2 | 1.3 | −26.7 | −23.0 |
+| 8 + pulse skewness 0 | 12.6 | −2.9 | −25.6 | −19.4 |
+
+- 嘉音は JD2 より 2–4 kHz が 5 dB 弱く、4–8 kHz が 10 dB 強い。4–8 kHz は主に足した気息雑音。声道が短いので、フォルマントが高いことも効いている。
+- phase lag（下端と上端の位相差）を上げると、H1−H2 が JD2 に近づく。pulse skewness を 0 にすると離れる。
+- VTL の声門は、周期ごとのゆらぎ（jitter、shimmer）を持たない。flutter は 4.7〜12.7 Hz の三つの正弦波でゆっくり揺れるだけで、パルスの一つ一つは完全に同じ形になる。人の声は周期ごとに 0.5〜1% 程度の周期のゆらぎと、数 % の振幅のゆらぎを持つ。
+- 実験として `vtlSetGlottalAperiodicity(jitter %, shimmer %)` を足した（Geometric glottis 2019、周期ごとに正規乱数で f0 と振幅に掛ける。乱数の種は固定）。`ctune.py run --aperiodicity=1,5`。既定は 0, 0 で、出力は元とサンプル単位で一致する。
+- 試聴音節の f0 は 220 Hz で平らである。平らな f0 だけでもロボットっぽく聞こえるので、声質の判断は accent.py の抑揚付きの文でもしたほうがよい。
+- 試聴：[listening-smooth/](results/listening-smooth)。1 試聴の 8、2 phase lag 1.22、3 phase lag 1.6、4 jitter 0.5 % shimmer 3 %、5 jitter 1 % shimmer 5 %、6 jitter 2 % shimmer 10 %（誇張）、7 phase lag 1.6 + jitter 1 % shimmer 5 %。話者は [glottis-variants/](results/glottis-variants) の `A_ra2_fl25`、`A_ra2_fl25_lag122`、`A_ra2_fl25_lag16`。
+
 注意：同じプロセスで続けて合成すると、ノイズの乱数が引き継がれるので、2回目以降は波形が変わる。`ctune.py run` は毎回同じ順で合成するので、同じ条件なら同じ結果になる。
 
 ## 使い方
