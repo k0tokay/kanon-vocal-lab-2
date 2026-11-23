@@ -15,7 +15,7 @@ import numpy as np
 import torch
 from scipy.io.wavfile import write
 
-from emjem import Inference, Normalizer, infer, load_corpus, log_mel, match_level, pick_device
+from emjem import Inference, Normalizer, infer, load_corpus, log_mel, match_level, pick_device, use_run_speaker
 from evaluate import mel_cepstral_distance, pearson
 from synth import AUDIO_RATE, Pool
 from vtl import Vtl
@@ -29,7 +29,7 @@ def main():
     parser.add_argument("--examples", type=int, default=8, help="speakers to write example wavs for")
     parser.add_argument("--workers", type=int, default=None)
     args = parser.parse_args()
-    meta = json.loads((args.data / "meta.json").read_text())
+    meta = use_run_speaker(args.run, json.loads((args.data / "meta.json").read_text()))
     mode = json.loads((args.run / "args.json").read_text())["mode"]
     norm = Normalizer(meta)
     stats = np.load(args.run / "mel_stats.npz")
@@ -73,7 +73,7 @@ def main():
     reference_length = float(vtl.tube(vtl.shape("a"))[0].sum())
 
     female, male = gender == "F", gender == "M"
-    result = {"mode": mode, "speakers": len(speakers), "female": int(female.sum()), "male": int(male.sum()),
+    result = {"mode": mode, "vtl_speaker": meta.get("speaker", "default"), "speakers": len(speakers), "female": int(female.sum()), "male": int(male.sum()),
               "reference_length_a_cm": reference_length}
     if mode != "fix":
         diff = speaker_hat[female].mean(0) - speaker_hat[male].mean(0)

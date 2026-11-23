@@ -16,6 +16,8 @@ The ground-truth parameters of the target corpus are never used for training.
 """
 import argparse
 import json
+import os
+import re
 import time
 from pathlib import Path
 
@@ -37,6 +39,35 @@ TEST_SPEAKERS = 8
 # ---------------------------------------------------------------------------
 # Parameter normalization to [-1, 1]
 # ---------------------------------------------------------------------------
+
+def use_run_speaker(run, meta, speaker=None, glottis_model=None):
+    """Makes VTL (here and in synthesis workers) use the run's speaker file and refreshes the speaker-dependent meta.
+
+    With SPEAKER, the file is copied to RUN/speaker.speaker (optionally selecting GLOTTIS_MODEL, e.g.
+    "Geometric glottis 2019"); a run that already has that file keeps it, so --resume and evaluation reuse it.
+    Without either, the default speaker (vtl.SPEAKER) and the corpus meta are used unchanged.
+    """
+    own = Path(run) / "speaker.speaker"
+    if speaker and not own.exists():
+        text = Path(speaker).read_text()
+        if glottis_model:
+            if f'type="{glottis_model}"' not in text:
+                raise SystemExit(f"{speaker} has no glottis model {glottis_model!r}")
+            text = re.sub(r'(<glottis_model type="([^"]+)" selected=")[01]"',
+                          lambda m: m.group(1) + ("1" if m.group(2) == glottis_model else "0") + '"', text)
+        own.write_text(text)
+    if not own.exists():
+        return meta
+    os.environ["VTL_EXPERIMENT_SPEAKER"] = str(own.resolve())
+    from vtl import Vtl
+    vtl = Vtl()
+    if vtl.glottis_names != meta["glottis_names"] or vtl.anatomy_names != meta["anatomy_names"]:
+        raise SystemExit(f"{own}: its glottis/anatomy parameters differ from the corpus meta; "
+                         "select a glottis model with the same parameters (--glottis-model)")
+    return dict(meta, speaker=str(speaker or own), anatomy_reference=vtl.anatomy_reference.tolist(),
+                anatomy_min=vtl.anatomy_min.tolist(), anatomy_max=vtl.anatomy_max.tolist(),
+                glottis_min=vtl.glottis_min.tolist(), glottis_max=vtl.glottis_max.tolist())
+
 
 class Normalizer:
     def __init__(self, meta):
@@ -234,11 +265,18 @@ def main():
                         help="synthesize only a random segment of this many frames per utterance (training uses "
                              f"{CROP}-frame crops, so long real utterances need not be synthesized whole)")
     parser.add_argument("--resume", action="store_true", help="continue from RUN_DIR/checkpoint.pt")
+    parser.add_argument("--speaker", type=Path, default=None,
+                        help="VTL speaker file to synthesize with (default: the corpus/vtl.py default); "
+                             "its anatomy is the FIX-AM reference")
+    parser.add_argument("--glottis-model", default=None, help="glottis model to select in --speaker")
     args = parser.parse_args()
     args.run.mkdir(parents=True, exist_ok=True)
     (args.run / "args.json").write_text(json.dumps({k: str(v) for k, v in vars(args).items()}, indent=1))
 
     meta = json.loads((args.data / "meta.json").read_text())
+    if args.speaker and not meta.get("real", False):
+        raise SystemExit("--speaker only applies to real corpora (a synthetic corpus fixes its speaker)")
+    meta = use_run_speaker(args.run, meta, args.speaker, args.glottis_model)
     norm = Normalizer(meta)
     if args.mode == "oracle" and meta.get("real", False):
         raise SystemExit("--mode oracle needs a synthetic corpus")
@@ -319,7 +357,9 @@ def main():
                 if wav is None or not np.all(np.isfinite(wav)):
                     rejected["nan"] += 1
                     continue
-                if np.max(np.abs(wav)) >= 1.0:
+                # Real corpora rescale every synthesis to the corpus level, so only synthetic data needs the
+                # [-1, 1] range of the stored int16-like audio.
+                if not meta.get("real", False) and np.max(np.abs(wav)) >= 1.0:
                     rejected["clip"] += 1
                     continue
                 mel = (log_mel(match_level(wav, meta, rng), len(f)) - mel_stats[0]) / mel_stats[1]
