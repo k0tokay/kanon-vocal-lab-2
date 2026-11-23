@@ -357,6 +357,47 @@ Geometric glottis 2019 には chink area（披裂軟骨の間の隙間）があ�
 - 話者：[glottis-variants/](results/glottis-variants) の `G25_*`。
 - 試聴：[listening-glottis2025/](results/listening-glottis2025)。1 現状、2 試聴の 8、3 JD2 の 2025 の声門、4 2025・声帯長 0.8・開き 0.04・chink 0.02、5 2025・声帯長 1.2・開き 0.03、6 2025・声帯長 1.2・開き 0.045・chink 0.02、7 2025・声帯長 1.6・開き 0.04。3〜7 は声門の雑音も jitter も既定のまま。
 
+### まとめ：`fulkhisa-kanon-v0-8-vtl24-g2025.speaker`
+
+ここまでの結果をまとめて、新しい話者 [speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24-g2025.speaker](../../speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24-g2025.speaker) を作った。元の `fulkhisa-kanon-v0-8-vtl24.speaker` は変えていない。違うのは Geometric glottis 2025 の欄だけで、声道の形（ɕ の修正も含めて）は元と同じ。
+
+パルスを抑える方法：
+- 声帯の静止長（rest_length）を上げる。0.8 → 1.2 cm（JD2 の 1.6 cm × 嘉音の大きさ 0.747）。声門の流量が増えて、母音が解放に負けなくなる。
+- relative amplitude を上げる。0.508 → 1.0。
+- 静止時の開き（lower / upper displacement）を下げる。声質が変わりやすいので控えめにして、0.081 / 0.121 → 0.06 / 0.08。
+
+息っぽさで馴染ませる方法：
+- chink area。0.0035 → 0.03。
+- flutter。9.5 → 25 %。
+- 声門の雑音源の利得。`vtlSetGlottalNoise` は API のオプションで、話者ファイルには入らない。この話者は既定の 1 で調整した。
+
+作り方：
+- `glottis2025.py` で、元の話者の 2019 の欄（static params と全形状）から 2025 の欄を作った。そのうえで、rest_length と modal の値を上のように変え、2025 を選択した。
+- 2019 の欄は元のまま残してある。GUI で 2019 に戻せば、元の声になる。
+- 2019 の skewness と double pulsing に当たるものが 2025 にはない。そのため pulse shape は 0.5（JD2 の形状と同じ）、jitter は 10 %（2025 の既定）にした。phase lag は嘉音の 0.864 のまま。
+
+```
+python3 glottis2025.py ../../speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.speaker \
+  ../../speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24-g2025.speaker \
+  --rest-length 1.2 --modal "2=0.06,3=0.08,4=0.03,6=1,9=25"
+```
+
+| | H1−H2 | 換算 1–2 kHz | 解放の 1.5–4 kHz（ta / ka / pa） | rpk（ta / ka / pa） |
+|---|---|---|---|---|
+| 元（vtl24） | 14.4 | −23.2 | −9 / +1 / +6 | 1.06 / 0.61 / 0.93 |
+| g2025 | 13.2 | −10.5 | −30 / −16 / −13 | 0.26 / 0.12 / 0.21 |
+| 別案：開き 0.045 / 0.045、chink 0.02、phase lag 1.222 | 7.8 | −6.4 | −14 / −21 / −17 | 0.42 / 0.09 / 0.31 |
+
+- 試した組み合わせ（声帯長 1.2、rel_amp 1、flutter 25）：
+  - 開き 0.05 / 0.07、chink 0.02
+  - 開き 0.05 / 0.07、chink 0.03
+  - 開き 0.06 / 0.08、chink 0.03
+  - 上の 0.05 / 0.07・chink 0.02 で phase lag 1.222 にしたもの
+  - 開き 0.045 / 0.045・chink 0.02・phase lag 1.222
+- 開きをいちばん控えめにした 0.06 / 0.08 は、息っぽさ（H1−H2）を元に近く保ったまま、解放が 13 dB 以上下がった。そこでこれを採った。
+- 別案は、倍音がより JD2 に近い代わりに、声質の変化が大きい。
+- 試聴：[listening-kanon-g2025/](results/listening-kanon-g2025)。1 元、2 g2025、3 別案。どれも ɕ の修正なし、声門の雑音は既定。
+
 注意：同じプロセスで続けて合成すると、ノイズの乱数が引き継がれるので、2回目以降は波形が変わる。`ctune.py run` は毎回同じ順で合成するので、同じ条件なら同じ結果になる。
 
 ## 使い方
