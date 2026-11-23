@@ -27,7 +27,8 @@ def load(samples, eps, cap):
     edges = graph["edges"][graph["path_errors"] <= cap]
     n = len(points)
     A = coo_matrix((np.ones(len(edges)), (edges[:, 0], edges[:, 1])), shape=(n, n))
-    return points, ((A+A.T) > 0).astype(float).toarray(), list(data["names"])
+    seeds = data["seeds"][data["errors"] <= eps] if "seeds" in data else np.full(n, -1)
+    return points, ((A+A.T) > 0).astype(float).toarray(), list(data["names"]), seeds
 
 
 def giant(A):
@@ -61,9 +62,9 @@ if __name__ == "__main__":
     parser.add_argument("--draws", type=int, default=20)
     args = parser.parse_args()
 
-    X, A, names = load(args.samples, args.eps, args.cap)
+    X, A, names, seeds = load(args.samples, args.eps, args.cap)
     keep = giant(A)
-    X, A = X[keep], A[np.ix_(keep, keep)]
+    X, A, seeds = X[keep], A[np.ix_(keep, keep)], seeds[keep]
     phi, side = sweep(A)
     print(f"{args.samples.parent.name}: points={len(keep)} mean degree={A.sum(1).mean():.1f} "
           f"cut edges={int(A[np.ix_(side, ~side)].sum())} sides={side.sum()}/{(~side).sum()} conductance={phi:.4f}")
@@ -71,7 +72,15 @@ if __name__ == "__main__":
     for k in np.argsort(-abs(diff))[:5]:
         print(f"  {names[k]:4s} {X[side, k].mean():.2f} vs {X[~side, k].mean():.2f}")
 
-    R, B, _ = load(args.reference, args.eps, args.cap)
+    if np.all(seeds >= 0):
+        # a side made by one chain alone would only be that chain's excursion
+        print("  points per chain (seed: side A / side B):")
+        for s in np.unique(seeds):
+            print(f"    {s}: {np.sum(side & (seeds == s)):3d} / {np.sum(~side & (seeds == s)):3d}")
+        within = np.mean([seeds[p] == seeds[q] for p, q in zip(*np.nonzero(np.triu(A)))])
+        print(f"  share of edges joining points of the same chain: {within:.2f}")
+
+    R, B, _, _ = load(args.reference, args.eps, args.cap)
     n = int(np.sum(np.load(args.samples)["errors"] <= args.eps))
     rng = np.random.default_rng(0)
     null = []

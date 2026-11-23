@@ -1,7 +1,8 @@
 """Replica exchange over shapes whose F1-F3 stay near Kanon's static /a/.
 
 Writes the accepted shapes in range-normalised coordinates of the movable
-parameters together with their maximum absolute log-formant error.
+parameters together with their maximum absolute log-formant error and the
+seed of the chain that found them (-1 for samples saved before seeds were kept).
 """
 import argparse
 import ctypes
@@ -101,28 +102,32 @@ if __name__ == "__main__":
     args.out = args.out or Path(__file__).resolve().parent / f"results/kanon-{args.vowel}/samples.npz"
     args.out.parent.mkdir(parents=True, exist_ok=True)
     chains_file = args.out.with_suffix(".chains.json")
-    chains, points = {}, np.empty((0, int(active.sum())))
+    chains, points, origin = {}, np.empty((0, int(active.sum()))), np.empty(0, int)
     if args.out.exists() and not args.fresh:
         chains = {int(k): v for k, v in json.loads(chains_file.read_text()).items()}
         saved = np.load(args.out)
         assert (str(saved["vowel"]) if "vowel" in saved else "a") == args.vowel, "saved samples are for another vowel"
         points = saved["points"]
+        origin = saved["seeds"] if "seeds" in saved else np.full(len(points), -1)
     seeds = sorted(set(args.seeds) | set(chains))
     start = perf_counter()
     jobs = [(seed, args.steps, args.keep, chains.get(seed)) for seed in seeds]
-    found, evaluations, busy = [], 0, 0.
+    found, labels, evaluations, busy = [], [], 0, 0.
     with mp.get_context("spawn").Pool(min(args.workers, len(jobs)), load, (args.lib.resolve(), args.vowel)) as pool:
         for seed, samples, chain, count, seconds in pool.imap_unordered(run, jobs):
             found += samples
+            labels += [seed]*len(samples)
             chains[seed] = chain
             evaluations += count
             busy += seconds
     wall = perf_counter()-start
     load(args.lib.resolve(), args.vowel)
     before = len(points)
-    points = np.unique(np.vstack([points, *found]) if found else points, axis=0)
+    # duplicates (the shared start shape, repeated states) keep the chain that found them first
+    points, first = np.unique(np.vstack([points, *found]) if found else points, axis=0, return_index=True)
+    origin = np.concatenate([origin, labels]).astype(int)[first]
     errors = np.array([error(z) for z in points])
-    np.savez(args.out, points=points, errors=errors, names=names[active], vowel=args.vowel)
+    np.savez(args.out, points=points, errors=errors, names=names[active], vowel=args.vowel, seeds=origin)
     chains_file.write_text(json.dumps(chains))
     new = len(points)-before
     print(f"chains={len(chains)} steps={[chains[s]['step'] for s in seeds]} evaluations={evaluations} "
