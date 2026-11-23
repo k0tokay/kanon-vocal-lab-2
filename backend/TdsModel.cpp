@@ -58,7 +58,7 @@ TdsModel::TdsModel()
   options.noiseAreaExponent = 2.0;
   options.noiseFrequencyExponent = -1.0;
   options.glottalNoiseGainFactor = 1.0;
-  options.glottalNoiseCutoff_Hz = 1000.0;
+  options.glottalNoiseCutoff_Hz = 0.0;   // 0: the glottis model's cutoff
   options.radiationCharacteristic = HEAD_TORSO_RADIATION_CHARACTERISTIC;
 
   // ****************************************************************
@@ -691,6 +691,8 @@ void TdsModel::setTube(Tube* tube, bool filtering)
   double dummy;
   tube->getAuxParams(dummy, this->teethPosition, this->tongueTipSideElevation);
   this->sizeScale = tube->getSizeScale();
+  this->aspirationStrength_dB = tube->getAspirationStrength_dB();
+  this->aspirationCutoff_Hz = tube->getAspirationCutoff_Hz();
 }
 
 
@@ -1457,8 +1459,13 @@ void TdsModel::calcNoiseSources()
       // According to Badin et al. (1994), the aspiration noise source
       // spectrum is essentially flat -> high f_c, but not too high.
       // f_c > 6 kHz sounds increasingly worse.
-      cons->gain = 0.2e-6 * options.glottalNoiseGainFactor;
-      cons->cutoffFreq = options.glottalNoiseCutoff_Hz;
+      // Level and cutoff come from the glottis model ("Aspiration strength",
+      // -40 dB = the original 0.2e-6; "Aspiration cutoff"). The API options
+      // multiply the gain and, if > 0, override the cutoff.
+      cons->gain = 0.2e-6 * pow(10.0, (aspirationStrength_dB + 40.0) / 20.0) *
+        options.glottalNoiseGainFactor;
+      cons->cutoffFreq = (options.glottalNoiseCutoff_Hz > 0.0) ?
+        options.glottalNoiseCutoff_Hz : aspirationCutoff_Hz;
     }
     else
 

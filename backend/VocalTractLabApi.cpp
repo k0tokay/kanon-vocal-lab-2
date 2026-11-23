@@ -362,7 +362,7 @@ int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz)
     printf("Error: The API has not been initialized.\n");
     return 1;
   }
-  if ((gainFactor < 0.0) || (cutoff_Hz <= 0.0))
+  if ((gainFactor < 0.0) || (cutoff_Hz < 0.0))
   {
     return 2;
   }

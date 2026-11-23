@@ -122,7 +122,7 @@ def frame(syl: str, f0=220.0, vowel_s=0.24, carrier_s=0.2, onset_map=None) -> Fr
 
 NOISE_SCALING = True   # VTL noise-source constants scaled to the speaker's size
 NOISE_EXPONENTS = (1.0, 2.0, -1.0)   # of the size for lengths, areas, cutoff frequencies
-GLOTTAL_NOISE = (1.0, 1000.0)   # gain factor, cutoff Hz of the aspiration source
+GLOTTAL_NOISE = (1.0, 0.0)   # gain factor, cutoff Hz (0 = speaker's) of the aspiration source
 APERIODICITY = (0.0, 0.0)   # jitter %, shimmer % per glottal cycle
 LUNG_PRESSURE = None   # dPa; replaces VTL's fixed 8000 dPa lung-pressure gestures
 
@@ -656,8 +656,8 @@ def main(argv=None):
                    help="VTL's original noise-source constants (JD2 sizes)")
     a.add_argument("--noise-exponents", default="1,2,-1",
                    help="exponents of the size scale for lengths, areas, cutoffs")
-    a.add_argument("--glottal-noise", default="1,1000",
-                   help="aspiration source gain factor and cutoff Hz (VTL: 1,1000)")
+    a.add_argument("--glottal-noise", default="1,0",
+                   help="aspiration gain factor on top of the speaker's, and cutoff Hz (0 = the speaker's)")
     a.add_argument("--aperiodicity", default="0,0",
                    help="glottal jitter and shimmer in percent per cycle (VTL: 0,0)")
     a.add_argument("--lung-pressure", type=float,

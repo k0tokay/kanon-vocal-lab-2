@@ -398,6 +398,34 @@ python3 glottis2025.py ../../speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24.s
 - 別案は、倍音がより JD2 に近い代わりに、声質の変化が大きい。
 - 試聴：[listening-kanon-g2025/](results/listening-kanon-g2025)。1 元、2 g2025、3 別案。どれも ɕ の修正なし、声門の雑音は既定。
 
+### 声門の雑音源の強さを話者ファイルに持たせる
+
+声門の雑音源（気息雑音）の強さとカットオフを、声門モデルの static param にした。GUI の声門パネルは static param をそのまま並べるので、GUI でも変えられる（このブランチで GUI をビルドし直した場合）。
+
+- `Glottis::getAspirationStrength_dB()` は元から基底クラスにあったが、どこからも使われていなかった。値を持っていたのは Triangular glottis の control param「Aspiration strength」（−40〜0 dB、既定 −40）だけだった。
+- Geometric glottis 2019 と 2025 に、static param を二つ足した。
+  - `Aspiration strength`（dB、−60〜0、既定 −40）
+  - `Aspiration cutoff`（Hz、300〜8000、既定 1000）
+- 合成のとき、`Synthesizer::addSample` がこの二つを `Tube` に渡し、`TdsModel` の声門の雑音源で使う。利得は 0.2e-6 × 10^((dB + 40) / 20) で、−40 dB と 1000 Hz なら元の音源と同じになる。JD2 と g2025 の話者で、出力がサンプル単位で元と一致することを確かめた。
+- Triangular glottis の「Aspiration strength」も、これで初めて効くようになる。既定の −40 dB なら、出力は変わらない。
+- API の `vtlSetGlottalNoise(倍率, カットオフ)` は、話者の値の上に掛ける倍率と、カットオフの上書きになった（カットオフ 0 = 話者の値）。`ctune.py --glottal-noise` の既定も `1,0` にした。
+- 注意：このパラメタを書いた話者ファイルは、このブランチより前の VTL では読めない（static param の index が範囲外になり、読み込みエラーになる）。パラメタのない古い話者ファイルは、そのまま読める（既定値になる）。
+- `glottis2025.py --aspiration=dB,Hz` で、2025 の欄に書き込める。
+
+g2025 の話者の上で、強さを変えて測った（声帯長 1.2、開き 0.06 / 0.08、chink 0.03、flutter 25）：
+
+| Aspiration strength / cutoff | 換算 2–3 kHz | 換算 3–4 kHz | 換算 4–8 kHz | 解放の 1.5–4 kHz（ta / ka / pa） |
+|---|---|---|---|---|
+| −40 dB / 1000 Hz（元と同じ） | −34.8 | −34.3 | −32.2 | −26 / −16 / −12 |
+| −34 / 1000 | −31.2 | −28.5 | −29.7 | −23 / −16 / −12 |
+| −30 / 1000 | −27.9 | −24.8 | −27.1 | −25 / −18 / −14 |
+| −30 / 3000 | −24.8 | −20.2 | −23.2 | −23 / −17 / −13 |
+| −26 / 2000 | −21.5 | −16.9 | −21.3 | −19 / −19 / −16 |
+
+- 雑音を強くしても、上がるのは 2–8 kHz の雑音だけである。H1−H2（13.2）と解放の目立ち方は変わらない。
+- 中間の −30 dB / 1000 Hz を [speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24-g2025-asp.speaker](../../speakers/fulkhisa-kanon/fulkhisa-kanon-v0-8-vtl24-g2025-asp.speaker) にした。g2025 との違いはこの二つの static param だけ。g2025 のほうは、古い VTL でも読めるように、このパラメタを書かずに残した。
+- 試聴：[listening-aspiration-strength/](results/listening-aspiration-strength)。上の表の順に 1〜5。
+
 注意：同じプロセスで続けて合成すると、ノイズの乱数が引き継がれるので、2回目以降は波形が変わる。`ctune.py run` は毎回同じ順で合成するので、同じ条件なら同じ結果になる。
 
 ## 使い方

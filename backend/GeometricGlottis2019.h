@@ -61,6 +61,8 @@ public:
     REST_LENGTH,
     REST_F0,
     CHINK_LENGTH,
+    ASPIRATION_STRENGTH,
+    ASPIRATION_CUTOFF,
     NUM_STATIC_PARAMS
   };
 
@@ -92,6 +94,8 @@ public:
   void calcGeometry();
   void getTubeData(double *length_cm, double *area_cm2);
   int getApertureParamIndex();
+  double getAspirationStrength_dB();
+  double getAspirationCutoff_Hz();
 
   // Cycle-to-cycle aperiodicity, drawn once per glottal cycle (standard
   // deviations in percent of f0 and of the vibration amplitude). Shared by

@@ -27,6 +27,7 @@
 
 // This constant should have the same value as the same constant in Tube.h/cpp
 const double Glottis::DEFAULT_ASPIRATION_STRENGTH_DB = -40.0;
+const double Glottis::DEFAULT_ASPIRATION_CUTOFF_HZ = 1000.0;
 
 // ****************************************************************************
 /// Default implementation.
@@ -37,6 +38,15 @@ double Glottis::getAspirationStrength_dB()
   // When this function was not overwritten by a derived class,
   // just return the default value.
   return DEFAULT_ASPIRATION_STRENGTH_DB;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double Glottis::getAspirationCutoff_Hz()
+{
+  return DEFAULT_ASPIRATION_CUTOFF_HZ;
 }
 
 

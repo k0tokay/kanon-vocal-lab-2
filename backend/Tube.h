@@ -151,6 +151,9 @@ public:
   void getAuxParams(double &nasalPortArea_cm2, double &incisorPos_cm, double &tongueTipSideElevation);
   void setSizeScale(double s) { sizeScale = s; }
   double getSizeScale() const { return sizeScale; }
+  void setAspiration(double strength_dB, double cutoff_Hz) { aspirationStrength_dB = strength_dB; aspirationCutoff_Hz = cutoff_Hz; }
+  double getAspirationStrength_dB() const { return aspirationStrength_dB; }
+  double getAspirationCutoff_Hz() const { return aspirationCutoff_Hz; }
 
   void interpolate(const Tube* leftTube, const Tube* rightTube, const double ratio);
   void calcPositions();
@@ -171,6 +174,10 @@ private:
   /// (VocalTract::REFERENCE_TRACT_LENGTH_CM). TdsModel scales the noise-source
   /// constants (lengths, areas, frequencies) with it. 1 = reference (JD2).
   double sizeScale{ 1.0 };
+  /// Aspiration noise source of the glottis model (Glottis::getAspirationStrength_dB,
+  /// getAspirationCutoff_Hz); -40 dB and 1000 Hz are VTL's original source.
+  double aspirationStrength_dB{ -40.0 };
+  double aspirationCutoff_Hz{ 1000.0 };
 
   // Elevation of the tongue tip side (corresponding to the TS3 
   // parameter of the vocal tract model).

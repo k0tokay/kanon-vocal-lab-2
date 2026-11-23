@@ -72,7 +72,11 @@ GeometricGlottis2019::GeometricGlottis2019()
     { "Rest thickness", "rest_thickness", "cm", 10, "mm", 0.3, 1.0, 0.45, 0.0 },
     { "Rest length", "rest_length", "cm", 10, "mm", 0.5, 2.0, 1.6, 0.0 },
     { "Rest f0", "rest_f0", "Hz", 1.0, "Hz", 50.0, 400.0, 120.0, 120.0 },
-    { "Chink length", "chink_length", "cm", 10, "mm", 0.1, 0.5, 0.4, 0.0 }
+    { "Chink length", "chink_length", "cm", 10, "mm", 0.1, 0.5, 0.4, 0.0 },
+    // Aspiration noise above the glottis (TdsModel). -40 dB and 1000 Hz give
+    // VTL's original source; the gain changes by 20 dB per factor of 10.
+    { "Aspiration strength", "aspiration_strength", "dB", 1, "dB", -60.0, 0.0, -40.0, -40.0 },
+    { "Aspiration cutoff", "aspiration_cutoff", "Hz", 1, "Hz", 300.0, 8000.0, 1000.0, 1000.0 }
   };
 
   staticParams.clear();
@@ -465,3 +469,21 @@ int GeometricGlottis2019::getApertureParamIndex()
 
 
 // ****************************************************************************
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double GeometricGlottis2019::getAspirationStrength_dB()
+{
+  return staticParams[ASPIRATION_STRENGTH].x;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double GeometricGlottis2019::getAspirationCutoff_Hz()
+{
+  return staticParams[ASPIRATION_CUTOFF].x;
+}

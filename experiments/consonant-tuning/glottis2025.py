@@ -35,6 +35,23 @@ def set_rest_length(path, length_cm):
     open(path, 'w', newline='').write(t[:i] + g + t[j:])
 
 
+def set_aspiration(path, strength_dB, cutoff_Hz, model='Geometric glottis 2025'):
+    """Write the "Aspiration strength" / "Aspiration cutoff" static params
+    (added on branch consonant-tuning; a VTL without them cannot read the file)."""
+    t = open(path, newline='').read(); nl = '\r\n' if '\r\n' in t else '\n'
+    i = t.index(f'<glottis_model type="{model}"'); j = t.index('</static_params>', i)
+    s = t[i:j]
+    s = re.sub(r'\s*<param index="\d+" name="Aspiration (strength|cutoff)"[^>]*/>', '', s)
+    n = len(re.findall(r'<param index=', s))
+    k = s.rstrip().rfind('/>') + 2
+    add = (f'{nl}        <param index="{n}" name="Aspiration strength" abbr="aspiration_strength" unit="dB" '
+           f'min="-60.000000" max="0.000000" default="-40.000000" value="{strength_dB:.6f}"/>'
+           f'{nl}        <param index="{n+1}" name="Aspiration cutoff" abbr="aspiration_cutoff" unit="Hz" '
+           f'min="300.000000" max="8000.000000" default="1000.000000" value="{cutoff_Hz:.6f}"/>')
+    s = s[:k] + add + s[k:]
+    open(path, 'w', newline='').write(t[:i] + s + t[j:])
+
+
 if __name__ == '__main__':
     import argparse
     ap = argparse.ArgumentParser(description=__doc__)
@@ -43,9 +60,12 @@ if __name__ == '__main__':
     ap.add_argument('--rest-length', type=float)
     ap.add_argument('--pulse-shape', type=float, default=0.5)
     ap.add_argument('--jitter', type=float, default=10.0)
+    ap.add_argument('--aspiration', help='strength_dB,cutoff_Hz (VTL: -40,1000)')
     a = ap.parse_args()
     modal = {int(k): float(v) for k, v in (kv.split('=') for kv in a.modal.split(',') if kv)}
     convert(a.src, a.dst, modal=modal, pulse_shape=a.pulse_shape, jitter=a.jitter)
     if a.rest_length:
         set_rest_length(a.dst, a.rest_length)
+    if a.aspiration:
+        set_aspiration(a.dst, *(float(v) for v in a.aspiration.split(',')))
     print('wrote', a.dst)
