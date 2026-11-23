@@ -1,0 +1,7 @@
+# 音節ごとの WAV は ctune.py run で再生成できる。all.wav・summary.json・kanon.speaker と試聴セットだけ残す。
+baseline/*.wav
+tuned/*.wav
+!baseline/all.wav
+!tuned/all.wav
+*.seg
+*.ges
