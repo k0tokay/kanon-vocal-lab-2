@@ -48,6 +48,7 @@ def targets():
 
 
 LOG_SCALE = (np.log(0.6), np.log(1.2))         # range of the common formant scale k
+RAISE_DEPTH = 1.5                              # cm, how far a freed length may be shortened
 
 
 class Problem:
@@ -57,10 +58,17 @@ class Problem:
     With scale=True a last coordinate c sets a common formant scale k
     (log k from LOG_SCALE) and y = log F - log k: the vowels are then held
     only up to a uniform scaling of all formants, as when the same vowels
-    are spoken by a larger speaker."""
+    are spoken by a larger speaker.
 
-    def __init__(self, vowels, scale=False):
+    With raise_params (anatomy names, e.g. pharynx_length) each of them gets
+    a free shortening d in [0, RAISE_DEPTH] cm, shared by all vowels: the
+    anatomy still moves to its target ("rest" anatomy) but the tract is
+    built with rest - d, as when the larynx is held raised. Coordinate
+    c = 1 - d/RAISE_DEPTH, so the start (no shortening) is c = 1."""
+
+    def __init__(self, vowels, scale=False, raise_params=()):
         self.scale = scale
+        self.raise_idx = np.array([vm.anatomy_names().index(n) for n in raise_params], dtype=int)
         self.tract = vm.Tract(SPEAKER)
         self.vowels = vowels
         self.names = self.tract.names
@@ -78,8 +86,18 @@ class Problem:
         self._memo = {}
 
     # coordinates ---------------------------------------------------------
+    def rest(self, z):
+        """Anatomy before the free shortenings (the driven coordinates)."""
+        return self.alo + z[:self.na] * (self.ahi - self.alo)
+
+    def shortening(self, z):
+        """cm taken off each raise_params length."""
+        k0 = self.na + len(self.vowels) * self.nq
+        return RAISE_DEPTH * (1 - z[k0:k0 + len(self.raise_idx)])
+
     def split(self, z):
-        theta = self.alo + z[:self.na] * (self.ahi - self.alo)
+        theta = self.rest(z).copy()
+        theta[self.raise_idx] = np.maximum(theta[self.raise_idx] - self.shortening(z), self.alo[self.raise_idx])
         qs = {}
         for k, v in enumerate(self.vowels):
             q = self.q0[v].copy()
@@ -89,9 +107,11 @@ class Problem:
         return theta, qs
 
     def join(self, theta, qs, log_k=0.0):
+        """theta is the rest anatomy; the shortenings start at 0."""
         parts = [(theta - self.alo) / (self.ahi - self.alo)]
         for v in self.vowels:
             parts.append(((qs[v] - self.qlo) / (self.qhi - self.qlo))[self.free])
+        parts.append(np.ones(len(self.raise_idx)))
         if self.scale:
             parts.append([(log_k - LOG_SCALE[0]) / (LOG_SCALE[1] - LOG_SCALE[0])])
         return np.concatenate(parts)
@@ -197,10 +217,17 @@ def main():
     ap.add_argument("--vowels", default="a,i,u")
     ap.add_argument("--scale", action="store_true",
                     help="hold the formants only up to a common scale factor")
+    ap.add_argument("--raise", dest="raise_params", default="",
+                    help="anatomy lengths that may be shortened by up to RAISE_DEPTH cm "
+                         "(larynx raising), e.g. pharynx_length")
+    ap.add_argument("--raise-weight", type=float, default=1.0,
+                    help="metric weight of the shortenings relative to articulation "
+                         "(< 1 makes the path prefer shortening)")
     args = ap.parse_args()
     vowels = args.vowels.split(",")
+    raise_params = [n for n in args.raise_params.split(",") if n]
     vm.set_reference(None)          # VTL's built-in template, which Kanon was made from
-    problem = Problem(vowels, scale=args.scale)
+    problem = Problem(vowels, scale=args.scale, raise_params=raise_params)
     z0 = problem.join(problem.theta0, problem.q0)
     y0 = problem(z0)
     print("Kanon", problem.formants_hz(y0), "min areas", problem.min_areas(z0))
@@ -215,7 +242,8 @@ def main():
     for name in args.targets:
         spec = targets()[name]
         theta_t = vm.restrict_anatomy(spec["theta"])
-        folder = OUT / (f"{name}-scaled" if args.scale else name)
+        folder = OUT / (name + ("-scaled" if args.scale else "") + ("-raised" if raise_params else "")
+                        + (f"-w{args.raise_weight:g}" if raise_params and args.raise_weight != 1 else ""))
         folder.mkdir(exist_ok=True)
         zt = (theta_t - problem.alo) / (problem.ahi - problem.alo)
 
@@ -223,8 +251,8 @@ def main():
             return min(problem.min_areas(z).values()) >= MIN_AREA
 
         def log(step):
-            theta, _ = problem.split(step.z)
-            # The naive point at the same anatomy, for comparison.
+            theta = problem.rest(step.z)
+            # The naive point at the same (rest) anatomy, for comparison.
             try:
                 yn = problem(naive(problem, z0, theta))
                 naive_err = float(np.max(np.abs(yn - y0)))
@@ -232,21 +260,27 @@ def main():
                 yn, naive_err = None, None
             step.info.update(naive_error=naive_err, formant_scale=float(np.exp(problem.log_k(step.z))),
                              naive_formants=problem.formants_hz(yn) if yn is not None else None,
-                             min_area=problem.min_areas(step.z))
-            print(f"{name} s={step.s:.3f} k={step.info['formant_scale']:.3f} ds={step.info.get('ds', 0):.4f} it={step.info.get('iterations')} residual={step.residual:.4f} naive={naive_err} "
+                             min_area=problem.min_areas(step.z),
+                             shortening=dict(zip(raise_params, problem.shortening(step.z).round(4).tolist())))
+            print(f"{name} s={step.s:.3f} k={step.info['formant_scale']:.3f} short={step.info['shortening']} ds={step.info.get('ds', 0):.4f} it={step.info.get('iterations')} residual={step.residual:.4f} naive={naive_err} "
                   f"areas={ {v: round(a, 3) for v, a in step.info['min_area'].items()} }", flush=True)
 
+        weights = np.ones(n - problem.na)
+        k0 = len(problem.vowels) * problem.nq
+        weights[k0:k0 + len(raise_params)] = args.raise_weight
         path = vm.follow(problem, z0, np.arange(problem.na), zt, free_lower, free_upper, H,
                          y_target=y0, ds=0.05, ds_max=0.1, ds_min=1e-3, tol=TOL,
-                         accept=accept, on_step=log, scheme="minmod")
+                         accept=accept, on_step=log, scheme="minmod", weights=weights)
         end = path[-1]
         theta_end, xs_end = problem.shapes(end.z)
-        _, xs_naive = problem.shapes(naive(problem, z0, theta_end))
+        _, xs_naive = problem.shapes(naive(problem, z0, problem.rest(end.z)))
         record = dict(
             target=name, label=spec["label"] + (", formants up to a common scale" if args.scale else ""),
             scaled=args.scale, reached=end.s >= 1 - 1e-9, s_end=end.s,
             anatomy=dict(names=anatomy_names, kanon=problem.theta0.tolist(),
-                         target=theta_t.tolist(), end=theta_end.tolist()),
+                         target=theta_t.tolist(), end=theta_end.tolist(),
+                         rest_end=problem.rest(end.z).tolist(), raised=raise_params,
+                         shortening=problem.shortening(end.z).tolist()),
             params=problem.names, free=[problem.names[j] for j in problem.free],
             kanon_formants=problem.formants_hz(y0),
             near_bounds=dict(start=near_bounds(problem, z0), end=near_bounds(problem, end.z)),

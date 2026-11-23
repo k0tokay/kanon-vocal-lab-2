@@ -318,14 +318,16 @@ class Step:
 
 
 def correct(f, z, free, y_target, free_lower, free_upper, jac_free, tol=1e-3, aim=None,
-            iterations=12, damping=1e-2, accept=None, y=None):
+            iterations=12, damping=1e-2, accept=None, y=None, weights=None):
     """Levenberg-Marquardt on the free coordinates until max|f(z) - y_target| < aim (default tol);
     a point that only gets below tol is still accepted.
 
     The free Jacobian is recomputed at every accepted iterate (VTL's maps are
     only piecewise smooth, so a stale one points the wrong way across kinks).
     Trials that leave the domain or that `accept(z, y)` rejects count as
-    failures and raise the damping. Returns (z, y, number of iterations);
+    failures and raise the damping. `weights` (one per free coordinate) is
+    the metric of the damping term: a small weight makes that coordinate
+    cheap to move. Returns (z, y, number of iterations);
     raises Invalid when it does not converge.
     """
     y = f(z) if y is None else y
@@ -336,7 +338,7 @@ def correct(f, z, free, y_target, free_lower, free_upper, jac_free, tol=1e-3, ai
             return z, y, it
         J = jac_free(z, y)
         for _ in range(8):
-            d = bounded_step(J, -r, free_lower - z[free], free_upper - z[free], lam)
+            d = bounded_step(J, -r, free_lower - z[free], free_upper - z[free], lam, weights)
             trial = z.copy()
             trial[free] += d
             try:
@@ -358,7 +360,7 @@ def correct(f, z, free, y_target, free_lower, free_upper, jac_free, tol=1e-3, ai
 
 def follow(f, z0, driven, target, free_lower, free_upper, h, y_target=None,
            ds=0.05, ds_min=1e-3, ds_max=0.1, tol=1e-3, accept=None, damping=1e-2,
-           corrector_iterations=12, on_step=None, scheme="central"):
+           corrector_iterations=12, on_step=None, scheme="central", weights=None):
     """Drive the coordinates `driven` of z from z0 straight to `target` while
     the free coordinates keep f(z) == y_target (continuation on the level set).
 
@@ -366,7 +368,10 @@ def follow(f, z0, driven, target, free_lower, free_upper, h, y_target=None,
     solution of J_free dz = -J_driven dp, i.e. along the tangent of the level
     set (the kernel of the full Jacobian) whose driven part is the step dp.
     Corrector: `correct` (Levenberg-Marquardt) with the driven coordinates
-    held. `accept(z, y)` can reject points (e.g. tongue contact). The step
+    held. `weights` (one per free coordinate) sets the metric of the
+    minimum-norm predictor and of the corrector's damping, so the path
+    prefers moving coordinates with small weights. `accept(z, y)` can
+    reject points (e.g. tongue contact). The step
     halves on failure and grows after easy steps. Returns the accepted
     `Step`s, ending at s = 1 or where the step fell below ds_min.
     """
@@ -387,7 +392,7 @@ def follow(f, z0, driven, target, free_lower, free_upper, h, y_target=None,
 
     def corr(z, y=None):
         return correct(f, z, free, y_target, free_lower, free_upper, jac_free, tol, tol / 4,
-                       corrector_iterations, damping, accept, y)
+                       corrector_iterations, damping, accept, y, weights)
 
     z, y, _ = corr(z, y)
     s, path = 0.0, [Step(0.0, z.copy(), y.copy(), float(np.max(np.abs(y - y_target))))]
@@ -402,7 +407,7 @@ def follow(f, z0, driven, target, free_lower, free_upper, h, y_target=None,
             pred = z.copy()
             pred[driven] = p0 + (s + ds) * (p1 - p0)
             pred[free] += bounded_step(Jf, -Jd @ (pred[driven] - z[driven]),
-                                       free_lower - z[free], free_upper - z[free], damping)
+                                       free_lower - z[free], free_upper - z[free], damping, weights)
             zn, yn, iterations = corr(pred)
             if accept and not accept(zn, yn):
                 raise Invalid("rejected by accept()")

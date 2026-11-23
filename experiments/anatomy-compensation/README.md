@@ -89,6 +89,40 @@ s = 0 が嘉音、s = 1 が目標の解剖。止まった場合、出力の話�
 - 嘉音の高さ（絶対値）を保とうとすると、成人寄りの解剖では /a/ の過剰な開口や /u/ の接触寸前の狭めが要る。この「無理」は、解剖の小ささとフォルマントの高さが組になって決まっているところから来ている。
 - W02 の13値は、W02 そのものの声道を再現しない。W02 の形状を13値から作り直した解剖に載せると、/i/ の F3 が 3438 → 2574 Hz に下がり、/u/ はピークが3つそろわない。そのため W02 を目標にした結果は、「W02 の解剖」ではなく「W02 の寸法に伸ばした基準話者」に向かったものとして読むこと。
 
+### 喉頭を上げる（咽頭長を変数側に回す）
+
+声優が声を作るときの喉頭挙上の代わりとして、咽頭長 `pharynx_length` に共通の短縮量 d（0〜1.5 cm、3母音で共通）を足した（`--raise pharynx_length`）。
+
+- 解剖の目標（安静時の咽頭長）はそのまま。
+- 声道は「目標 − d」で作る。
+- d は調音と同じく自由変数。
+- `--raise-weight 0.1` は、最小ノルムの計量で d を調音より100倍安くする（`vm.follow` の `weights`）。重み1のままだと、経路は d をほとんど使わない（≤0.1 cm）。
+
+| | 到達した s | 短縮 d (cm) | 共通倍率 k |
+|---|---:|---:|---:|
+| F15 厳密 | 0.71 → 0.64 / 0.30 (w0.1) | 0.10 / 0.57 | — |
+| W02 厳密 | 0.25 → 0.45 / 0.53 (w0.1) | 0.41 / 0.84 | — |
+| F15 スケール込み | 1.00 → 1.00 / 1.00 (w0.1) | 0.01 / 0.20 | 0.877 → 0.878 / 0.887 |
+| W02 スケール込み | 0.46 → **1.00** / 1.00 (w0.1) | 0.04 / 1.06 | 0.912 → 0.808 / 0.836 |
+
+矢印の左が咽頭固定、右が重み1 / 重み0.1。止まる理由は、どれも /a/ の JA、/i/ の HX・JX、/u/ の TS1・TS2 が端に寄った後の修正子の停滞か接触である。
+
+**喉頭挙上でどこまで高さを戻せるか**（[raise_scale.py](raise_scale.py)）：
+
+- 手順：スケール込みの到達点（目標の解剖そのもの）で解剖を固定し、k を 1 に向けて押し上げる。d（上限 3 cm、重み0.1）と調音を自由にする。
+- F15（[F15-scaled-raised/raise_scale.png](results/F15-scaled-raised/raise_scale.png)）：
+  - d ≈ 0.9 cm で k は 0.878 → 0.916（+4%）。
+  - その先は d が増えず、調音だけで k 0.963 まで上がって止まる。
+- W02（[W02-scaled-raised/raise_scale.png](results/W02-scaled-raised/raise_scale.png)）：
+  - d ≈ 1.0 cm で k は 0.808 → 0.852（+5%）。
+  - d = 1.75 cm（咽頭 4.50 cm、嘉音の 4.40 cm とほぼ同じ）で k は 0.917 まで上がり、/u/ が接触に近づいて止まる。
+
+読み取れること：
+
+- 喉頭挙上の効き目は、1 cm あたりフォルマントが一様に 4〜5% 上がる程度である。
+- W02 は咽頭を嘉音と同じ長さまで縮めても、k は 0.92 にとどまる。残りの約8%は口腔側の寸法から来ている。口腔側の寸法とは硬口蓋長（嘉音 3.07、W02 4.40 cm）や口蓋の高さ・深さなどである。
+- 嘉音の「高さ」の大部分は、咽頭ではなく口腔（短い口蓋）が担っている。口蓋の短縮は F2 を最もよく上げる（以前の GUI での観察と一致）。喉頭挙上はその一部しか肩代わりできない。
+
 ## 試聴
 
 各フォルダに、/a i u/ の静止母音（F0 220 Hz）を置いた。
@@ -121,6 +155,8 @@ cmake --build build-mac/gui --target VocalTractLabApi
 python3 experiments/anatomy-compensation/compensate.py W02 F15
 python3 experiments/anatomy-compensation/compensate.py --scale W02 F15
 python3 experiments/anatomy-compensation/plot.py W02 F15 W02-scaled F15-scaled
+python3 experiments/anatomy-compensation/compensate.py --raise pharynx_length [--raise-weight 0.1] [--scale] W02 F15
+python3 experiments/anatomy-compensation/raise_scale.py F15 W02   # --scale --raise の結果が必要
 python3 experiments/anatomy-compensation/baseline.py
 ```
 

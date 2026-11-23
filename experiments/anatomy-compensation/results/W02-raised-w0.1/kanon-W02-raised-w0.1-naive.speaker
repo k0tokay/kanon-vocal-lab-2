@@ -1,0 +1,1473 @@
+<speaker>
+  <vocal_tract_model>
+    <anatomy>
+      <palate>
+        <p0 x="0.0000" z="-1.6648" teeth_height="0.0000" top_teeth_width="0.8740" bottom_teeth_width="0.8740" palate_height="1.0847" palate_angle_deg="60.8000"/>
+        <p1 x="0.0000" z="-1.6648" teeth_height="0.0000" top_teeth_width="0.8740" bottom_teeth_width="0.8740" palate_height="1.0847" palate_angle_deg="60.8000"/>
+        <p2 x="0.8724" z="-1.6648" teeth_height="0.5845" top_teeth_width="0.8324" bottom_teeth_width="0.8324" palate_height="1.3343" palate_angle_deg="60.8000"/>
+        <p3 x="1.8724" z="-1.4983" teeth_height="0.5845" top_teeth_width="0.8324" bottom_teeth_width="0.8324" palate_height="1.4981" palate_angle_deg="60.8000"/>
+        <p4 x="2.5724" z="-1.3318" teeth_height="0.7014" top_teeth_width="0.6659" bottom_teeth_width="0.6659" palate_height="1.3108" palate_angle_deg="60.8000"/>
+        <p5 x="3.2224" z="-1.1653" teeth_height="0.8183" top_teeth_width="0.5827" bottom_teeth_width="0.5827" palate_height="0.6554" palate_angle_deg="38.0000"/>
+        <p6 x="3.6224" z="-0.9156" teeth_height="0.9352" top_teeth_width="0.5410" bottom_teeth_width="0.2497" palate_height="0.1404" palate_angle_deg="23.4000"/>
+        <p7 x="3.7724" z="-0.4994" teeth_height="0.9352" top_teeth_width="0.6659" bottom_teeth_width="0.1665" palate_height="0.0000" palate_angle_deg="0.0000"/>
+        <p8 x="3.7724" z="0.0000" teeth_height="0.9352" top_teeth_width="0.7075" bottom_teeth_width="0.1665" palate_height="0.0000" palate_angle_deg="0.0000"/>
+      </palate>
+      <jaw fulcrum_x="-6.5000" fulcrum_y="2.0000" rest_pos_x="0.0000" rest_pos_y="-1.2732" tooth_root_length="0.7140">
+        <p0 x="0.0000" z="-1.8312" teeth_height="0.0000" top_teeth_width="0.8740" bottom_teeth_width="0.8740" jaw_height="1.3387" jaw_angle_deg="69.5000"/>
+        <p1 x="0.4224" z="-1.8312" teeth_height="0.4887" top_teeth_width="0.9156" bottom_teeth_width="0.9156" jaw_height="1.3387" jaw_angle_deg="69.5000"/>
+        <p2 x="1.4224" z="-1.5815" teeth_height="0.4887" top_teeth_width="0.8740" bottom_teeth_width="0.8740" jaw_height="1.3387" jaw_angle_deg="69.5000"/>
+        <p3 x="2.4224" z="-1.3318" teeth_height="0.4887" top_teeth_width="0.7491" bottom_teeth_width="0.7491" jaw_height="1.3387" jaw_angle_deg="69.5000"/>
+        <p4 x="3.1224" z="-1.1653" teeth_height="0.4887" top_teeth_width="0.6243" bottom_teeth_width="0.6243" jaw_height="0.8925" jaw_angle_deg="42.2000"/>
+        <p5 x="3.5224" z="-0.9156" teeth_height="0.5375" top_teeth_width="0.4994" bottom_teeth_width="0.5827" jaw_height="0.3570" jaw_angle_deg="35.8000"/>
+        <p6 x="3.7224" z="-0.5827" teeth_height="0.5864" top_teeth_width="0.2497" bottom_teeth_width="0.6659" jaw_height="0.1160" jaw_angle_deg="31.4000"/>
+        <p7 x="3.7724" z="-0.4162" teeth_height="0.6841" top_teeth_width="0.1665" bottom_teeth_width="0.7491" jaw_height="0.0000" jaw_angle_deg="0.0000"/>
+        <p8 x="3.7724" z="0.0000" teeth_height="0.6841" top_teeth_width="0.1665" bottom_teeth_width="0.7491" jaw_height="0.0000" jaw_angle_deg="0.0000"/>
+      </jaw>
+      <lips width="1.0971"/>
+      <tongue>
+        <tip radius="0.1776"/>
+        <body radius_x="1.5984" radius_y="1.2848"/>
+        <root automatic_calc="1" trx_slope="1.0044" trx_intercept="-4.7582" try_slope="0.7118" try_intercept="-1.4787"/>
+        <tonsil length="2.2000" height="0.5000"/>
+      </tongue>
+      <velum uvula_width="0.4996" uvula_height="0.6424" uvula_depth="0.5827">
+        <low points="-1.321 -0.7 -1.057 -0.3431 -0.74 -0.07537 -0.3171 0.2369 0 0.4154 "/>
+        <mid points="-1.85 -0.07537 -1.639 0.1923 -1.216 0.3708 -0.6343 0.5493 0 0.701 "/>
+        <high points="-1.85 0.3708 -1.586 0.7723 -1.163 0.9954 -0.6343 1.04 0 1.085 "/>
+      </velum>
+      <pharynx fulcrum_x="-2.5076" fulcrum_y="1.0079" rotation_angle_deg="-95.1211" top_rib_y="-1.4000" upper_depth="3.1631" lower_depth="2.8301" back_side_width="1.5000"/>
+      <larynx upper_depth="0.8324" lower_depth="0.8324" epiglottis_width="0.3569" epiglottis_height="1.1420" epiglottis_depth="1.1653" epiglottis_angle_deg="100.0000">
+        <narrow points="1.309 0 0.7636 -0.1511 1.289 -0.9063 2.379 -2.417 1.076 -2.417 0.8 -0.9063 0 -0.7553 0 0 "/>
+        <wide points="2.4 0 1.549 -0.1511 1.543 -0.9063 2.379 -2.417 1.076 -2.417 1.055 -0.9063 0 -0.7553 0 0 "/>
+      </larynx>
+      <vocal_folds default_f0="220.0000"/>
+      <piriform_fossa length="2.5000" volume="1.5000"/>
+      <subglottal_cavity length="23.0000"/>
+      <nasal_cavity length="11.4000"/>
+      <param index="0"  name="HX"  min="0.000"  max="1.000"  neutral="1.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="1"  name="HY"  min="-3.926"  max="-2.142"  neutral="-3.545"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="2"  name="JX"  min="-0.444"  max="0.000"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="3"  name="JA"  min="-7.000"  max="0.000"  neutral="-2.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="4"  name="LP"  min="-1.000"  max="1.000"  neutral="-0.070"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="5"  name="LD"  min="-1.428"  max="2.855"  neutral="0.678"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="6"  name="VS"  min="0.000"  max="1.000"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="7"  name="VO"  min="-0.100"  max="1.000"  neutral="-0.100"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="8"  name="TCX"  min="-3.171"  max="3.211"  neutral="-0.423"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="9"  name="TCY"  min="-1.785"  max="1.070"  neutral="-0.891"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="10"  name="TTX"  min="1.204"  max="4.415"  neutral="2.809"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="11"  name="TTY"  min="-1.785"  max="2.140"  neutral="-0.876"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="12"  name="TBX"  min="-3.171"  max="3.211"  neutral="1.605"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="13"  name="TBY"  min="-1.785"  max="3.925"  neutral="0.550"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="14"  name="TRX"  min="-4.229"  max="1.605"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="15"  name="TRY"  min="-3.926"  max="0.356"  neutral="0.227"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="16"  name="TS1"  min="0.000"  max="0.832"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="17"  name="TS2"  min="0.000"  max="0.832"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+      <param index="18"  name="TS3"  min="-0.832"  max="0.832"  neutral="0.000"  positive_velocity_factor="1.000"  negative_velocity_factor="1.000" />
+    </anatomy>
+    <shapes>
+      <shape name="a">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8069"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="1.0353"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="0.0526"/>
+        <param name="TCX" value="-0.7201"/>
+        <param name="TCY" value="-1.3685"/>
+        <param name="TTX" value="2.9276"/>
+        <param name="TTY" value="-1.4667"/>
+        <param name="TBX" value="1.1258"/>
+        <param name="TBY" value="-0.5224"/>
+        <param name="TRX" value="-2.2871"/>
+        <param name="TRY" value="-2.0766"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-tap-a">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8069"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="1.0353"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="0.0526"/>
+        <param name="TCX" value="-0.7201"/>
+        <param name="TCY" value="-1.3685"/>
+        <param name="TTX" value="3.8072"/>
+        <param name="TTY" value="-0.1900"/>
+        <param name="TBX" value="1.1258"/>
+        <param name="TBY" value="-0.5224"/>
+        <param name="TRX" value="-2.2871"/>
+        <param name="TRY" value="-2.0766"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="i">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="0.6888"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.4438"/>
+        <param name="TCY" value="-0.7767"/>
+        <param name="TTX" value="3.8815"/>
+        <param name="TTY" value="-0.9134"/>
+        <param name="TBX" value="2.6450"/>
+        <param name="TBY" value="0.4686"/>
+        <param name="TRX" value="-1.2951"/>
+        <param name="TRY" value="-0.8224"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="tt-tap-i">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="0.6888"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.4438"/>
+        <param name="TCY" value="-0.7767"/>
+        <param name="TTX" value="4.0934"/>
+        <param name="TTY" value="-0.3613"/>
+        <param name="TBX" value="2.6450"/>
+        <param name="TBY" value="0.4686"/>
+        <param name="TRX" value="-1.2951"/>
+        <param name="TRY" value="-0.8224"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="M">
+        <param name="HX" value="0.5422"/>
+        <param name="HY" value="-3.8183"/>
+        <param name="JX" value="-0.1451"/>
+        <param name="JA" value="-2.3211"/>
+        <param name="LP" value="-0.6600"/>
+        <param name="LD" value="1.0610"/>
+        <param name="VS" value="0.0203"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.5356"/>
+        <param name="TCY" value="-0.7355"/>
+        <param name="TTX" value="2.5163"/>
+        <param name="TTY" value="-0.6997"/>
+        <param name="TBX" value="1.0284"/>
+        <param name="TBY" value="0.7353"/>
+        <param name="TRX" value="-1.6121"/>
+        <param name="TRY" value="-1.8702"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0466"/>
+        <param name="TS3" value="0.1897"/>
+      </shape>
+      <shape name="u">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="0.0380"/>
+        <param name="LD" value="0.5737"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2902"/>
+        <param name="TCY" value="-0.4137"/>
+        <param name="TTX" value="2.5297"/>
+        <param name="TTY" value="-0.7886"/>
+        <param name="TBX" value="1.2227"/>
+        <param name="TBY" value="0.4867"/>
+        <param name="TRX" value="-1.3482"/>
+        <param name="TRY" value="-1.6140"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tt-tap-u">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="0.0380"/>
+        <param name="LD" value="0.5737"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2902"/>
+        <param name="TCY" value="-0.4137"/>
+        <param name="TTX" value="3.6879"/>
+        <param name="TTY" value="-0.0230"/>
+        <param name="TBX" value="1.2227"/>
+        <param name="TBY" value="0.4867"/>
+        <param name="TRX" value="-1.3482"/>
+        <param name="TRY" value="-1.6140"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="e">
+        <param name="HX" value="0.8562"/>
+        <param name="HY" value="-3.7487"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-3.6850"/>
+        <param name="LP" value="-0.6600"/>
+        <param name="LD" value="1.0610"/>
+        <param name="VS" value="0.3832"/>
+        <param name="VO" value="0.0100"/>
+        <param name="TCX" value="0.0978"/>
+        <param name="TCY" value="-1.0256"/>
+        <param name="TTX" value="2.9664"/>
+        <param name="TTY" value="-1.1370"/>
+        <param name="TBX" value="1.7299"/>
+        <param name="TBY" value="0.0547"/>
+        <param name="TRX" value="-1.8609"/>
+        <param name="TRY" value="-1.2481"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1543"/>
+        <param name="TS3" value="-0.0089"/>
+      </shape>
+      <shape name="tt-tap-e">
+        <param name="HX" value="0.8562"/>
+        <param name="HY" value="-3.7487"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-3.6850"/>
+        <param name="LP" value="-0.6600"/>
+        <param name="LD" value="1.0610"/>
+        <param name="VS" value="0.3832"/>
+        <param name="VO" value="0.0100"/>
+        <param name="TCX" value="0.0978"/>
+        <param name="TCY" value="-1.0256"/>
+        <param name="TTX" value="3.8189"/>
+        <param name="TTY" value="-0.1781"/>
+        <param name="TBX" value="1.7299"/>
+        <param name="TBY" value="0.0547"/>
+        <param name="TRX" value="-1.8609"/>
+        <param name="TRY" value="-1.2481"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1543"/>
+        <param name="TS3" value="-0.0089"/>
+      </shape>
+      <shape name="y">
+        <param name="HX" value="0.9612"/>
+        <param name="HY" value="-3.8153"/>
+        <param name="JX" value="-0.0049"/>
+        <param name="JA" value="-2.5269"/>
+        <param name="LP" value="0.8200"/>
+        <param name="LD" value="0.2987"/>
+        <param name="VS" value="0.4846"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.9188"/>
+        <param name="TCY" value="-0.7774"/>
+        <param name="TTX" value="3.5105"/>
+        <param name="TTY" value="-0.9394"/>
+        <param name="TBX" value="2.2627"/>
+        <param name="TBY" value="0.3733"/>
+        <param name="TRX" value="-1.4530"/>
+        <param name="TRY" value="-0.8168"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.2529"/>
+        <param name="TS3" value="-0.0072"/>
+      </shape>
+      <shape name="o">
+        <param name="HX" value="0.6761"/>
+        <param name="HY" value="-3.5949"/>
+        <param name="JX" value="-0.0156"/>
+        <param name="JA" value="-3.4215"/>
+        <param name="LP" value="0.6200"/>
+        <param name="LD" value="0.4017"/>
+        <param name="VS" value="0.3124"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.7201"/>
+        <param name="TCY" value="-0.9301"/>
+        <param name="TTX" value="2.7247"/>
+        <param name="TTY" value="-1.1212"/>
+        <param name="TBX" value="0.9492"/>
+        <param name="TBY" value="0.0234"/>
+        <param name="TRX" value="-1.9895"/>
+        <param name="TRY" value="-2.0684"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0238"/>
+      </shape>
+      <shape name="tt-tap-o">
+        <param name="HX" value="0.6761"/>
+        <param name="HY" value="-3.5949"/>
+        <param name="JX" value="-0.0156"/>
+        <param name="JA" value="-3.4215"/>
+        <param name="LP" value="0.6200"/>
+        <param name="LD" value="0.4017"/>
+        <param name="VS" value="0.3124"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.7201"/>
+        <param name="TCY" value="-0.9301"/>
+        <param name="TTX" value="3.7464"/>
+        <param name="TTY" value="-0.0798"/>
+        <param name="TBX" value="0.9492"/>
+        <param name="TBY" value="0.0234"/>
+        <param name="TRX" value="-1.9895"/>
+        <param name="TRY" value="-2.0684"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0238"/>
+      </shape>
+      <shape name="ll-labial-closure(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.1893"/>
+        <param name="LP" value="0.2364"/>
+        <param name="LD" value="-0.1140"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.7201"/>
+        <param name="TCY" value="-1.3685"/>
+        <param name="TTX" value="2.9983"/>
+        <param name="TTY" value="-1.1807"/>
+        <param name="TBX" value="1.0600"/>
+        <param name="TBY" value="-0.3619"/>
+        <param name="TRX" value="-2.2871"/>
+        <param name="TRY" value="-2.0766"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-labial-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.0363"/>
+        <param name="LP" value="0.1754"/>
+        <param name="LD" value="-0.0418"/>
+        <param name="VS" value="0.4262"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="1.4086"/>
+        <param name="TCY" value="-0.7485"/>
+        <param name="TTX" value="3.7755"/>
+        <param name="TTY" value="-0.8283"/>
+        <param name="TBX" value="2.6450"/>
+        <param name="TBY" value="0.5542"/>
+        <param name="TRX" value="-1.2859"/>
+        <param name="TRY" value="-0.7929"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="ll-labial-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.7428"/>
+        <param name="LP" value="0.0714"/>
+        <param name="LD" value="-0.1295"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2616"/>
+        <param name="TCY" value="-0.4855"/>
+        <param name="TTX" value="2.5297"/>
+        <param name="TTY" value="-0.7886"/>
+        <param name="TBX" value="1.2227"/>
+        <param name="TBY" value="0.4867"/>
+        <param name="TRX" value="-1.4062"/>
+        <param name="TRY" value="-1.5861"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="ll-labial-fricative(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="-0.0624"/>
+        <param name="JA" value="-2.0999"/>
+        <param name="LP" value="0.3837"/>
+        <param name="LD" value="0.1434"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.5482"/>
+        <param name="TCY" value="-1.2192"/>
+        <param name="TTX" value="2.9983"/>
+        <param name="TTY" value="-1.1807"/>
+        <param name="TBX" value="1.1612"/>
+        <param name="TBY" value="-0.2336"/>
+        <param name="TRX" value="-2.1536"/>
+        <param name="TRY" value="-1.8968"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-labial-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="0.3684"/>
+        <param name="LD" value="0.0626"/>
+        <param name="VS" value="0.4262"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="0.9139"/>
+        <param name="TCY" value="-0.6701"/>
+        <param name="TTX" value="3.8461"/>
+        <param name="TTY" value="-0.7433"/>
+        <param name="TBX" value="2.5389"/>
+        <param name="TBY" value="0.6107"/>
+        <param name="TRX" value="-1.3716"/>
+        <param name="TRY" value="-0.7062"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="ll-labial-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8197"/>
+        <param name="LP" value="0.3589"/>
+        <param name="LD" value="0.0877"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2616"/>
+        <param name="TCY" value="-0.4855"/>
+        <param name="TTX" value="2.5297"/>
+        <param name="TTY" value="-0.7886"/>
+        <param name="TBX" value="1.2227"/>
+        <param name="TBY" value="0.4867"/>
+        <param name="TRX" value="-1.4062"/>
+        <param name="TRY" value="-1.5861"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="ll-labial-approximant(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="-0.0624"/>
+        <param name="JA" value="-2.0999"/>
+        <param name="LP" value="0.7488"/>
+        <param name="LD" value="0.2150"/>
+        <param name="VS" value="0.2538"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.5482"/>
+        <param name="TCY" value="-1.2192"/>
+        <param name="TTX" value="2.9983"/>
+        <param name="TTY" value="-1.1807"/>
+        <param name="TBX" value="1.1612"/>
+        <param name="TBY" value="-0.2336"/>
+        <param name="TRX" value="-2.1536"/>
+        <param name="TRY" value="-1.8968"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-labial-approximant(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="0.8027"/>
+        <param name="LD" value="0.2626"/>
+        <param name="VS" value="0.4262"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="0.9139"/>
+        <param name="TCY" value="-0.6701"/>
+        <param name="TTX" value="3.8461"/>
+        <param name="TTY" value="-0.7433"/>
+        <param name="TBX" value="2.5389"/>
+        <param name="TBY" value="0.6107"/>
+        <param name="TRX" value="-1.3716"/>
+        <param name="TRY" value="-0.7062"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="ll-labial-approximant(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8197"/>
+        <param name="LP" value="0.8644"/>
+        <param name="LD" value="0.3165"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2616"/>
+        <param name="TCY" value="-0.4855"/>
+        <param name="TTX" value="2.5297"/>
+        <param name="TTY" value="-0.7886"/>
+        <param name="TBX" value="1.2227"/>
+        <param name="TBY" value="0.4867"/>
+        <param name="TRX" value="-1.4062"/>
+        <param name="TRY" value="-1.5861"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="ll-dental-fricative(a)">
+        <param name="HX" value="0.5776"/>
+        <param name="HY" value="-3.8184"/>
+        <param name="JX" value="-0.3690"/>
+        <param name="JA" value="-1.6569"/>
+        <param name="LP" value="0.0022"/>
+        <param name="LD" value="0.2309"/>
+        <param name="VS" value="0.1214"/>
+        <param name="VO" value="-0.0639"/>
+        <param name="TCX" value="-0.4562"/>
+        <param name="TCY" value="-1.7067"/>
+        <param name="TTX" value="2.3927"/>
+        <param name="TTY" value="-1.1697"/>
+        <param name="TBX" value="1.0651"/>
+        <param name="TBY" value="-0.3745"/>
+        <param name="TRX" value="-2.4105"/>
+        <param name="TRY" value="-1.8093"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="ll-dental-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.3929"/>
+        <param name="JA" value="-2.4761"/>
+        <param name="LP" value="-0.5563"/>
+        <param name="LD" value="0.3683"/>
+        <param name="VS" value="0.3688"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="1.2671"/>
+        <param name="TCY" value="-0.7796"/>
+        <param name="TTX" value="3.7755"/>
+        <param name="TTY" value="-0.8000"/>
+        <param name="TBX" value="2.5037"/>
+        <param name="TBY" value="0.5534"/>
+        <param name="TRX" value="-1.3549"/>
+        <param name="TRY" value="-0.8234"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="ll-dental-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.4441"/>
+        <param name="JA" value="-1.9578"/>
+        <param name="LP" value="-0.0249"/>
+        <param name="LD" value="0.1584"/>
+        <param name="VS" value="0.2250"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.2616"/>
+        <param name="TCY" value="-0.4855"/>
+        <param name="TTX" value="2.5297"/>
+        <param name="TTY" value="-0.7886"/>
+        <param name="TBX" value="1.2227"/>
+        <param name="TBY" value="0.4867"/>
+        <param name="TRX" value="-1.4062"/>
+        <param name="TRY" value="-1.5861"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tt-alveolar-closure(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.7403"/>
+        <param name="JX" value="-0.1051"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3871"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="-0.1183"/>
+        <param name="TCY" value="-1.7290"/>
+        <param name="TTX" value="4.0934"/>
+        <param name="TTY" value="0.1637"/>
+        <param name="TBX" value="1.3379"/>
+        <param name="TBY" value="-0.0875"/>
+        <param name="TRX" value="-2.4461"/>
+        <param name="TRY" value="-1.7831"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-alveolar-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0660"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.3732"/>
+        <param name="TCY" value="-0.7203"/>
+        <param name="TTX" value="4.0934"/>
+        <param name="TTY" value="-0.6299"/>
+        <param name="TBX" value="2.8570"/>
+        <param name="TBY" value="0.6694"/>
+        <param name="TRX" value="-1.2764"/>
+        <param name="TRY" value="-0.7634"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="tt-alveolar-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="-0.0610"/>
+        <param name="TCY" value="-0.8613"/>
+        <param name="TTX" value="3.9521"/>
+        <param name="TTY" value="-0.0630"/>
+        <param name="TBX" value="1.8678"/>
+        <param name="TBY" value="0.3773"/>
+        <param name="TRX" value="-1.6966"/>
+        <param name="TRY" value="-1.3880"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tt-alveolar-flap(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.7403"/>
+        <param name="JX" value="-0.1051"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3871"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="0.2427"/>
+        <param name="TCY" value="-1.7201"/>
+        <param name="TTX" value="3.6342"/>
+        <param name="TTY" value="-0.0075"/>
+        <param name="TBX" value="1.8678"/>
+        <param name="TBY" value="-0.4832"/>
+        <param name="TRX" value="-2.3370"/>
+        <param name="TRY" value="-1.7803"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-alveolar-flap(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0660"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.3732"/>
+        <param name="TCY" value="-0.7203"/>
+        <param name="TTX" value="4.0227"/>
+        <param name="TTY" value="-0.5732"/>
+        <param name="TBX" value="2.9629"/>
+        <param name="TBY" value="0.3568"/>
+        <param name="TRX" value="-1.2764"/>
+        <param name="TRY" value="-0.7634"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3594"/>
+        <param name="TS3" value="0.2263"/>
+      </shape>
+      <shape name="tt-alveolar-flap(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="-0.0610"/>
+        <param name="TCY" value="-0.8613"/>
+        <param name="TTX" value="3.8109"/>
+        <param name="TTY" value="-0.0914"/>
+        <param name="TBX" value="1.9032"/>
+        <param name="TBY" value="0.1482"/>
+        <param name="TRX" value="-1.6966"/>
+        <param name="TRY" value="-1.3879"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tt-alveolar-fricative(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.7403"/>
+        <param name="JX" value="-0.1051"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3871"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0106"/>
+        <param name="TCX" value="-0.0610"/>
+        <param name="TCY" value="-1.4725"/>
+        <param name="TTX" value="3.8815"/>
+        <param name="TTY" value="-0.4599"/>
+        <param name="TBX" value="1.3379"/>
+        <param name="TBY" value="-0.0875"/>
+        <param name="TRX" value="-2.2259"/>
+        <param name="TRY" value="-1.5183"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.8286"/>
+      </shape>
+      <shape name="tt-alveolar-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.7694"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.0803"/>
+        <param name="LD" value="0.8686"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.3732"/>
+        <param name="TCY" value="-0.7203"/>
+        <param name="TTX" value="3.8815"/>
+        <param name="TTY" value="-0.5165"/>
+        <param name="TBX" value="2.8922"/>
+        <param name="TBY" value="0.4417"/>
+        <param name="TRX" value="-1.3222"/>
+        <param name="TRY" value="-0.7642"/>
+        <param name="TS1" value="0.1797"/>
+        <param name="TS2" value="0.0283"/>
+        <param name="TS3" value="0.7021"/>
+      </shape>
+      <shape name="tt-alveolar-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.5865"/>
+        <param name="LP" value="0.1877"/>
+        <param name="LD" value="0.3262"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="0.0307"/>
+        <param name="TCY" value="-1.1506"/>
+        <param name="TTX" value="3.8109"/>
+        <param name="TTY" value="-0.5448"/>
+        <param name="TBX" value="2.4330"/>
+        <param name="TBY" value="-0.0471"/>
+        <param name="TRX" value="-1.9210"/>
+        <param name="TRY" value="-1.3050"/>
+        <param name="TS1" value="0.1448"/>
+        <param name="TS2" value="0.0633"/>
+        <param name="TS3" value="0.8286"/>
+      </shape>
+      <shape name="tt-postalveolar-closure(a)">
+        <param name="HX" value="0.7098"/>
+        <param name="HY" value="-3.7403"/>
+        <param name="JX" value="-0.1051"/>
+        <param name="JA" value="-2.9018"/>
+        <param name="LP" value="-0.0625"/>
+        <param name="LD" value="0.3871"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.8079"/>
+        <param name="TCY" value="-0.9030"/>
+        <param name="TTX" value="2.9983"/>
+        <param name="TTY" value="0.7271"/>
+        <param name="TBX" value="1.2671"/>
+        <param name="TBY" value="0.7463"/>
+        <param name="TRX" value="-1.5481"/>
+        <param name="TRY" value="-0.9442"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-postalveolar-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0660"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.1612"/>
+        <param name="TCY" value="-0.4066"/>
+        <param name="TTX" value="3.1043"/>
+        <param name="TTY" value="0.4145"/>
+        <param name="TBX" value="1.6558"/>
+        <param name="TBY" value="1.2080"/>
+        <param name="TRX" value="-1.0996"/>
+        <param name="TRY" value="-0.4382"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.3427"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="tt-postalveolar-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="0.5960"/>
+        <param name="TCY" value="-0.7044"/>
+        <param name="TTX" value="2.9629"/>
+        <param name="TTY" value="0.6985"/>
+        <param name="TBX" value="1.3379"/>
+        <param name="TBY" value="0.8626"/>
+        <param name="TRX" value="-1.4518"/>
+        <param name="TRY" value="-0.8282"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tt-postalveolar-fricative(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-4.8069"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="0.6781"/>
+        <param name="VS" value="0.1675"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.1470"/>
+        <param name="TCY" value="-0.8044"/>
+        <param name="TTX" value="2.9276"/>
+        <param name="TTY" value="0.1571"/>
+        <param name="TBX" value="1.8324"/>
+        <param name="TBY" value="0.7499"/>
+        <param name="TRX" value="-1.7557"/>
+        <param name="TRY" value="-1.4770"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0000"/>
+      </shape>
+      <shape name="tt-postalveolar-fricative(i)">
+        <param name="HX" value="0.6741"/>
+        <param name="HY" value="-3.5367"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0660"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="0.7727"/>
+        <param name="TCY" value="-1.1928"/>
+        <param name="TTX" value="3.5635"/>
+        <param name="TTY" value="-0.2636"/>
+        <param name="TBX" value="2.2563"/>
+        <param name="TBY" value="-0.1634"/>
+        <param name="TRX" value="-1.9092"/>
+        <param name="TRY" value="-1.2456"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.2678"/>
+        <param name="TS3" value="0.3061"/>
+      </shape>
+      <shape name="tt-postalveolar-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="0.4547"/>
+        <param name="TCY" value="-0.5619"/>
+        <param name="TTX" value="2.6096"/>
+        <param name="TTY" value="0.6111"/>
+        <param name="TBX" value="1.7617"/>
+        <param name="TBY" value="1.2662"/>
+        <param name="TRX" value="-1.3666"/>
+        <param name="TRY" value="-0.9434"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tb-palatal-fricative(a)">
+        <param name="HX" value="0.8530"/>
+        <param name="HY" value="-3.5658"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8117"/>
+        <param name="LP" value="-0.0775"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.6850"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="1.3379"/>
+        <param name="TCY" value="-0.6921"/>
+        <param name="TTX" value="3.2809"/>
+        <param name="TTY" value="-0.2949"/>
+        <param name="TBX" value="2.0445"/>
+        <param name="TBY" value="1.1807"/>
+        <param name="TRX" value="-1.4025"/>
+        <param name="TRY" value="-0.7360"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.7021"/>
+      </shape>
+      <shape name="tb-palatal-fricative(i)">
+        <param name="HX" value="0.9694"/>
+        <param name="HY" value="-3.4494"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8197"/>
+        <param name="LP" value="-0.0592"/>
+        <param name="LD" value="0.5376"/>
+        <param name="VS" value="0.5412"/>
+        <param name="VO" value="0.0200"/>
+        <param name="TCX" value="1.4438"/>
+        <param name="TCY" value="-0.6041"/>
+        <param name="TTX" value="3.4576"/>
+        <param name="TTY" value="-0.3498"/>
+        <param name="TBX" value="2.1504"/>
+        <param name="TBY" value="0.8367"/>
+        <param name="TRX" value="-1.4371"/>
+        <param name="TRY" value="-0.6485"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.8286"/>
+      </shape>
+      <shape name="tb-palatal-fricative(u)">
+        <param name="HX" value="0.8530"/>
+        <param name="HY" value="-3.5658"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-1.8117"/>
+        <param name="LP" value="-0.0775"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.2825"/>
+        <param name="VO" value="-0.0422"/>
+        <param name="TCX" value="1.4792"/>
+        <param name="TCY" value="-0.5461"/>
+        <param name="TTX" value="3.4929"/>
+        <param name="TTY" value="-0.3779"/>
+        <param name="TBX" value="2.1504"/>
+        <param name="TBY" value="0.9227"/>
+        <param name="TRX" value="-1.2457"/>
+        <param name="TRY" value="-0.5869"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.7021"/>
+      </shape>
+      <shape name="tb-velar-closure(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="-0.0136"/>
+        <param name="JA" value="-2.3445"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="0.6781"/>
+        <param name="VS" value="0.5988"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.1470"/>
+        <param name="TCY" value="-0.1638"/>
+        <param name="TTX" value="3.0337"/>
+        <param name="TTY" value="-0.7245"/>
+        <param name="TBX" value="1.9032"/>
+        <param name="TBY" value="0.6069"/>
+        <param name="TRX" value="-1.2254"/>
+        <param name="TRY" value="-1.4656"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0400"/>
+      </shape>
+      <shape name="tb-velar-closure(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0660"/>
+        <param name="VS" value="0.6275"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.8786"/>
+        <param name="TCY" value="-0.0351"/>
+        <param name="TTX" value="3.4929"/>
+        <param name="TTY" value="-0.5766"/>
+        <param name="TBX" value="2.6096"/>
+        <param name="TBY" value="1.0962"/>
+        <param name="TRX" value="-0.8735"/>
+        <param name="TRY" value="-0.5861"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1797"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="tb-velar-closure(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.3189"/>
+        <param name="TCY" value="-0.1366"/>
+        <param name="TTX" value="2.5743"/>
+        <param name="TTY" value="-0.2742"/>
+        <param name="TBX" value="1.4086"/>
+        <param name="TBY" value="0.9204"/>
+        <param name="TRX" value="-1.1169"/>
+        <param name="TRY" value="-1.6381"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+      <shape name="tb-velar-fricative(a)">
+        <param name="HX" value="0.7386"/>
+        <param name="HY" value="-3.6821"/>
+        <param name="JX" value="-0.0136"/>
+        <param name="JA" value="-2.3445"/>
+        <param name="LP" value="-0.2074"/>
+        <param name="LD" value="0.6781"/>
+        <param name="VS" value="0.5988"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="-0.1756"/>
+        <param name="TCY" value="-0.6301"/>
+        <param name="TTX" value="3.0337"/>
+        <param name="TTY" value="-0.7245"/>
+        <param name="TBX" value="1.7971"/>
+        <param name="TBY" value="0.2907"/>
+        <param name="TRX" value="-1.6167"/>
+        <param name="TRY" value="-1.5031"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0400"/>
+      </shape>
+      <shape name="tb-velar-fricative(i)">
+        <param name="HX" value="1.0000"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="0.0000"/>
+        <param name="JA" value="-2.3138"/>
+        <param name="LP" value="-0.7000"/>
+        <param name="LD" value="1.0660"/>
+        <param name="VS" value="0.6275"/>
+        <param name="VO" value="-0.1000"/>
+        <param name="TCX" value="0.3840"/>
+        <param name="TCY" value="-0.3021"/>
+        <param name="TTX" value="3.4929"/>
+        <param name="TTY" value="-0.5766"/>
+        <param name="TBX" value="2.3976"/>
+        <param name="TBY" value="0.7242"/>
+        <param name="TRX" value="-1.1840"/>
+        <param name="TRY" value="-0.9985"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.1797"/>
+        <param name="TS3" value="-0.0199"/>
+      </shape>
+      <shape name="tb-velar-fricative(u)">
+        <param name="HX" value="0.9217"/>
+        <param name="HY" value="-3.8301"/>
+        <param name="JX" value="-0.0307"/>
+        <param name="JA" value="-2.0905"/>
+        <param name="LP" value="-0.1093"/>
+        <param name="LD" value="0.5782"/>
+        <param name="VS" value="0.3687"/>
+        <param name="VO" value="-0.0739"/>
+        <param name="TCX" value="-0.4908"/>
+        <param name="TCY" value="-0.4010"/>
+        <param name="TTX" value="2.5743"/>
+        <param name="TTY" value="-0.2742"/>
+        <param name="TBX" value="1.3379"/>
+        <param name="TBY" value="0.7761"/>
+        <param name="TRX" value="-1.3477"/>
+        <param name="TRY" value="-1.8182"/>
+        <param name="TS1" value="0.0000"/>
+        <param name="TS2" value="0.0000"/>
+        <param name="TS3" value="0.0466"/>
+      </shape>
+    </shapes>
+  </vocal_tract_model>
+  <glottis_models>
+    <glottis_model type="Geometric glottis 2025" selected="0">
+      <static_params>
+        <param index="0" name="Rest thickness" abbr="rest_thickness" unit="cm" min="0.200000" max="1.000000" default="0.450000" value="0.450000"/>
+        <param index="1" name="Rest length" abbr="rest_length" unit="cm" min="0.500000" max="2.000000" default="1.600000" value="1.600000"/>
+        <param index="2" name="Rest f0" abbr="rest_f0" unit="Hz" min="50.000000" max="400.000000" default="120.000000" value="120.000000"/>
+        <param index="3" name="Chink length" abbr="chink_length" unit="cm" min="0.100000" max="0.500000" default="0.400000" value="0.400000"/>
+        <param index="4" name="Jitter" abbr="jitter" unit="%" min="0.00000" max="100.0" default="10.00000" value="10.00000"/>
+      </static_params>
+      <control_params>
+        <param index="0" name="f0" abbr="f0" unit="Hz" min="40.000000" max="600.000000" default="120.000000" value="140.630000"/>
+        <param index="1" name="Subglottal pressure" abbr="pressure" unit="dPa" min="0.000000" max="16000.000000" default="8000.000000" value="2.849022"/>
+        <param index="2" name="Lower displacement" abbr="x_bottom" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.072054"/>
+        <param index="3" name="Upper displacement" abbr="x_top" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.072744"/>
+        <param index="4" name="Chink area" abbr="chink_area" unit="cm^2" min="-0.250000" max="0.250000" default="0.030000" value="0.019413"/>
+        <param index="5" name="Phase lag" abbr="lag" unit="rad" min="0.000000" max="3.141500" default="1.220000" value="1.222044"/>
+        <param index="6" name="Relative amplitude" abbr="rel_amp" unit="" min="-1.000000" max="1.000000" default="1.000000" value="0.970627"/>
+        <param index="7" name="Pulse shape" abbr="pulse_shape" unit="" min="-1.000000" max="1.000000" default="0.000000" value="0.253461"/>
+        <param index="8" name="Flutter" abbr="flutter" unit="%" min="0.000000" max="100.000000" default="25.000000" value="25.000000"/>
+      </control_params>
+      <shapes>
+        <shape name="stop">
+          <control_param index="0" value="108.672036"/>
+          <control_param index="1" value="7999.996827"/>
+          <control_param index="2" value="-0.009750"/>
+          <control_param index="3" value="-0.010100"/>
+          <control_param index="4" value="-0.001000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="-0.204000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="modal">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.040300"/>
+          <control_param index="3" value="0.039950"/>
+          <control_param index="4" value="0.020000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="h">
+          <control_param index="0" value="108.672036"/>
+          <control_param index="1" value="7999.996827"/>
+          <control_param index="2" value="0.044850"/>
+          <control_param index="3" value="0.045200"/>
+          <control_param index="4" value="0.100000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="0.002000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" value="194.350346"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.099800"/>
+          <control_param index="3" value="0.100150"/>
+          <control_param index="4" value="0.100000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" value="115.000000"/>
+          <control_param index="1" value="0.000000"/>
+          <control_param index="2" value="0.100150"/>
+          <control_param index="3" value="0.099800"/>
+          <control_param index="4" value="0.080000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" value="133.631612"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.149850"/>
+          <control_param index="3" value="0.150200"/>
+          <control_param index="4" value="0.000000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" value="133.631612"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.249600"/>
+          <control_param index="3" value="0.249950"/>
+          <control_param index="4" value="0.000000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="-1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="pressed">
+          <control_param index="0" value="140.630000"/>
+          <control_param index="1" value="3450.419653"/>
+          <control_param index="2" value="0.009850"/>
+          <control_param index="3" value="0.009850"/>
+          <control_param index="4" value="0.010000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.500000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+        <shape name="breathy">
+          <control_param index="0" value="138.688231"/>
+          <control_param index="1" value="15999.999998"/>
+          <control_param index="2" value="0.069700"/>
+          <control_param index="3" value="0.070400"/>
+          <control_param index="4" value="0.020000"/>
+          <control_param index="5" value="1.222044"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.246000"/>
+          <control_param index="8" value="25.000000"/>
+        </shape>
+      </shapes>
+    </glottis_model>
+    <glottis_model type="Geometric glottis 2019" selected="1">
+      <static_params>
+        <param index="0" name="Rest thickness" abbr="rest_thickness" unit="cm" min="0.300000" max="1.000000" default="0.450000" value="0.300000"/>
+        <param index="1" name="Rest length" abbr="rest_length" unit="cm" min="0.500000" max="2.000000" default="1.600000" value="0.800000"/>
+        <param index="2" name="Rest f0" abbr="rest_f0" unit="Hz" min="50.000000" max="400.000000" default="120.000000" value="170.000000"/>
+        <param index="3" name="Chink length" abbr="chink_length" unit="cm" min="0.100000" max="0.500000" default="0.400000" value="0.200000"/>
+      </static_params>
+      <control_params>
+        <param index="0" name="f0" abbr="f0" unit="Hz" min="40.000000" max="600.000000" default="120.000000" value="220.000000"/>
+        <param index="1" name="Subglottal pressure" abbr="pressure" unit="dPa" min="0.000000" max="20000.000000" default="8000.000000" value="8000.000000"/>
+        <param index="2" name="Lower displacement" abbr="x_bottom" unit="cm" min="-0.050000" max="0.300000" default="0.010000" value="0.076303"/>
+        <param index="3" name="Upper displacement" abbr="x_top" unit="cm" min="-0.050000" max="0.300000" default="0.020000" value="0.114596"/>
+        <param index="4" name="Chink area" abbr="chink_area" unit="cm^2" min="-0.250000" max="0.250000" default="0.050000" value="0.003276"/>
+        <param index="5" name="Phase lag" abbr="lag" unit="rad" min="0.000000" max="3.141500" default="1.220000" value="0.864349"/>
+        <param index="6" name="Relative amplitude" abbr="rel_amp" unit="" min="-1.000000" max="1.000000" default="1.000000" value="0.472559"/>
+        <param index="7" name="Double pulsing" abbr="double_pulsing" unit="" min="0.000000" max="1.000000" default="0.050000" value="0.038391"/>
+        <param index="8" name="Pulse skewness" abbr="pulse_skewness" unit="" min="-0.500000" max="0.500000" default="0.000000" value="0.278868"/>
+        <param index="9" name="Flutter" abbr="flutter" unit="%" min="0.000000" max="100.000000" default="25.000000" value="10.310891"/>
+      </control_params>
+      <shapes>
+        <shape name="default">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.050200"/>
+          <control_param index="3" value="0.090350"/>
+          <control_param index="4" value="0.050000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.200000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="stop">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="7999.996827"/>
+          <control_param index="2" value="-0.009750"/>
+          <control_param index="3" value="-0.010100"/>
+          <control_param index="4" value="-0.001000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="-0.204000"/>
+          <control_param index="7" value="0.504000"/>
+          <control_param index="8" value="0.200000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="pressed">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.000050"/>
+          <control_param index="3" value="0.050200"/>
+          <control_param index="4" value="0.095000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.200000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="modal">
+          <control_param index="0" value="220.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.080811"/>
+          <control_param index="3" value="0.121128"/>
+          <control_param index="4" value="0.003500"/>
+          <control_param index="5" value="0.863913"/>
+          <control_param index="6" value="0.508000"/>
+          <control_param index="7" value="0.014000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="9.541404"/>
+        </shape>
+        <shape name="breathy">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="7850.264062"/>
+          <control_param index="2" value="0.019650"/>
+          <control_param index="3" value="0.030500"/>
+          <control_param index="4" value="0.100000"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="h">
+          <control_param index="0" value="218.080000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.127450"/>
+          <control_param index="3" value="0.153000"/>
+          <control_param index="4" value="0.025500"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="0.002000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="whisper">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.099800"/>
+          <control_param index="3" value="0.100150"/>
+          <control_param index="4" value="0.250000"/>
+          <control_param index="5" value="0.880000"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.000000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="hoarse">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.020350"/>
+          <control_param index="3" value="0.040300"/>
+          <control_param index="4" value="0.160000"/>
+          <control_param index="5" value="0.880000"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.203000"/>
+          <control_param index="8" value="0.000000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" value="220.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.132700"/>
+          <control_param index="3" value="0.132700"/>
+          <control_param index="4" value="0.025500"/>
+          <control_param index="5" value="1.002139"/>
+          <control_param index="6" value="0.594000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" value="218.640000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.102250"/>
+          <control_param index="3" value="0.137600"/>
+          <control_param index="4" value="0.011000"/>
+          <control_param index="5" value="1.002139"/>
+          <control_param index="6" value="0.478000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" value="241.631824"/>
+          <control_param index="1" value="84.957872"/>
+          <control_param index="2" value="0.137600"/>
+          <control_param index="3" value="0.149800"/>
+          <control_param index="4" value="0.025500"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" value="241.631824"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.153000"/>
+          <control_param index="3" value="0.142850"/>
+          <control_param index="4" value="0.032500"/>
+          <control_param index="5" value="0.872664"/>
+          <control_param index="6" value="0.000000"/>
+          <control_param index="7" value="0.050000"/>
+          <control_param index="8" value="0.283000"/>
+          <control_param index="9" value="10.100000"/>
+        </shape>
+        <shape name="hoarse2">
+          <control_param index="0" value="225.920000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="-0.009750"/>
+          <control_param index="3" value="-0.009750"/>
+          <control_param index="4" value="0.160000"/>
+          <control_param index="5" value="0.880000"/>
+          <control_param index="6" value="1.000000"/>
+          <control_param index="7" value="0.203000"/>
+          <control_param index="8" value="0.500000"/>
+          <control_param index="9" value="25.000000"/>
+        </shape>
+      </shapes>
+    </glottis_model>
+    <glottis_model type="Triangular glottis" selected="0">
+      <static_params>
+        <param index="0" name="Cord length" abbr="cord_length" unit="cm" min="0.500000" max="2.000000" default="1.300000" value="1.300000"/>
+        <param index="1" name="L. rest thickness" abbr="lower_rest_thickness" unit="cm" min="0.100000" max="0.500000" default="0.240000" value="0.240000"/>
+        <param index="2" name="U. rest thickness" abbr="upper_rest_thickness" unit="cm" min="0.010000" max="0.200000" default="0.060000" value="0.060000"/>
+        <param index="3" name="L. rest mass" abbr="lower_rest_mass" unit="g" min="0.010000" max="0.200000" default="0.120000" value="0.120000"/>
+        <param index="4" name="U. rest mass" abbr="upper_rest_mass" unit="g" min="0.010000" max="0.200000" default="0.030000" value="0.030000"/>
+        <param index="5" name="L. damping ratio" abbr="lower_damping_ratio" unit="" min="0.000000" max="3.000000" default="0.100000" value="0.100000"/>
+        <param index="6" name="U. damping ratio" abbr="upper_damping_ratio" unit="" min="0.000000" max="3.000000" default="0.600000" value="0.600000"/>
+        <param index="7" name="L. spring k" abbr="lower_spring_k" unit="dyne/cm" min="0.000000" max="400000.000000" default="80000.000000" value="80000.000000"/>
+        <param index="8" name="U. spring k" abbr="upper_spring_k" unit="dyne/cm" min="0.000000" max="400000.000000" default="8000.000000" value="8000.000000"/>
+        <param index="9" name="L. contact spring k" abbr="lower_contact_spring_k" unit="dyne/cm" min="0.000000" max="500000.000000" default="240000.000000" value="240000.000000"/>
+        <param index="10" name="U. contact spring k" abbr="upper_contact_spring_k" unit="dyne/cm" min="0.000000" max="500000.000000" default="24000.000000" value="24000.000000"/>
+        <param index="11" name="Coupling spring k" abbr="coupling_spring_k" unit="dyne/cm" min="0.000000" max="400000.000000" default="25000.000000" value="25000.000000"/>
+        <param index="12" name="Inlet length" abbr="inlet_length" unit="cm" min="0.000000" max="1.000000" default="0.050000" value="0.050000"/>
+        <param index="13" name="Outlet length" abbr="outlet_length" unit="cm" min="0.000000" max="0.500000" default="0.010000" value="0.010000"/>
+        <param index="14" name="Natural F0" abbr="natural_f0" unit="Hz" min="20.000000" max="500.000000" default="129.000000" value="130.979962"/>
+        <param index="15" name="dF0/dQ" abbr="f0_div_q" unit="Hz" min="20.000000" max="500.000000" default="125.510000" value="132.065991"/>
+      </static_params>
+      <control_params>
+        <param index="0" name="f0" abbr="f0" unit="Hz" min="40.000000" max="600.000000" default="120.000000" value="120.000000"/>
+        <param index="1" name="Subglottal pressure" abbr="pressure" unit="dPa" min="0.000000" max="20000.000000" default="8000.000000" value="8000.000000"/>
+        <param index="2" name="Lower rest displacement" abbr="lower_rest_displacement" unit="cm" min="-0.050000" max="0.300000" default="0.010000" value="0.010000"/>
+        <param index="3" name="Upper rest displacement" abbr="upper_rest_displacement" unit="cm" min="-0.050000" max="0.300000" default="0.010000" value="0.010000"/>
+        <param index="4" name="Arytenoid area" abbr="ary_area" unit="cm^2" min="-0.100000" max="0.500000" default="0.000000" value="0.000000"/>
+        <param index="5" name="Aspiration strength" abbr="aspiration_strength" unit="dB" min="-40.000000" max="0.000000" default="-40.000000" value="-40.000000"/>
+      </control_params>
+      <shapes>
+        <shape name="default">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.004950"/>
+          <control_param index="3" value="0.000400"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="stop">
+          <control_param index="0" value="105.627486"/>
+          <control_param index="1" value="1424.066347"/>
+          <control_param index="2" value="-0.029700"/>
+          <control_param index="3" value="-0.030100"/>
+          <control_param index="4" value="0.000000"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="modal">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.004950"/>
+          <control_param index="3" value="0.000400"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="h">
+          <control_param index="0" value="120.405059"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.080200"/>
+          <control_param index="3" value="0.079850"/>
+          <control_param index="4" value="0.010400"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiced-fricative">
+          <control_param index="0" value="113.573271"/>
+          <control_param index="1" value="7999.817730"/>
+          <control_param index="2" value="0.020350"/>
+          <control_param index="3" value="0.019650"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiceless-fricative">
+          <control_param index="0" value="111.718118"/>
+          <control_param index="1" value="7973.638321"/>
+          <control_param index="2" value="0.102250"/>
+          <control_param index="3" value="0.102250"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiceless-plosive">
+          <control_param index="0" value="120.388382"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.050100"/>
+          <control_param index="3" value="0.050100"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+        <shape name="voiced-plosive">
+          <control_param index="0" value="120.000000"/>
+          <control_param index="1" value="8000.000000"/>
+          <control_param index="2" value="0.004950"/>
+          <control_param index="3" value="0.000400"/>
+          <control_param index="4" value="0.000200"/>
+          <control_param index="5" value="-10.000000"/>
+        </shape>
+      </shapes>
+    </glottis_model>
+  </glottis_models>
+</speaker>
