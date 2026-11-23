@@ -100,6 +100,7 @@ public:
     bool radiationFromSkin;       // Allow sound radiation from the skin
     bool piriformFossa;           // Include the piriform fossa
     bool innerLengthCorrections;  // Additional inductivities between adjacent sections
+    bool scaleNoiseToAnatomy;     // Scale the noise-source constants with Tube::sizeScale
     RadiationCharacteristic radiationCharacteristic;
   };
 
@@ -286,6 +287,7 @@ public:
 private:
   int position;         ///< Internal counter for the sampling position
   double teethPosition; ///< Position of the teeth (from the glottis)
+  double sizeScale{ 1.0 }; ///< Tube::sizeScale of the current tube (1 = reference speaker)
   // Elevation of the tongue tip side (corresponding to TS3 of the vocal tract model)
   double tongueTipSideElevation;
   std::mt19937 randomNumberGenerator;

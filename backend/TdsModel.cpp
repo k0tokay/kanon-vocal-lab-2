@@ -53,6 +53,7 @@ TdsModel::TdsModel()
   options.radiationFromSkin = true;
   options.piriformFossa = true;
   options.innerLengthCorrections = false;
+  options.scaleNoiseToAnatomy = true;
   options.radiationCharacteristic = HEAD_TORSO_RADIATION_CHARACTERISTIC;
 
   // ****************************************************************
@@ -684,6 +685,7 @@ void TdsModel::setTube(Tube* tube, bool filtering)
 
   double dummy;
   tube->getAuxParams(dummy, this->teethPosition, this->tongueTipSideElevation);
+  this->sizeScale = tube->getSizeScale();
 }
 
 
@@ -1074,9 +1076,20 @@ void TdsModel::resetConstriction(Constriction *c)
 
 void TdsModel::calcNoiseSources()
 {
-  const double MAX_CONSTRICTION_AREA = 1.0;   // 1.0 cm^2
-  const double MAX_DELTA_AREA = 0.2;          // 0.2 cm^2
-  const double MAX_TEETH_DISTANCE = 2.5;      // = 2.5 cm
+  // The constants below were set for the reference speaker (JD2). For other
+  // anatomies they are scaled with the size of the vocal tract
+  // (Tube::sizeScale, s): lengths by s, areas by s^2, and the cutoff
+  // frequencies of the noise shaping filters by 1/s (a smaller jet and
+  // obstacle give a proportionally higher source spectrum). Source gains are
+  // left as they are. With s = 1 everything is as in the original model.
+  const double sc = (options.scaleNoiseToAnatomy && sizeScale > 0.0) ? sizeScale : 1.0;
+  const double L = sc;          // length factor
+  const double A = sc * sc;     // area factor
+  const double F = 1.0 / sc;    // frequency factor
+
+  const double MAX_CONSTRICTION_AREA = 1.0 * A;   // 1.0 cm^2
+  const double MAX_DELTA_AREA = 0.2 * A;          // 0.2 cm^2
+  const double MAX_TEETH_DISTANCE = 2.5 * L;      // = 2.5 cm
 
   Constriction *cons = NULL;
   int i, k;
@@ -1109,7 +1122,7 @@ void TdsModel::calcNoiseSources()
   // Always take the upper glottis section as the "narrowest" section
   // to avoid flipping of the two sections all the time.
   cons->narrowestSection = Tube::UPPER_GLOTTIS_SECTION;
-  cons->obstaclePos = 1.5;   // 1.5 cm above the glottis.
+  cons->obstaclePos = 1.5 * L;   // 1.5 cm above the glottis.
   cons->articulator = Tube::VOCAL_FOLDS;
 
   // ****************************************************************
@@ -1401,11 +1414,11 @@ void TdsModel::calcNoiseSources()
     {
       // /f/ has a flat source spectrum (see Badin 1989).
       double gain_f = 0.7e-6;
-      double cutoffFreq_f = 8000.0;
+      double cutoffFreq_f = 8000.0 * F;
 
       // The burst of /p,b/ has essentially low-frequency noise.
       double gain_p = 0.2e-6;
-      double cutoffFreq_p = 500.0;
+      double cutoffFreq_p = 500.0 * F;
 
       // Determine whether the lower-lip constriction is with the
       // upper incisors (d=1) or rather with the upper lip (d=0).
@@ -1420,8 +1433,8 @@ void TdsModel::calcNoiseSources()
         }
       }
 
-      const double CRITICAL_CONSTRICTION_AREA_CM2 = 0.15;
-      double d = exp(-(areaAtTeeth_cm2 - CRITICAL_CONSTRICTION_AREA_CM2) / 0.10);
+      const double CRITICAL_CONSTRICTION_AREA_CM2 = 0.15 * A;
+      double d = exp(-(areaAtTeeth_cm2 - CRITICAL_CONSTRICTION_AREA_CM2) / (0.10 * A));
 
       if (d > 1.0) { d = 1.0; }
 
@@ -1458,16 +1471,16 @@ void TdsModel::calcNoiseSources()
         // f_c should be around 4-6 kHz.
         double jetPos = tubeSection[cons->lastSection].pos + tubeSection[cons->lastSection].length;
         double obstacleDistance_cm = fabs(cons->obstaclePos - jetPos);
-        const double REF_DISTANCE_CM = 3.0;   // Where the values drop to 37 %
+        const double REF_DISTANCE_CM = 3.0 * L;   // Where the values drop to 37 %
 
         // Gain and cutoff freq. for /s, S, C/.
         // Reduce both gain and cutoff frequency with increasing distance to obstacle.
         double gain_fricatives = 1.0e-6 * exp(-obstacleDistance_cm / REF_DISTANCE_CM);
-        double cutoffFreq_fricatives = 6000.0 * exp(-obstacleDistance_cm / REF_DISTANCE_CM);
+        double cutoffFreq_fricatives = 6000.0 * F * exp(-obstacleDistance_cm / REF_DISTANCE_CM);
 
         // The bursts of /d,t/ has a clearly lower cutoff frequency.
         double gain_plosives = 0.6e-6 * exp(-obstacleDistance_cm / REF_DISTANCE_CM);
-        double cutoffFreq_plosives = 1500.0 * exp(-obstacleDistance_cm / REF_DISTANCE_CM);
+        double cutoffFreq_plosives = 1500.0 * F * exp(-obstacleDistance_cm / REF_DISTANCE_CM);
 
         // Interploate between the settings for plosives and fricatives,
         // depending on the elevation of the tongue tip sides.
@@ -1504,7 +1517,7 @@ void TdsModel::calcNoiseSources()
         // source (as in /k/) dominates the perception.
 
         cons->gain = 0.5e-6;
-        cons->cutoffFreq = 1500.0;
+        cons->cutoffFreq = 1500.0 * F;
       }
     }
 
@@ -1514,7 +1527,7 @@ void TdsModel::calcNoiseSources()
     // when the noise source is suddenly turned off at 1 cm^2.
     // ************************************************************
 
-    const double TAPER_START_AREA = 0.5;   // cm^2
+    const double TAPER_START_AREA = 0.5 * A;   // cm^2
     if (cons->area >= TAPER_START_AREA)
     {
       // d in [0, 1]

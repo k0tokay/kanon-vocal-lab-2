@@ -382,6 +382,7 @@ void Tube::interpolate(const Tube* leftTube, const Tube* rightTube, const double
 
   this->incisorPos_cm = ratio1 * leftTube->incisorPos_cm + ratio * rightTube->incisorPos_cm;
   this->tongueTipSideElevation = ratio1 * leftTube->tongueTipSideElevation + ratio * rightTube->tongueTipSideElevation;
+  this->sizeScale = ratio1 * leftTube->sizeScale + ratio * rightTube->sizeScale;
 }
 
 
@@ -530,6 +531,7 @@ void Tube::operator=(const Tube &t)
 
   this->incisorPos_cm = t.incisorPos_cm;
   this->tongueTipSideElevation = t.tongueTipSideElevation;
+  this->sizeScale = t.sizeScale;
 }
 
 // ****************************************************************************
@@ -539,7 +541,8 @@ void Tube::operator=(const Tube &t)
 bool Tube::operator==(const Tube &t)
 {
   if ((this->incisorPos_cm != t.incisorPos_cm) ||
-    (this->tongueTipSideElevation != t.tongueTipSideElevation))
+    (this->tongueTipSideElevation != t.tongueTipSideElevation) ||
+    (this->sizeScale != t.sizeScale))
   {
     return false;
   }

@@ -993,6 +993,7 @@ void AnatomyParams::setFor(VocalTract *tract)
 
   adjustTongueRootCalculation(tract);
   tract->calculateAll();
+  tract->calcSizeScale();
 }
 
 

@@ -1707,6 +1707,8 @@ void VocalTract::readFromXml(const string &speakerFileName) throw (std::string)
   // Delete the XML-tree.
 
   delete rootNode;
+
+  calcSizeScale();
 }
 
 
@@ -7588,6 +7590,47 @@ void VocalTract::getTube(Tube *tube)
 
   tube->setPharynxMouthSections(length_cm, area_cm2, articulator);
   tube->setAuxParams(nasalPortArea_cm2, incisorPos_cm, tongueTipSideElevation);
+  tube->setSizeScale(sizeScale);
+}
+
+
+// ****************************************************************************
+/// Length of the pharynx-mouth tube of the neutral shape of the reference
+/// speaker (JD2.speaker). Anatomy-dependent constants elsewhere (the noise
+/// sources in TdsModel) are scaled by sizeScale = (own neutral length) /
+/// REFERENCE_TRACT_LENGTH_CM, so that JD2 keeps sizeScale = 1 exactly.
+// ****************************************************************************
+
+const double VocalTract::REFERENCE_TRACT_LENGTH_CM = 16.779180806687659;  // JD2.speaker
+
+// ****************************************************************************
+/// Recalculates sizeScale from the current anatomy. Call after the anatomy
+/// changed (reading a speaker file, AnatomyParams::setFor()). The current
+/// parameters and geometry are restored afterwards.
+// ****************************************************************************
+
+void VocalTract::calcSizeScale()
+{
+  double saved[NUM_PARAMS];
+  int i;
+  for (i = 0; i < NUM_PARAMS; i++)
+  {
+    saved[i] = params[i].x;
+    params[i].x = params[i].neutral;
+  }
+  calculateAll();
+  double length_cm = 0.0;
+  for (i = 0; i < Tube::NUM_PHARYNX_MOUTH_SECTIONS; i++)
+  {
+    length_cm += tubeSection[i].length;
+  }
+  for (i = 0; i < NUM_PARAMS; i++)
+  {
+    params[i].x = saved[i];
+  }
+  calculateAll();
+  neutralTractLength_cm = length_cm;
+  sizeScale = (length_cm > 0.0) ? length_cm / REFERENCE_TRACT_LENGTH_CM : 1.0;
 }
 
 

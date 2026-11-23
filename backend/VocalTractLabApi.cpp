@@ -304,6 +304,31 @@ void vtlGetVersion(char *version)
 // 1: The API has not been initialized.
 // ****************************************************************************
 
+int vtlGetSizeScale(double *sizeScale, double *neutralTractLength_cm)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  if (sizeScale) { *sizeScale = vocalTract->sizeScale; }
+  if (neutralTractLength_cm) { *neutralTractLength_cm = vocalTract->neutralTractLength_cm; }
+  return 0;
+}
+
+
+int vtlScaleNoiseToAnatomy(int enable)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  tdsModel->options.scaleNoiseToAnatomy = (enable != 0);
+  return 0;
+}
+
+
 int vtlGetConstants(int *audioSamplingRate, int *numTubeSections,
   int *numVocalTractParams, int *numGlottisParams)
 {
