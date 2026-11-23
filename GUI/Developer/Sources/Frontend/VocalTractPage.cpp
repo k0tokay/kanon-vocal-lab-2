@@ -378,7 +378,9 @@ void VocalTractPage::initWidgets(VocalTractPicture *picVocalTract)
   splitter = new wxSplitterWindow(this, wxID_ANY,
     wxDefaultPosition, wxDefaultSize, wxSP_3DSASH | wxSP_LIVE_UPDATE);
 
+#ifndef __WXOSX__
   splitter->SetBackgroundColour(*wxWHITE); // If this is not set to white, every label will show up with a white background against the gray panels.
+#endif
   splitter->SetMinimumPaneSize(200);   // Pane size may not be reduced to zero!
 
   wxPanel *topPanel = new wxPanel(splitter, wxID_ANY, wxDefaultPosition, wxDefaultSize);

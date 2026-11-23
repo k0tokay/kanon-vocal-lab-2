@@ -227,13 +227,17 @@ void SignalPage::initWidgets()
 
   wxSplitterWindow *splitter = new wxSplitterWindow(this, wxID_ANY, 
     wxDefaultPosition, wxDefaultSize, wxSP_3DSASH | wxSP_LIVE_UPDATE);
+#ifndef __WXOSX__
   splitter->SetBackgroundColour(*wxWHITE); // If this is not set to white, every label will show up with a white background against the gray panels.
+#endif
 
   splitter->SetMinimumPaneSize(20);   // Pane size may not be reduced to zero!
 
   wxSplitterWindow *subSplitter = new wxSplitterWindow(splitter, wxID_ANY, 
     wxDefaultPosition, wxDefaultSize, wxSP_NO_XP_THEME | wxSP_LIVE_UPDATE);
+#ifndef __WXOSX__
   subSplitter->SetBackgroundColour(*wxWHITE); // If this is not set to white, every label will show up with a white background against the gray panels.
+#endif
 
   subSplitter->SetMinimumPaneSize(20);   // Pane size may not be reduced to zero!
 

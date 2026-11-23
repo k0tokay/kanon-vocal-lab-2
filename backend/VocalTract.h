@@ -420,6 +420,9 @@ public:
   void calcTongue();
   double tongueSideParamToElevation_cm(double paramValue);
   double tongueSideParamToMinArea_cm2(double paramValue);
+  // Smallest centre-line cross-sectional area before the tongue-side
+  // minimum areas are imposed in calcCrossSections().
+  double minAreaBeforeTongueSideFloor_cm2 = 0.0;
   void restrictTongueParams();
   Point2D limitEllipsePos(Point2D C, double rx, double ry, LineStrip2D &border, Point2D A);
   void calcTongueRibs();

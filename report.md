@@ -22,4 +22,29 @@ VTL 2.4の嘉音話者では、異なる声道形状がほぼ同じF1–F3を実
 
 従来版の舌尖閉鎖を使い、前後の /a/ だけを差し替えた。元のスコアでは基準形で7.5 msの閉鎖が生じたが、形状差の大きい4候補では閉鎖を検出できなかった。同じ舌尖目標のまま各形状に合わせて指令時刻を再計算すると、全候補で10〜15 msの閉鎖が生じた。静止母音のF1–F3が一致しても、次の子音を作るための時間条件は変わる。閉鎖はモデルの声道断面積から2.5 ms刻みで判定した。[閉鎖時刻の測定結果](experiments/vowel-inversion/results/large-ara/summary.json)
 
-**今後の嘉音の /r/ には refined 版を採用する。** 音素記号は `4`。語中では主に先行母音、語頭では後続母音に応じた舌尖目標を使う。イヤホンで感じたクリック様の音が舌尖接触に由来する可能性はあるが、原因は未検証である。[refined版の試聴](experiments/vowel-inversion/results/integrated/ara-reference-fixed.wav) · [母音文脈と接触位置を調べた前川のMRI研究](bib/japanese-phonetics/Maekawa2023JapaneseR.pdf)
+**今後の嘉音の /r/ には refined 版を採用する。** 音素記号は `4`。語中では主に先行母音、語頭では後続母音に応じた舌尖目標を使う。イヤホンで感じたクリック様の音が舌尖接触に由来する可能性はあるが、原因は未検証である。[refined版の試聴](experiments/vowel-inversion/results/integrated/ara-reference-fixed.wav) · 母音文脈と接触位置を調べた前川(2023)のMRI研究
+
+### 嘉音 /a/ の手動形状への経路
+
+基準形状から各 fitted 形状までの直線と、直線の両端を固定し内部15点で顎・唇・舌の6パラメータを局所調整した折れ線を比較した。目的関数は F1–F3 の最大絶対対数比、開口条件は最小断面積 0.12 cm²。各経路を等しい区間数で513点測定した。
+
+| 終点 | 直線の最大誤差 | 補正経路の最大誤差 | 終点の誤差 |
+|---|---:|---:|---:|
+| a-compare | 1.595 | 1.337 | 0.027 |
+| a-compare-2 | 7.339 | 3.665 | 2.689 |
+
+数値は最大絶対対数比の100倍。全測定点で最小断面積は 0.223 cm² を超えた。2番目の終点はそれ自体に誤差があり、この値より薄い許容帯での連結性を調べるには終点の再フィットが必要。離散測定では厳密な等値面の成分数や経路上の連続最大値は決まらない。
+
+再現にはリポジトリ直下で以下を実行する。形状・フォルマント・断面積は experiments/vowel-topology/results/fiber-paths/ に保存する。
+
+```sh
+cmake --build build-mac/gui --target VocalTractLabApi
+clang++ -O2 -std=c++14 -Ibackend -Wl,-rpath,build-mac/gui experiments/vowel-topology/fiber_path.cpp build-mac/gui/libVocalTractLabApi.dylib -o build-mac/fiber-path
+python3 experiments/vowel-topology/run_fiber_paths.py
+```
+
+### 基準 /a/ の0次パーシステントホモロジー
+
+嘉音の F1–F3 = (852.857, 1528.300, 3652.045) Hz を固定し、上記4経路の開いた実測形状2047点を使用した。経路上の隣接点を結んだ2048辺のグラフに最大絶対対数フォルマント誤差の lower-star filtration を入れると、誤差 0.001, 0.003, 0.01, 0.02, 0.04 で成分数は順に18, 9, 7, 3, 1となった。
+
+別に各誤差帯内の点群に対し、話者の各パラメータの可動幅で正規化した19次元ユークリッド距離で Vietoris–Rips の H0 を計算した。誤差 0.01 の739点では接続距離 0.01, 0.02, 0.05 で5, 4, 1成分。距離だけで張った辺の途中の音響は未評価であり、厳密な等値面の連結を保証しない。また点群は4経路に偏る。全持続区間と成分数曲線は experiments/vowel-topology/results/fiber-persistence/ に保存した。再計算は NumPy, SciPy, Matplotlib のある Python で experiments/vowel-topology/fiber_persistence.py を実行する。

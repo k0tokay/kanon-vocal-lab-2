@@ -20,6 +20,9 @@
 // ****************************************************************************
 
 #include "Tube.h"
+
+constexpr int Tube::SINUS_COUPLING_SECTION[];
+constexpr char Tube::ARTICULATOR_LETTER[];
 #include <iostream>
 #include <cstdio>
 #include <cmath>

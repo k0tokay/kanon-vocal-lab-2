@@ -5674,6 +5674,15 @@ void VocalTract::calcCrossSections()
 
   CrossSection* cs = NULL;
 
+  minAreaBeforeTongueSideFloor_cm2 = 1000000.0;
+  for (i = 0; i < NUM_CENTERLINE_POINTS; i++)
+  {
+    if (crossSection[i].area < minAreaBeforeTongueSideFloor_cm2)
+    {
+      minAreaBeforeTongueSideFloor_cm2 = crossSection[i].area;
+    }
+  }
+
   for (i = 0; i < NUM_CENTERLINE_POINTS; i++)
   {
     cs = &crossSection[i];
