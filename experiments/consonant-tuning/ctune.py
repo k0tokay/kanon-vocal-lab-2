@@ -119,6 +119,9 @@ def frame(syl: str, f0=220.0, vowel_s=0.24, carrier_s=0.2, onset_map=None) -> Fr
                  (segs[1].t0, segs[1].t0 + segs[1].duration))
 
 
+NOISE_SCALING = True   # VTL noise-source constants scaled to the speaker's size
+
+
 def render(speaker, syllables, out_dir: Path, **kw):
     """WAV per syllable plus all.wav (the set joined) in out_dir; each frame also
     gets its tract-parameter trajectory (Frame.track). Returns the frames."""
@@ -128,6 +131,9 @@ def render(speaker, syllables, out_dir: Path, **kw):
         fr = frame(syl, **kw)
         seg = out_dir / f"{syl}.seg"
         accent.write_seg(fr.segments, seg)
+        lib = accent.use_speaker(speaker)
+        if hasattr(lib, "vtlScaleNoiseToAnatomy"):
+            lib.vtlScaleNoiseToAnatomy(int(NOISE_SCALING))
         accent.synthesize(seg, out_dir / f"{syl}.wav", fr.segments, speaker)
         fr.track = tract_sequence(speaker, seg.with_suffix(".ges"))
         seg.unlink()
@@ -331,6 +337,7 @@ def measure(wav: Path, fr: Frame, speaker) -> dict:
     acoustics (levels re the vowel midpoint)
       closure_ms                silence: 0.5-12 kHz > 35 dB below the vowel
       burst_db, burst_cog_hz    first 8 ms after the acoustic closure
+      release_peak              peak |x| in -2..+10 ms around the release / vowel peak
       vot_ms                    release to the return of 70-500 Hz energy (within 12 dB)
       noise_db                  peak 2-12 kHz level in the consonant window
       fric_cog_hz, fric_peak_hz, fric_bands, voice_db
@@ -384,6 +391,9 @@ def measure(wav: Path, fr: Frame, speaker) -> dict:
             rel = t_hi[run[-1]] + HOP
             b = x[int(rel * sr):int((rel + .008) * sr)]
             out["burst_db"] = round(20 * np.log10(np.sqrt(np.mean(b ** 2)) / vrms + 1e-12), 1)
+            # click check: release peak against the vowel's peak (JD2: 0.6-0.75)
+            r = x[int((rel - .002) * sr):int((rel + .01) * sr)]
+            out["release_peak"] = round(float(np.abs(r).max() / np.abs(vseg).max()), 2)
             out["burst_cog_hz"] = round(cog_peak(b, sr)[0])
             voiced = (t_lo > rel) & (lo_db > ref_lo - 12)
             if voiced.any():
@@ -444,6 +454,7 @@ def run(edits, syllables, out_dir: Path, base=SPEAKER, label=None, onset_map=Non
     except ValueError:
         base_name = str(base)
     summary = dict(label=label or out_dir.name, base=base_name, edits=list(edits), onset_map=onset_map or {},
+                   noise_scaling=NOISE_SCALING,
                    changes=log,
                    syllables=rows, locus=locus(rows))
     (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1))
@@ -451,7 +462,7 @@ def run(edits, syllables, out_dir: Path, base=SPEAKER, label=None, onset_map=Non
 
 
 COLUMNS = [("min_area_cm2", "minA"), ("min_pos_cm", "pos"), ("closed_ms", "shut"), ("narrow_ms", "narw"),
-           ("closure_ms", "sil"), ("burst_db", "brst"), ("vot_ms", "VOT"), ("noise_db", "noise"),
+           ("closure_ms", "sil"), ("burst_db", "brst"), ("release_peak", "rpk"), ("vot_ms", "VOT"), ("noise_db", "noise"),
            ("fric_cog_hz", "fCoG"), ("fric_db", "fdB"), ("voice_db", "voic"), ("murmur_db", "nas"),
            ("f2_release_hz", "F2rel"), ("f2_vowel_hz", "F2v")]
 
@@ -610,6 +621,8 @@ def main(argv=None):
     a.add_argument("--base", default=SPEAKER)
     a.add_argument("--map", action="append", default=[], help="onset override, e.g. w=w or w=M:0.06")
     a.add_argument("--compare", help="earlier output folder to diff against")
+    a.add_argument("--no-noise-scaling", action="store_true",
+                   help="VTL's original noise-source constants (JD2 sizes)")
 
     a = sub.add_parser("fit", help="fit one shape's constriction area/position; prints edits")
     a.add_argument("shape", help="shape name; (*) fits all three contexts")
@@ -644,6 +657,8 @@ def main(argv=None):
             k, _, v = m.partition("=")
             omap[k] = v.split("+")
         edits = load_edits(args.edits) + args.edit
+        global NOISE_SCALING
+        NOISE_SCALING = not args.no_noise_scaling
         s = run(edits, args.syll.split(","), Path(args.out), args.base, onset_map=omap or None)
         print(table(s, _summary(args.compare) if args.compare else None))
         print("locus:", json.dumps(s["locus"]))

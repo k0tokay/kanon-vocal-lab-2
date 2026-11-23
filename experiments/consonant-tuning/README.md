@@ -133,6 +133,67 @@ python3 ctune.py fit "tt-alveolopalatal-fricative(u)" --area 0.12 --pos 10.2 --f
 
 **試聴**：[results/listening/ab.wav](results/listening/ab.wav) は、sha shi shu chi ji ya yo wa の順に、それぞれ調整前 → 調整後を並べたもの。音節ごとの `<音節>-before.wav` / `<音節>-after.wav` もある。聴取による評価はまだしていない。
 
+## ノイズ源の解剖スケーリング（backend の変更）
+
+VTL の摩擦・破裂ノイズ源（`TdsModel::calcNoiseSources`）の定数は、JD2 の寸法の絶対値で書かれていた。そのため、声道が小さい嘉音（中立形状で 12.5 cm、JD2 は 16.8 cm）では、ɕ もヒ（ç）も「歯から 1 cm 前後」の同じ扱いになっていた。その結果、雑音フィルタのカットオフ（約 4.3 kHz）がほぼ同じになり、シャがヒャに聞こえていた。
+
+このブランチでは、話者の大きさ s = 中立形状の管長 / JD2 の値 で、これらの定数を伸縮する。
+
+| 定数 | 元の値 | 伸縮 |
+|---|---|---|
+| 狭めとみなす最大断面積・その幅・テーパ開始 | 1.0 / 0.2 / 0.5 cm² | ×s² |
+| 歯の音源とみなす距離・減衰距離 | 2.5 / 3.0 cm | ×s |
+| 声門上の音源位置 | 1.5 cm | ×s |
+| 唇の f/p 判定の断面積 | 0.15 / 0.10 cm² | ×s² |
+| カットオフ（歯 6000/1500、壁 1500、唇 8000/500 Hz） | | ×1/s |
+
+- 利得はそのままにしてある。声門の気息雑音と鼻腔の音源も変えていない。
+- 実装：
+  - `VocalTract::calcSizeScale()` が s を計算する。呼ばれるのは話者ファイルの読み込み時と `AnatomyParams::setFor` の後。
+  - s は `Tube::sizeScale` として `TdsModel` に渡る。GUI でも API でも同じように効く。
+  - 管列ファイル（tube sequence）からの合成では、s = 1 のまま。
+- 基準長 `VocalTract::REFERENCE_TRACT_LENGTH_CM` は JD2 の中立形状の値（16.779… cm）そのもの。そのため JD2 では s = 1 になる。スケーリングの有無で JD2 の出力がサンプル単位で一致することを確かめた（sa, shi, ka, pa）。
+- API：`vtlGetSizeScale(&s, &length)` と `vtlScaleNoiseToAnatomy(0/1)`（既定は 1）。`ctune.py run --no-noise-scaling` で元の動作に戻せる。嘉音の s は 0.747。
+
+結果（[scaling-off](results/scaling-off/summary.json) → [scaling-on](results/scaling-on/summary.json)。どちらも ɕ の修正後の形状）：
+
+| 音節 | 摩擦の重心 [Hz] | 2–12 kHz のピーク（母音比）[dB] |
+|---|---|---|
+| sha / hya | 4329 / 3552 → **4518 / 2880** | 16.5 / 17.5 → 28.9 / 20.6 |
+| shi / hi | 4896 / 4100 → **5920 / 2883** | 10.8 / 10.4 → 25.1 / 15.3 |
+| shu / hyu | 4150 / 4030 → 3421 / 3641 | 19.8 / 22.2 → 27.3 / 20.8 |
+| sa / su | 6890 / 5529 → 7290 / 7281 | 11.1 / 17.1 → 25.6 / 31.5 |
+| fu | 3634 → 1499 | 13.6 → 10.0 |
+
+- シャ・シの重心はヒャ・ヒから 1.6〜3 kHz 離れ、歯茎硬口蓋音らしく強くなった。
+- シュとヒュは、重心はまだ近い。ただ、シュのほうがノイズのピークが 6〜10 dB 強い。(u) の ɕ の狭めは、fit でも 10.15 cm より前に動かせなかった。
+- フは、唇と歯の間の断面積が伸縮後の臨界値より広い。そのため、両唇の低域ノイズ（/p/ 型）に寄った。
+- 試聴：[listening-noise-scaling/ab.wav](results/listening-noise-scaling/ab.wav)。sha hya shu hyu shi hi sa su fu ha の順に、それぞれ スケーリングなし → あり。
+
+## 破裂音のパルスと声門の relative amplitude
+
+破裂音の解放で単発のパルスが出るのは、解放が強すぎるからではなかった。母音が弱いからである。
+
+- 嘉音の解放の振幅は母音のピークの 0.66〜1.15 倍（`rpk` 列）。JD2 では 0.64〜0.75 倍。
+- 嘉音の modal の声門（Geometric glottis 2019）は、次のとおり。
+  - lower/upper displacement が 0.081 / 0.121 cm（モデルの既定は 0.02）。
+  - relative amplitude が 0.508。
+- そのため声帯振動の振幅が小さい。一方、解放の過渡音は肺圧で決まるので、JD2 と同程度の大きさになる。
+- 声門を開いたまま無声破裂の外転を広げても、ノイズ源をスケーリングしても、`rpk` は変わらなかった。
+- relative amplitude（control param 6）が直接効く。
+
+| modal の relative amplitude | ka | ta | pa | da | ga | ba |
+|---|---|---|---|---|---|---|
+| 0.508（現状） | 0.66 | 1.15 | 0.95 | 1.15 | 0.80 | 0.91 |
+| 0.75 | 0.39 | 0.68 | 0.56 | 0.70 | 0.50 | 0.55 |
+| 1.0 | 0.24 | 0.43 | 0.36 | 0.46 | 0.31 | 0.35 |
+
+- 0.75 で JD2 と同じくらいの比になる。代わりに、母音に対する摩擦音のレベルは 3〜7 dB 下がる。
+- 声質（息っぽさ）に関わるので、話者ファイルは変えていない。試聴用の話者は [results/relamp-0.75/kanon.speaker](results/relamp-0.75/kanon.speaker)。ɕ の修正と relative amplitude 0.75 が入っている。
+- 試聴：[listening-relamp/ab.wav](results/listening-relamp/ab.wav)。ka ta pa da ga ba sa sha の順に、それぞれ 0.508 → 0.75。どちらもスケーリングあり。
+
+注意：同じプロセスで続けて合成すると、ノイズの乱数が引き継がれるので、2回目以降は波形が変わる。`ctune.py run` は毎回同じ順で合成するので、同じ条件なら同じ結果になる。
+
 ## 使い方
 
 ビルド（リポジトリ直下）：
@@ -180,6 +241,6 @@ python3 ctune.py ab results/baseline out/try1 out/ab -s ka,ki,ku
 
 - 評価は測定だけで、聴取による確認はまだ。重心の目安（ɕ が s より低いこと）も、嘉音の目標の実測値ではない。
 - chi・ji の閉鎖部は `tt-alveolar-closure`（10.3〜10.8 cm）である。`ts\` を `tt-postalveolar-closure` で閉じるには backend の変更が要る。ɕ を狭めたので、chi の摩擦の重心は 4.4 → 5.6 kHz に上がった。
-- `noise`（摩擦の強さ）は、ɕ の断面積を 0.31 → 0.10 cm² と変えても 1 dB ほどしか変わらない。無声摩擦の声門ジェスチャによる気息雑音が支配的だからである。摩擦の強さを調整する手段は、形状ではなく声門の形状や声門下圧になる。
+- 上の「調整前の所見」と「結果」の表は、ノイズ源のスケーリングを入れる前の backend で測った値である（`baseline`、`tuned`）。
 - `ll-labial-fricative(i)` が閉じている（「フィ」が破裂音になる）。この音節セットには入れていないので、まだ直していない。
 - japanese-accent の例文 WAV は、ヤ・ワの変更後にまだ作り直していない。
