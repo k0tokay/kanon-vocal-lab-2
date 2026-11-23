@@ -303,6 +303,26 @@ int vm_area_function(void *p, const double *x, double *pos, double *area, int si
   return n;
 }
 
+// Narrowest centre-line cross-section of shape x before VTL's tongue-side
+// floor: out = {area [cm^2], position along the centre line [cm],
+// midsagittal x, y of that centre-line point [cm], articulator (Tube enum)}.
+void vm_constriction(void *p, const double *x, double *out) {
+  auto *h = static_cast<Handle *>(p);
+  double params[VocalTract::NUM_PARAMS];
+  std::copy_n(x, VocalTract::NUM_PARAMS, params);
+  params[VocalTract::VO] = std::min(0.0, params[VocalTract::VO]);
+  h->tract.setParams(params);
+  h->tract.calculateAll();
+  int k = 0;
+  for (int i = 1; i < VocalTract::NUM_CENTERLINE_POINTS; i++)
+    if (h->tract.crossSection[i].area < h->tract.crossSection[k].area) k = i;
+  out[0] = h->tract.crossSection[k].area;
+  out[1] = h->tract.crossSection[k].pos;
+  out[2] = h->tract.centerLine[k].point.x;
+  out[3] = h->tract.centerLine[k].point.y;
+  out[4] = (double)h->tract.crossSection[k].articulator;
+}
+
 // The <vocal_tract_model> element with the current anatomy and shapes.
 int vm_write_tract(void *p, const char *path) {
   auto *h = static_cast<Handle *>(p);

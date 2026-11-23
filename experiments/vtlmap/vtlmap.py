@@ -63,7 +63,8 @@ def lib():
             "vm_peaks": ([ct.c_void_p, _D, ct.c_int, ct.c_int, ct.c_double, ct.c_double, _D, _D,
                           ct.POINTER(ct.c_double)], ct.c_int),
             "vm_area_function":([ct.c_void_p, _D, _D, _D, ct.c_int], ct.c_int),
-            "vm_write_tract": ([ct.c_void_p, ct.c_char_p], ct.c_int),
+            "vm_constriction": ([ct.c_void_p, _D, _D], None),
+            "vm_write_tract":([ct.c_void_p, ct.c_char_p], ct.c_int),
         }
         for name, (args, res) in sig.items():
             fn = getattr(L, name)
@@ -199,6 +200,14 @@ class Tract:
         pos, area = np.empty(size), np.empty(size)
         k = lib().vm_area_function(self._h, np.ascontiguousarray(x, float), pos, area, size)
         return pos[:k], area[:k]
+
+    def constriction(self, x):
+        """Narrowest cross-section before the tongue-side floor:
+        dict(area, pos (cm along the centre line from the glottis), x, y (midsagittal cm), articulator)."""
+        out = np.empty(5)
+        lib().vm_constriction(self._h, np.ascontiguousarray(x, float), out)
+        return dict(area=out[0], pos=out[1], x=out[2], y=out[3],
+                    articulator=["vocal folds", "tongue", "lower incisors", "lower lip", "other"][int(out[4])])
 
     def write_speaker(self, path: str | Path, template: str | Path | None = None):
         """Write a speaker file: `template`'s glottis models with this tract's
