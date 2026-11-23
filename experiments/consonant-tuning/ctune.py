@@ -21,6 +21,7 @@ shape name stands for all three vowel contexts, e.g.
 """
 from __future__ import annotations
 
+import ctypes
 import json
 import re
 import sys
@@ -120,6 +121,7 @@ def frame(syl: str, f0=220.0, vowel_s=0.24, carrier_s=0.2, onset_map=None) -> Fr
 
 
 NOISE_SCALING = True   # VTL noise-source constants scaled to the speaker's size
+NOISE_EXPONENTS = (1.0, 2.0, -1.0)   # of the size for lengths, areas, cutoff frequencies
 
 
 def render(speaker, syllables, out_dir: Path, **kw):
@@ -134,6 +136,8 @@ def render(speaker, syllables, out_dir: Path, **kw):
         lib = accent.use_speaker(speaker)
         if hasattr(lib, "vtlScaleNoiseToAnatomy"):
             lib.vtlScaleNoiseToAnatomy(int(NOISE_SCALING))
+            lib.vtlSetNoiseScalingExponents.argtypes = [ctypes.c_double] * 3
+            lib.vtlSetNoiseScalingExponents(*NOISE_EXPONENTS)
         accent.synthesize(seg, out_dir / f"{syl}.wav", fr.segments, speaker)
         fr.track = tract_sequence(speaker, seg.with_suffix(".ges"))
         seg.unlink()
@@ -454,7 +458,7 @@ def run(edits, syllables, out_dir: Path, base=SPEAKER, label=None, onset_map=Non
     except ValueError:
         base_name = str(base)
     summary = dict(label=label or out_dir.name, base=base_name, edits=list(edits), onset_map=onset_map or {},
-                   noise_scaling=NOISE_SCALING,
+                   noise_scaling=NOISE_SCALING, noise_exponents=list(NOISE_EXPONENTS),
                    changes=log,
                    syllables=rows, locus=locus(rows))
     (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=1))
@@ -623,6 +627,8 @@ def main(argv=None):
     a.add_argument("--compare", help="earlier output folder to diff against")
     a.add_argument("--no-noise-scaling", action="store_true",
                    help="VTL's original noise-source constants (JD2 sizes)")
+    a.add_argument("--noise-exponents", default="1,2,-1",
+                   help="exponents of the size scale for lengths, areas, cutoffs")
 
     a = sub.add_parser("fit", help="fit one shape's constriction area/position; prints edits")
     a.add_argument("shape", help="shape name; (*) fits all three contexts")
@@ -659,6 +665,8 @@ def main(argv=None):
         edits = load_edits(args.edits) + args.edit
         global NOISE_SCALING
         NOISE_SCALING = not args.no_noise_scaling
+        global NOISE_EXPONENTS
+        NOISE_EXPONENTS = tuple(float(v) for v in args.noise_exponents.split(","))
         s = run(edits, args.syll.split(","), Path(args.out), args.base, onset_map=omap or None)
         print(table(s, _summary(args.compare) if args.compare else None))
         print("locus:", json.dumps(s["locus"]))

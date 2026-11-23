@@ -109,6 +109,9 @@ C_EXPORT int vtlGetConstants(int *audioSamplingRate, int *numTubeSections,
 
 C_EXPORT int vtlGetSizeScale(double *sizeScale, double *neutralTractLength_cm);
 C_EXPORT int vtlScaleNoiseToAnatomy(int enable);
+// Exponents of sizeScale for the lengths, areas and cutoff frequencies of the
+// noise sources (default 1, 2, -1).
+C_EXPORT int vtlSetNoiseScalingExponents(double length, double area, double frequency);
 
 
 // ****************************************************************************

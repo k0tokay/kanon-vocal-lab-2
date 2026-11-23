@@ -101,6 +101,11 @@ public:
     bool piriformFossa;           // Include the piriform fossa
     bool innerLengthCorrections;  // Additional inductivities between adjacent sections
     bool scaleNoiseToAnatomy;     // Scale the noise-source constants with Tube::sizeScale
+    // Exponents of sizeScale for lengths, areas and cutoff frequencies
+    // (geometric similarity: 1, 2, -1).
+    double noiseLengthExponent;
+    double noiseAreaExponent;
+    double noiseFrequencyExponent;
     RadiationCharacteristic radiationCharacteristic;
   };
 

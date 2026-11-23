@@ -329,6 +329,20 @@ int vtlScaleNoiseToAnatomy(int enable)
 }
 
 
+int vtlSetNoiseScalingExponents(double length, double area, double frequency)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  tdsModel->options.noiseLengthExponent = length;
+  tdsModel->options.noiseAreaExponent = area;
+  tdsModel->options.noiseFrequencyExponent = frequency;
+  return 0;
+}
+
+
 int vtlGetConstants(int *audioSamplingRate, int *numTubeSections,
   int *numVocalTractParams, int *numGlottisParams)
 {

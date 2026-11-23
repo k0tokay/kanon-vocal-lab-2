@@ -54,6 +54,9 @@ TdsModel::TdsModel()
   options.piriformFossa = true;
   options.innerLengthCorrections = false;
   options.scaleNoiseToAnatomy = true;
+  options.noiseLengthExponent = 1.0;
+  options.noiseAreaExponent = 2.0;
+  options.noiseFrequencyExponent = -1.0;
   options.radiationCharacteristic = HEAD_TORSO_RADIATION_CHARACTERISTIC;
 
   // ****************************************************************
@@ -1083,9 +1086,9 @@ void TdsModel::calcNoiseSources()
   // obstacle give a proportionally higher source spectrum). Source gains are
   // left as they are. With s = 1 everything is as in the original model.
   const double sc = (options.scaleNoiseToAnatomy && sizeScale > 0.0) ? sizeScale : 1.0;
-  const double L = sc;          // length factor
-  const double A = sc * sc;     // area factor
-  const double F = 1.0 / sc;    // frequency factor
+  const double L = pow(sc, options.noiseLengthExponent);      // length factor
+  const double A = pow(sc, options.noiseAreaExponent);        // area factor
+  const double F = pow(sc, options.noiseFrequencyExponent);   // frequency factor
 
   const double MAX_CONSTRICTION_AREA = 1.0 * A;   // 1.0 cm^2
   const double MAX_DELTA_AREA = 0.2 * A;          // 0.2 cm^2
@@ -1122,7 +1125,11 @@ void TdsModel::calcNoiseSources()
   // Always take the upper glottis section as the "narrowest" section
   // to avoid flipping of the two sections all the time.
   cons->narrowestSection = Tube::UPPER_GLOTTIS_SECTION;
-  cons->obstaclePos = 1.5 * L;   // 1.5 cm above the glottis.
+  // 1.5 cm above the glottis. Not scaled: with sizeScale this moved the
+  // aspiration source of breathy voices into another tube section and took
+  // the high frequencies out of the vowels. The glottal source is not part
+  // of the oral geometry the other constants describe.
+  cons->obstaclePos = 1.5;
   cons->articulator = Tube::VOCAL_FOLDS;
 
   // ****************************************************************
