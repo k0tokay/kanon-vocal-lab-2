@@ -1,0 +1,354 @@
+{
+ "w0.00-tip0.0-keep": {
+  "min_area_cm2_i": 0.14,
+  "front_cavity_cm_i": 1.21,
+  "a": {
+   "cog_hz": 3396,
+   "peak_hz": 3287,
+   "level_re_vowel_db": -14.5,
+   "low_band_re_vowel_db": -27.0
+  },
+  "i": {
+   "cog_hz": 6176,
+   "peak_hz": 7061,
+   "level_re_vowel_db": -12.4,
+   "low_band_re_vowel_db": -28.4
+  },
+  "u": {
+   "cog_hz": 2110,
+   "peak_hz": 2104,
+   "level_re_vowel_db": -13.0,
+   "low_band_re_vowel_db": -23.4
+  }
+ },
+ "w0.00-tip0.0-spread": {
+  "min_area_cm2_i": 0.14,
+  "front_cavity_cm_i": 1.21,
+  "a": {
+   "cog_hz": 3068,
+   "peak_hz": 2314,
+   "level_re_vowel_db": -14.6,
+   "low_band_re_vowel_db": -23.7
+  },
+  "i": {
+   "cog_hz": 6166,
+   "peak_hz": 7055,
+   "level_re_vowel_db": -12.3,
+   "low_band_re_vowel_db": -28.5
+  },
+  "u": {
+   "cog_hz": 2116,
+   "peak_hz": 2104,
+   "level_re_vowel_db": -12.9,
+   "low_band_re_vowel_db": -22.5
+  }
+ },
+ "w0.00-tip0.4-keep": {
+  "min_area_cm2_i": 0.526,
+  "front_cavity_cm_i": 0.2,
+  "a": {
+   "cog_hz": 3573,
+   "peak_hz": 4354,
+   "level_re_vowel_db": -12.7,
+   "low_band_re_vowel_db": -27.4
+  },
+  "i": {
+   "cog_hz": 4433,
+   "peak_hz": 5039,
+   "level_re_vowel_db": -14.2,
+   "low_band_re_vowel_db": -27.0
+  },
+  "u": {
+   "cog_hz": 2752,
+   "peak_hz": 4471,
+   "level_re_vowel_db": -17.8,
+   "low_band_re_vowel_db": -22.6
+  }
+ },
+ "w0.00-tip0.4-spread": {
+  "min_area_cm2_i": 0.526,
+  "front_cavity_cm_i": 0.2,
+  "a": {
+   "cog_hz": 3508,
+   "peak_hz": 4266,
+   "level_re_vowel_db": -13.0,
+   "low_band_re_vowel_db": -27.4
+  },
+  "i": {
+   "cog_hz": 4432,
+   "peak_hz": 5039,
+   "level_re_vowel_db": -14.2,
+   "low_band_re_vowel_db": -26.9
+  },
+  "u": {
+   "cog_hz": 2852,
+   "peak_hz": 4430,
+   "level_re_vowel_db": -17.6,
+   "low_band_re_vowel_db": -23.1
+  }
+ },
+ "w0.33-tip0.0-keep": {
+  "min_area_cm2_i": 0.136,
+  "front_cavity_cm_i": 1.23,
+  "a": {
+   "cog_hz": 3436,
+   "peak_hz": 3299,
+   "level_re_vowel_db": -13.9,
+   "low_band_re_vowel_db": -24.8
+  },
+  "i": {
+   "cog_hz": 6197,
+   "peak_hz": 7178,
+   "level_re_vowel_db": -12.8,
+   "low_band_re_vowel_db": -27.2
+  },
+  "u": {
+   "cog_hz": 2216,
+   "peak_hz": 2303,
+   "level_re_vowel_db": -10.6,
+   "low_band_re_vowel_db": -21.1
+  }
+ },
+ "w0.33-tip0.0-spread": {
+  "min_area_cm2_i": 0.136,
+  "front_cavity_cm_i": 1.23,
+  "a": {
+   "cog_hz": 3027,
+   "peak_hz": 2402,
+   "level_re_vowel_db": -13.2,
+   "low_band_re_vowel_db": -22.1
+  },
+  "i": {
+   "cog_hz": 6057,
+   "peak_hz": 7154,
+   "level_re_vowel_db": -12.2,
+   "low_band_re_vowel_db": -26.5
+  },
+  "u": {
+   "cog_hz": 2167,
+   "peak_hz": 2203,
+   "level_re_vowel_db": -11.4,
+   "low_band_re_vowel_db": -23.3
+  }
+ },
+ "w0.33-tip0.4-keep": {
+  "min_area_cm2_i": 0.525,
+  "front_cavity_cm_i": 0.2,
+  "a": {
+   "cog_hz": 3466,
+   "peak_hz": 2385,
+   "level_re_vowel_db": -11.3,
+   "low_band_re_vowel_db": -25.3
+  },
+  "i": {
+   "cog_hz": 4383,
+   "peak_hz": 5016,
+   "level_re_vowel_db": -13.9,
+   "low_band_re_vowel_db": -27.1
+  },
+  "u": {
+   "cog_hz": 3000,
+   "peak_hz": 2965,
+   "level_re_vowel_db": -16.0,
+   "low_band_re_vowel_db": -19.2
+  }
+ },
+ "w0.33-tip0.4-spread": {
+  "min_area_cm2_i": 0.525,
+  "front_cavity_cm_i": 0.2,
+  "a": {
+   "cog_hz": 3385,
+   "peak_hz": 2379,
+   "level_re_vowel_db": -11.4,
+   "low_band_re_vowel_db": -25.5
+  },
+  "i": {
+   "cog_hz": 4382,
+   "peak_hz": 5016,
+   "level_re_vowel_db": -13.9,
+   "low_band_re_vowel_db": -27.1
+  },
+  "u": {
+   "cog_hz": 3077,
+   "peak_hz": 2965,
+   "level_re_vowel_db": -16.1,
+   "low_band_re_vowel_db": -20.5
+  }
+ },
+ "w0.67-tip0.0-keep": {
+  "min_area_cm2_i": 0.115,
+  "front_cavity_cm_i": 1.24,
+  "a": {
+   "cog_hz": 3363,
+   "peak_hz": 3293,
+   "level_re_vowel_db": -13.2,
+   "low_band_re_vowel_db": -25.6
+  },
+  "i": {
+   "cog_hz": 6438,
+   "peak_hz": 7102,
+   "level_re_vowel_db": -12.2,
+   "low_band_re_vowel_db": -27.1
+  },
+  "u": {
+   "cog_hz": 2858,
+   "peak_hz": 2801,
+   "level_re_vowel_db": -9.6,
+   "low_band_re_vowel_db": -24.2
+  }
+ },
+ "w0.67-tip0.0-spread": {
+  "min_area_cm2_i": 0.115,
+  "front_cavity_cm_i": 1.24,
+  "a": {
+   "cog_hz": 3284,
+   "peak_hz": 3018,
+   "level_re_vowel_db": -13.3,
+   "low_band_re_vowel_db": -25.7
+  },
+  "i": {
+   "cog_hz": 6249,
+   "peak_hz": 7061,
+   "level_re_vowel_db": -11.9,
+   "low_band_re_vowel_db": -29.2
+  },
+  "u": {
+   "cog_hz": 2842,
+   "peak_hz": 2789,
+   "level_re_vowel_db": -9.8,
+   "low_band_re_vowel_db": -24.3
+  }
+ },
+ "w0.67-tip0.4-keep": {
+  "min_area_cm2_i": 0.505,
+  "front_cavity_cm_i": 1.44,
+  "a": {
+   "cog_hz": 3712,
+   "peak_hz": 4471,
+   "level_re_vowel_db": -11.1,
+   "low_band_re_vowel_db": -25.8
+  },
+  "i": {
+   "cog_hz": 4111,
+   "peak_hz": 2596,
+   "level_re_vowel_db": -14.2,
+   "low_band_re_vowel_db": -27.1
+  },
+  "u": {
+   "cog_hz": 3043,
+   "peak_hz": 2537,
+   "level_re_vowel_db": -13.9,
+   "low_band_re_vowel_db": -24.1
+  }
+ },
+ "w0.67-tip0.4-spread": {
+  "min_area_cm2_i": 0.505,
+  "front_cavity_cm_i": 1.44,
+  "a": {
+   "cog_hz": 3533,
+   "peak_hz": 3105,
+   "level_re_vowel_db": -11.5,
+   "low_band_re_vowel_db": -25.9
+  },
+  "i": {
+   "cog_hz": 4026,
+   "peak_hz": 2602,
+   "level_re_vowel_db": -14.2,
+   "low_band_re_vowel_db": -26.7
+  },
+  "u": {
+   "cog_hz": 3195,
+   "peak_hz": 3334,
+   "level_re_vowel_db": -14.8,
+   "low_band_re_vowel_db": -23.2
+  }
+ },
+ "w1.00-tip0.0-keep": {
+  "min_area_cm2_i": 0.096,
+  "front_cavity_cm_i": 1.46,
+  "a": {
+   "cog_hz": 3647,
+   "peak_hz": 3357,
+   "level_re_vowel_db": -10.0,
+   "low_band_re_vowel_db": -18.5
+  },
+  "i": {
+   "cog_hz": 6134,
+   "peak_hz": 3785,
+   "level_re_vowel_db": -11.0,
+   "low_band_re_vowel_db": -30.1
+  },
+  "u": {
+   "cog_hz": 2275,
+   "peak_hz": 3363,
+   "level_re_vowel_db": -26.8,
+   "low_band_re_vowel_db": -46.9
+  }
+ },
+ "w1.00-tip0.0-spread": {
+  "min_area_cm2_i": 0.096,
+  "front_cavity_cm_i": 1.46,
+  "a": {
+   "cog_hz": 3718,
+   "peak_hz": 3750,
+   "level_re_vowel_db": -9.7,
+   "low_band_re_vowel_db": -18.4
+  },
+  "i": {
+   "cog_hz": 6343,
+   "peak_hz": 6164,
+   "level_re_vowel_db": -11.8,
+   "low_band_re_vowel_db": -30.6
+  },
+  "u": {
+   "cog_hz": 1856,
+   "peak_hz": 2467,
+   "level_re_vowel_db": -27.0,
+   "low_band_re_vowel_db": -46.4
+  }
+ },
+ "w1.00-tip0.4-keep": {
+  "min_area_cm2_i": 0.38,
+  "front_cavity_cm_i": 1.66,
+  "a": {
+   "cog_hz": 4124,
+   "peak_hz": 4506,
+   "level_re_vowel_db": -11.4,
+   "low_band_re_vowel_db": -26.9
+  },
+  "i": {
+   "cog_hz": 4479,
+   "peak_hz": 4975,
+   "level_re_vowel_db": -14.6,
+   "low_band_re_vowel_db": -23.8
+  },
+  "u": {
+   "cog_hz": 3959,
+   "peak_hz": 3838,
+   "level_re_vowel_db": -11.0,
+   "low_band_re_vowel_db": -23.3
+  }
+ },
+ "w1.00-tip0.4-spread": {
+  "min_area_cm2_i": 0.38,
+  "front_cavity_cm_i": 1.66,
+  "a": {
+   "cog_hz": 4106,
+   "peak_hz": 4506,
+   "level_re_vowel_db": -11.4,
+   "low_band_re_vowel_db": -27.0
+  },
+  "i": {
+   "cog_hz": 4476,
+   "peak_hz": 4975,
+   "level_re_vowel_db": -14.8,
+   "low_band_re_vowel_db": -23.8
+  },
+  "u": {
+   "cog_hz": 3903,
+   "peak_hz": 3844,
+   "level_re_vowel_db": -10.9,
+   "low_band_re_vowel_db": -23.3
+  }
+ }
+}

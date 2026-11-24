@@ -253,6 +253,7 @@ double Synthesizer::addSample(double* glottisParams, Tube* tube, ofstream* miscF
   glottis->calcGeometry();
   glottis->getTubeData(length_cm, area_cm2);
   tube->setGlottisSections(length_cm, area_cm2);
+  tube->setAspiration(glottis->getAspirationStrength_dB(), glottis->getAspirationCutoff_Hz());
 
   // ****************************************************************
   // Do the acoustic simulation.

@@ -24,6 +24,9 @@
 #include <cmath>
 #include <iostream>
 
+double GeometricGlottis2019::jitter_percent = 0.0;
+double GeometricGlottis2019::shimmer_percent = 0.0;
+
 // ****************************************************************************
 // Constructor.
 // ****************************************************************************
@@ -44,7 +47,10 @@ GeometricGlottis2019::GeometricGlottis2019()
     { "Upper displacement", "x_top", "cm", 10.0, "mm", -0.05, 0.3, 0.02, 0.0 },
     { "Chink area", "chink_area", "cm^2", 100.0, "mm^2", -0.25, 0.25, 0.03, 0.0 },
     { "Phase lag", "lag", "rad", 57.296, "deg", 0.0, 3.1415, 1.22, 0.0 },
-    { "Relative amplitude", "rel_amp", "", 1.0, "", -1.0, 1.0, 1.0, 1.0 },
+    // Max raised from 1.0: the amplitude scales with the rest length, so a
+    // short-fold speaker cannot reach closure from a breathy rest opening.
+    // Values up to 1.0 behave as before.
+    { "Relative amplitude", "rel_amp", "", 1.0, "", -1.0, 4.0, 1.0, 1.0 },
     { "Double pulsing", "double_pulsing", "", 1.0, "", 0.0, 1.0, 0.05, 0.0 },
     { "Pulse skewness", "pulse_skewness", "", 1.0, "", -0.5, 0.5, 0.0, 0.0 },
     { "Flutter", "flutter", "%", 1.0, "%", 0.0, 100.0, 25.0, 25.0 }
@@ -66,7 +72,11 @@ GeometricGlottis2019::GeometricGlottis2019()
     { "Rest thickness", "rest_thickness", "cm", 10, "mm", 0.3, 1.0, 0.45, 0.0 },
     { "Rest length", "rest_length", "cm", 10, "mm", 0.5, 2.0, 1.6, 0.0 },
     { "Rest f0", "rest_f0", "Hz", 1.0, "Hz", 50.0, 400.0, 120.0, 120.0 },
-    { "Chink length", "chink_length", "cm", 10, "mm", 0.1, 0.5, 0.4, 0.0 }
+    { "Chink length", "chink_length", "cm", 10, "mm", 0.1, 0.5, 0.4, 0.0 },
+    // Aspiration noise above the glottis (TdsModel). -40 dB and 1000 Hz give
+    // VTL's original source; the gain changes by 20 dB per factor of 10.
+    { "Aspiration strength", "aspiration_strength", "dB", 1, "dB", -60.0, 0.0, -40.0, -40.0 },
+    { "Aspiration cutoff", "aspiration_cutoff", "Hz", 1, "Hz", 300.0, 8000.0, 1000.0, 1000.0 }
   };
 
   staticParams.clear();
@@ -143,6 +153,11 @@ void GeometricGlottis2019::resetMotion()
   time_s = 0.0;
   phase = 0.0;
   supraglottalPressure_dPa = 0.0;
+
+  cycleIndex = 0;
+  jitterFactor = 1.0;
+  shimmerFactor = 1.0;
+  rng.seed(12345);
 }
 
 
@@ -287,7 +302,7 @@ void GeometricGlottis2019::calcGeometry()
   {
     relAmp = 0.0;
   }
-  amplitude *= relAmp;
+  amplitude *= relAmp * shimmerFactor;
 
 
   // ****************************************************************
@@ -411,6 +426,19 @@ void GeometricGlottis2019::incTime(const double timeIncrement_s, const double pr
   F0 += (flutter_percent / 50.0) * (F0 / 100.0) * 
     (sin(2.0*M_PI*12.7*time_s) + sin(2.0*M_PI*7.1*time_s) + sin(2.0*M_PI*4.7*time_s));
 
+  // Cycle-to-cycle jitter and shimmer: new random factors at each cycle start.
+  long cycle = (long)(phase / (2.0 * M_PI));
+  if (cycle != cycleIndex)
+  {
+    cycleIndex = cycle;
+    std::normal_distribution<double> gauss(0.0, 1.0);
+    jitterFactor = 1.0 + 0.01 * jitter_percent * gauss(rng);
+    shimmerFactor = 1.0 + 0.01 * shimmer_percent * gauss(rng);
+    if (jitterFactor < 0.5) { jitterFactor = 0.5; }
+    if (shimmerFactor < 0.0) { shimmerFactor = 0.0; }
+  }
+  F0 *= jitterFactor;
+
   phase += F0*timeIncrement_s*2.0*M_PI;
   time_s+= timeIncrement_s;
 }
@@ -441,3 +469,21 @@ int GeometricGlottis2019::getApertureParamIndex()
 
 
 // ****************************************************************************
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double GeometricGlottis2019::getAspirationStrength_dB()
+{
+  return staticParams[ASPIRATION_STRENGTH].x;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double GeometricGlottis2019::getAspirationCutoff_Hz()
+{
+  return staticParams[ASPIRATION_CUTOFF].x;
+}

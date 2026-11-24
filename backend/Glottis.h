@@ -45,7 +45,9 @@ public:
   static const int FREQUENCY = 0;
   static const int PRESSURE = 1;
   static const int MAX_CONTROL_PARAMS = 32;
+  /// Aspiration noise level at which TdsModel uses its original source gain.
   static const double DEFAULT_ASPIRATION_STRENGTH_DB;
+  static const double DEFAULT_ASPIRATION_CUTOFF_HZ;
 
   struct Parameter
   {
@@ -90,6 +92,8 @@ public:
   virtual void getTubeData(double *length_cm, double *area_cm2) = 0;
   virtual int getApertureParamIndex() = 0;
   virtual double getAspirationStrength_dB();
+  /// Lowpass cutoff of the aspiration noise source above the glottis.
+  virtual double getAspirationCutoff_Hz();
 
   Shape *getShape(const string &name);
   bool writeToXml(ostream &os, int initialIndent, bool isSelected);

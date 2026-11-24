@@ -73,7 +73,7 @@ if __name__ == "__main__":
     axes[0].legend(fontsize=8)
 
     rng = np.random.default_rng(0)
-    chosen = points[errors <= .01][rng.choice(np.sum(errors <= .01), args.jacobians, replace=False)]
+    chosen = points[errors <= .01][rng.choice(np.sum(errors <= .01), min(args.jacobians, np.sum(errors <= .01)), replace=False)]
     with mp.get_context("spawn").Pool(args.workers, init, (args.lib.resolve(), vowel)) as pool:
         Js = [J for J in pool.map(jacobian, chosen) if J is not None]
     Js = np.array(Js)

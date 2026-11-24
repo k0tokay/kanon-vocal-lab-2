@@ -382,6 +382,9 @@ void Tube::interpolate(const Tube* leftTube, const Tube* rightTube, const double
 
   this->incisorPos_cm = ratio1 * leftTube->incisorPos_cm + ratio * rightTube->incisorPos_cm;
   this->tongueTipSideElevation = ratio1 * leftTube->tongueTipSideElevation + ratio * rightTube->tongueTipSideElevation;
+  this->sizeScale = ratio1 * leftTube->sizeScale + ratio * rightTube->sizeScale;
+  this->aspirationStrength_dB = ratio1 * leftTube->aspirationStrength_dB + ratio * rightTube->aspirationStrength_dB;
+  this->aspirationCutoff_Hz = ratio1 * leftTube->aspirationCutoff_Hz + ratio * rightTube->aspirationCutoff_Hz;
 }
 
 
@@ -530,6 +533,9 @@ void Tube::operator=(const Tube &t)
 
   this->incisorPos_cm = t.incisorPos_cm;
   this->tongueTipSideElevation = t.tongueTipSideElevation;
+  this->sizeScale = t.sizeScale;
+  this->aspirationStrength_dB = t.aspirationStrength_dB;
+  this->aspirationCutoff_Hz = t.aspirationCutoff_Hz;
 }
 
 // ****************************************************************************
@@ -539,7 +545,10 @@ void Tube::operator=(const Tube &t)
 bool Tube::operator==(const Tube &t)
 {
   if ((this->incisorPos_cm != t.incisorPos_cm) ||
-    (this->tongueTipSideElevation != t.tongueTipSideElevation))
+    (this->tongueTipSideElevation != t.tongueTipSideElevation) ||
+    (this->sizeScale != t.sizeScale) ||
+    (this->aspirationStrength_dB != t.aspirationStrength_dB) ||
+    (this->aspirationCutoff_Hz != t.aspirationCutoff_Hz))
   {
     return false;
   }

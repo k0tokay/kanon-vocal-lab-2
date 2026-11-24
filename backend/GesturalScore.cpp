@@ -906,21 +906,24 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
     if (Sampa::isPhoneme(n))
     {
       // Split affricates into a plosive and a fricative.
-      if ((n == "pf") || (n == "ts") || (n == "tS") || (n == "dZ"))
+      if ((n == "pf") || (n == "ts") || (n == "tS") || (n == "dZ") ||
+        (n == "ts\\") || (n == "dz\\"))
       {
         // The duration ratio of the plosive has been determined
         // from audio recordings of Peter Birkholz.
         double plosiveRatio = 0.4;
-        if (n == "pf") { plosiveRatio = 0.4;  } 
+        if (n == "pf") { plosiveRatio = 0.4;  }
         else
-          if (n == "ts") { plosiveRatio = 0.33; }
+          if ((n == "ts") || (n == "ts\\")) { plosiveRatio = 0.33; }
           else
             if (n == "tS") { plosiveRatio = 0.33; }
             else
-              if (n == "dZ") { plosiveRatio = 0.4; }
+              if ((n == "dZ") || (n == "dz\\")) { plosiveRatio = 0.4; }
 
+        // The fricative part is everything after the first character
+        // (e.g. "s\" in "ts\").
         segmentSequence.appendSegment(n.substr(0, 1), plosiveRatio * d);
-        segmentSequence.appendSegment(n.substr(1, 1), (1.0 - plosiveRatio) * d);
+        segmentSequence.appendSegment(n.substr(1), (1.0 - plosiveRatio) * d);
       }
       else
       {
@@ -1016,8 +1019,8 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
     s = segmentSequence.getSegment(i);
     n = s->value[Segment::NAME_INDEX];
 
-    // The i-th phone is a postalveolar fricative.
-    if ((n == "S") || (n == "Z"))
+    // The i-th phone is a postalveolar or alveolo-palatal fricative.
+    if ((n == "S") || (n == "Z") || (n == "s\\") || (n == "z\\"))
     {
       isPostalveolar[i] = true;
 
@@ -1497,6 +1500,13 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       vowelName = "@";
     }
 
+    // Japanese unrounded [ɯ]; the speaker file provides the shape "M".
+    if (segmentName == "M")
+    {
+      isVowel = true;
+      vowelName = "M";
+    }
+
     if (segmentName == "6")
     {
       isVowel = true;
@@ -1844,6 +1854,24 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       isFricative = true;
       gestureType = TONGUE_TIP_GESTURE;
       oralGestureName = "tt-postalveolar-fricative";
+      glottalGestureName = "voiced-fricative";
+    }
+
+    // Alveolo-palatal fricatives (Japanese shi, ji). They need the
+    // shapes tt-alveolopalatal-fricative(a|i|u) in the speaker file.
+    if (segmentName == "s\\")
+    {
+      isFricative = true;
+      gestureType = TONGUE_TIP_GESTURE;
+      oralGestureName = "tt-alveolopalatal-fricative";
+      glottalGestureName = "voiceless-fricative";
+    }
+
+    if (segmentName == "z\\")
+    {
+      isFricative = true;
+      gestureType = TONGUE_TIP_GESTURE;
+      oralGestureName = "tt-alveolopalatal-fricative";
       glottalGestureName = "voiced-fricative";
     }
 

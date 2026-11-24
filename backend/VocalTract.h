@@ -344,6 +344,13 @@ public:
 
   // Center line, cross sections, and tube sections.
   
+  /// Neutral-shape tube length of this speaker and its ratio to the
+  /// reference speaker (see calcSizeScale()).
+  double neutralTractLength_cm{ 0.0 };
+  double sizeScale{ 1.0 };
+  static const double REFERENCE_TRACT_LENGTH_CM;
+  void calcSizeScale();
+
   double centerLineLength;
   CenterLinePoint roughCenterLine[NUM_CENTERLINE_POINTS];
   CenterLinePoint centerLine[NUM_CENTERLINE_POINTS];

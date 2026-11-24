@@ -96,6 +96,32 @@ C_EXPORT int vtlGetConstants(int *audioSamplingRate, int *numTubeSections,
 
 
 // ****************************************************************************
+// Size of the loaded speaker's vocal tract relative to the reference speaker
+// (JD2): sizeScale = neutral tube length / reference neutral tube length.
+// The noise-source constants of the time-domain model (constriction areas,
+// distance to the teeth, filter cutoffs) are scaled with it unless
+// vtlScaleNoiseToAnatomy(0) switches this off (the original VTL behaviour).
+//
+// Function return value:
+// 0: success.
+// 1: The API has not been initialized.
+// ****************************************************************************
+
+C_EXPORT int vtlGetSizeScale(double *sizeScale, double *neutralTractLength_cm);
+C_EXPORT int vtlScaleNoiseToAnatomy(int enable);
+// Exponents of sizeScale for the lengths, areas and cutoff frequencies of the
+// noise sources (default 1, 2, -1).
+C_EXPORT int vtlSetNoiseScalingExponents(double length, double area, double frequency);
+// Aspiration noise source above the glottis: gain factor on top of the glottis
+// model's "Aspiration strength" (default 1), and lowpass cutoff in Hz that
+// overrides the model's "Aspiration cutoff" (default 0 = use the model's).
+C_EXPORT int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz);
+// Cycle-to-cycle jitter and shimmer of Geometric glottis 2019 (standard
+// deviations in percent; default 0 = strictly periodic).
+C_EXPORT int vtlSetGlottalAperiodicity(double jitter_percent, double shimmer_percent);
+
+
+// ****************************************************************************
 // Returns for each vocal tract parameter the minimum value, the maximum value,
 // and the neutral value. Each vector passed to this function must have at 
 // least as many elements as the number of vocal tract model parameters.

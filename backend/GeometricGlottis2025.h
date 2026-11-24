@@ -60,6 +60,8 @@ public:
     REST_F0,
     CHINK_LENGTH,
     JITTER,
+    ASPIRATION_STRENGTH,
+    ASPIRATION_CUTOFF,
     NUM_STATIC_PARAMS
   };
 
@@ -94,6 +96,8 @@ public:
 
   void getTubeData(double *length_cm, double *area_cm2);
   int getApertureParamIndex();
+  double getAspirationStrength_dB();
+  double getAspirationCutoff_Hz();
 
   // **************************************************************************
   // Private data.

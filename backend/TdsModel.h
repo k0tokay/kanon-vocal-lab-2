@@ -100,6 +100,17 @@ public:
     bool radiationFromSkin;       // Allow sound radiation from the skin
     bool piriformFossa;           // Include the piriform fossa
     bool innerLengthCorrections;  // Additional inductivities between adjacent sections
+    bool scaleNoiseToAnatomy;     // Scale the noise-source constants with Tube::sizeScale
+    // Exponents of sizeScale for lengths, areas and cutoff frequencies
+    // (geometric similarity: 1, 2, -1).
+    double noiseLengthExponent;
+    double noiseAreaExponent;
+    double noiseFrequencyExponent;
+    // Aspiration noise right above the glottis: gain factor (1 = VTL's 0.2e-6)
+    // multiplying the glottis model's aspiration strength, and lowpass cutoff
+    // overriding the glottis model's (0 = use the glottis model's).
+    double glottalNoiseGainFactor;
+    double glottalNoiseCutoff_Hz;
     RadiationCharacteristic radiationCharacteristic;
   };
 
@@ -286,6 +297,9 @@ public:
 private:
   int position;         ///< Internal counter for the sampling position
   double teethPosition; ///< Position of the teeth (from the glottis)
+  double sizeScale{ 1.0 }; ///< Tube::sizeScale of the current tube (1 = reference speaker)
+  double aspirationStrength_dB{ -40.0 };  ///< from the glottis model via Tube
+  double aspirationCutoff_Hz{ 1000.0 };
   // Elevation of the tongue tip side (corresponding to TS3 of the vocal tract model)
   double tongueTipSideElevation;
   std::mt19937 randomNumberGenerator;

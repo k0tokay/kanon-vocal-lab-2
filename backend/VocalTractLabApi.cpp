@@ -304,6 +304,74 @@ void vtlGetVersion(char *version)
 // 1: The API has not been initialized.
 // ****************************************************************************
 
+int vtlGetSizeScale(double *sizeScale, double *neutralTractLength_cm)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  if (sizeScale) { *sizeScale = vocalTract->sizeScale; }
+  if (neutralTractLength_cm) { *neutralTractLength_cm = vocalTract->neutralTractLength_cm; }
+  return 0;
+}
+
+
+int vtlScaleNoiseToAnatomy(int enable)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  tdsModel->options.scaleNoiseToAnatomy = (enable != 0);
+  return 0;
+}
+
+
+int vtlSetNoiseScalingExponents(double length, double area, double frequency)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  tdsModel->options.noiseLengthExponent = length;
+  tdsModel->options.noiseAreaExponent = area;
+  tdsModel->options.noiseFrequencyExponent = frequency;
+  return 0;
+}
+
+
+int vtlSetGlottalAperiodicity(double jitter_percent, double shimmer_percent)
+{
+  if ((jitter_percent < 0.0) || (shimmer_percent < 0.0))
+  {
+    return 2;
+  }
+  GeometricGlottis2019::jitter_percent = jitter_percent;
+  GeometricGlottis2019::shimmer_percent = shimmer_percent;
+  return 0;
+}
+
+
+int vtlSetGlottalNoise(double gainFactor, double cutoff_Hz)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  if ((gainFactor < 0.0) || (cutoff_Hz < 0.0))
+  {
+    return 2;
+  }
+  tdsModel->options.glottalNoiseGainFactor = gainFactor;
+  tdsModel->options.glottalNoiseCutoff_Hz = cutoff_Hz;
+  return 0;
+}
+
+
 int vtlGetConstants(int *audioSamplingRate, int *numTubeSections,
   int *numVocalTractParams, int *numGlottisParams)
 {
