@@ -94,6 +94,8 @@ public:
   virtual double getAspirationStrength_dB();
   /// Lowpass cutoff of the aspiration noise source above the glottis.
   virtual double getAspirationCutoff_Hz();
+  /// Folds that close within few samples; see TdsModel::setRapidGlottalClosure().
+  virtual bool hasRapidClosure() { return false; }
 
   Shape *getShape(const string &name);
   bool writeToXml(ostream &os, int initialIndent, bool isSelected);

@@ -21,6 +21,7 @@
 
 #include "Synthesizer.h"
 #include "TriangularGlottis.h"
+#include "BodyCoverGlottis.h"
 #include <iomanip>
 #include <condition_variable>
 #include <cstdlib>
@@ -254,6 +255,7 @@ double Synthesizer::addSample(double* glottisParams, Tube* tube, ofstream* miscF
   glottis->getTubeData(length_cm, area_cm2);
   tube->setGlottisSections(length_cm, area_cm2);
   tube->setAspiration(glottis->getAspirationStrength_dB(), glottis->getAspirationCutoff_Hz());
+  tdsModel->setRapidGlottalClosure(glottis->hasRapidClosure());
 
   // ****************************************************************
   // Do the acoustic simulation.
@@ -744,6 +746,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
   GeometricGlottis2025* geometricGlottis2025 = new GeometricGlottis2025();
   GeometricGlottis2019 *geometricGlottis2019 = new GeometricGlottis2019();
   TriangularGlottis *triangularGlottis = new TriangularGlottis();
+  BodyCoverGlottis *bodyCoverGlottis = new BodyCoverGlottis();
 
   if (line == geometricGlottis2025->getName())
   {
@@ -757,6 +760,10 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
   {
     glottis = triangularGlottis;
   }
+  else if (line == bodyCoverGlottis->getName())
+  {
+    glottis = bodyCoverGlottis;
+  }
 
   if (glottis == nullptr)
   {
@@ -764,6 +771,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -781,6 +789,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -802,6 +811,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -815,6 +825,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -904,6 +915,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
   delete geometricGlottis2025;
   delete geometricGlottis2019;
   delete triangularGlottis;
+  delete bodyCoverGlottis;
 
   if (stateOk)
   {

@@ -40,6 +40,7 @@
 #include "../Backend/GeometricGlottis2019.h"
 #include "../Backend/GeometricGlottis2025.h"
 #include "../Backend/TriangularGlottis.h"
+#include "../Backend/BodyCoverGlottis.h"
 #include "../Backend/Synthesizer.h"
 
 #include "../Backend/F0EstimatorYin.h"
@@ -144,6 +145,7 @@ public:
     GEOMETRIC_GLOTTIS_2025,
     GEOMETRIC_GLOTTIS_2019,
     TRIANGULAR_GLOTTIS,
+    BODY_COVER_GLOTTIS,
     NUM_GLOTTIS_MODELS
   };
 
