@@ -21,6 +21,7 @@
 
 #include "Synthesizer.h"
 #include "TriangularGlottis.h"
+#include "BodyCoverGlottis.h"
 #include <iomanip>
 #include <condition_variable>
 #include <cstdlib>
@@ -98,6 +99,11 @@ void Synthesizer::reset()
 
   outputPressureFilter.resetBuffers();
   initialShapesSet = false;
+
+  noiseGenerator.seed(20);
+  noiseDistribution.reset();
+  noiseLowpass = 0.0;
+  noiseHighpass = 0.0;
 
   int i;
 
@@ -254,6 +260,7 @@ double Synthesizer::addSample(double* glottisParams, Tube* tube, ofstream* miscF
   glottis->getTubeData(length_cm, area_cm2);
   tube->setGlottisSections(length_cm, area_cm2);
   tube->setAspiration(glottis->getAspirationStrength_dB(), glottis->getAspirationCutoff_Hz());
+  tdsModel->setRapidGlottalClosure(glottis->hasRapidClosure());
 
   // ****************************************************************
   // Do the acoustic simulation.
@@ -330,6 +337,7 @@ double Synthesizer::addSample(double* glottisParams, Tube* tube, ofstream* miscF
 
   // Scale the output to the range [-1, +1].
   double audioSample = outputPressureFilter.getOutputSample(outputPressure[k]) * 1e-7;
+  audioSample += getBackgroundNoiseSample();
 
   // **************************************************************
   // Write different quantities (area, pressure, flow, velocity) at 
@@ -383,6 +391,40 @@ double Synthesizer::addSample(double* glottisParams, Tube* tube, ofstream* miscF
   }
 
   return audioSample;
+}
+
+
+// ****************************************************************************
+/// Stationary Gaussian noise with a first-order lowpass at the cutoff of the
+/// glottis model and a fixed highpass against rumble. The gain makes the RMS
+/// value equal to the level of the glottis model.
+// ****************************************************************************
+
+double Synthesizer::getBackgroundNoiseSample()
+{
+  const double HIGHPASS_HZ = 50.0;
+  double level_dB = glottis->getBackgroundNoiseLevel_dB();
+
+  if (level_dB <= Glottis::BACKGROUND_NOISE_OFF_DB)
+  {
+    return 0.0;
+  }
+
+  double p = exp(-2.0 * M_PI * glottis->getBackgroundNoiseCutoff_Hz() / (double)AUDIO_SAMPLING_RATE_HZ);
+  double q = exp(-2.0 * M_PI * HIGHPASS_HZ / (double)AUDIO_SAMPLING_RATE_HZ);
+
+  // Both filters: y[n] = x[n] - x[n-1] (highpass zero) with the poles p and q.
+  double white = noiseDistribution(noiseGenerator);
+  double low = (1.0 - p) * white + p * noiseLowpass;
+  double out = low - noiseLowpass + q * noiseHighpass;
+
+  noiseLowpass = low;
+  noiseHighpass = out;
+
+  // Variance of the output for white noise of variance 1.
+  double variance = 2.0 * (1.0 - p) * (1.0 - p) / ((1.0 + p) * (1.0 + q) * (1.0 - p * q));
+
+  return out * pow(10.0, level_dB / 20.0) / sqrt(variance);
 }
 
 
@@ -744,6 +786,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
   GeometricGlottis2025* geometricGlottis2025 = new GeometricGlottis2025();
   GeometricGlottis2019 *geometricGlottis2019 = new GeometricGlottis2019();
   TriangularGlottis *triangularGlottis = new TriangularGlottis();
+  BodyCoverGlottis *bodyCoverGlottis = new BodyCoverGlottis();
 
   if (line == geometricGlottis2025->getName())
   {
@@ -757,6 +800,10 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
   {
     glottis = triangularGlottis;
   }
+  else if (line == bodyCoverGlottis->getName())
+  {
+    glottis = bodyCoverGlottis;
+  }
 
   if (glottis == nullptr)
   {
@@ -764,6 +811,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -781,6 +829,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -802,6 +851,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -815,6 +865,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
     delete geometricGlottis2025;
     delete geometricGlottis2019;
     delete triangularGlottis;
+    delete bodyCoverGlottis;
     return false;
   }
 
@@ -904,6 +955,7 @@ bool Synthesizer::synthesizeTubeSequence(string fileName, TdsModel *tdsModel, ve
   delete geometricGlottis2025;
   delete geometricGlottis2019;
   delete triangularGlottis;
+  delete bodyCoverGlottis;
 
   if (stateOk)
   {

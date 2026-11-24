@@ -29,6 +29,7 @@
 #include "GeometricGlottis2019.h"
 #include "GeometricGlottis2025.h"
 #include "TriangularGlottis.h"
+#include "BodyCoverGlottis.h"
 
 #include "VocalTract.h"
 #include "TdsModel.h"
@@ -45,6 +46,7 @@ enum GlottisModel
   GEOMETRIC_GLOTTIS_2025,
   GEOMETRIC_GLOTTIS_2019,
   TRIANGULAR_GLOTTIS,
+  BODY_COVER_GLOTTIS,
   NUM_GLOTTIS_MODELS
 };
 
@@ -208,6 +210,7 @@ int vtlInitialize(const char *speakerFileName)
   glottises[GEOMETRIC_GLOTTIS_2025] = new GeometricGlottis2025();
   glottises[GEOMETRIC_GLOTTIS_2019] = new GeometricGlottis2019();
   glottises[TRIANGULAR_GLOTTIS] = new TriangularGlottis();
+  glottises[BODY_COVER_GLOTTIS] = new BodyCoverGlottis();
   
   selectedGlottis = GEOMETRIC_GLOTTIS_2025;
 
@@ -831,6 +834,10 @@ C_EXPORT int vtlResetTubeSynthesis(
   else if (strcmp(glottisName, "Triangular glottis") == 0)
   {
     tubeGlottis = new TriangularGlottis();
+  }
+  else if (strcmp(glottisName, "Triangular body-cover glottis") == 0)
+  {
+    tubeGlottis = new BodyCoverGlottis();
   }
 
   if (tubeGlottis == NULL)

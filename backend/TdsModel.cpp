@@ -58,6 +58,8 @@ TdsModel::TdsModel()
   options.noiseAreaExponent = 2.0;
   options.noiseFrequencyExponent = -1.0;
   options.glottalNoiseGainFactor = 1.0;
+  options.limitGlottalJetVelocity = false;
+  options.glottalTheta = THETA;
   options.glottalNoiseCutoff_Hz = 0.0;   // 0: the glottis model's cutoff
   options.radiationCharacteristic = HEAD_TORSO_RADIATION_CHARACTERISTIC;
 
@@ -1047,9 +1049,10 @@ void TdsModel::prepareTimeStep()
       sourceAmp += flowSourceAmp; 
     }
 
-    d = timeStep*THETA / (ts->C + ts->alpha);
+    double theta = getSectionTheta(i);
+    d = timeStep*theta / (ts->C + ts->alpha);
     ts->E = d;
-    ts->D = ts->pressure + timeStep*THETA1*ts->pressureRate - 
+    ts->D = ts->pressure + timeStep*(1.0 - theta)*ts->pressureRate - 
             d*(ts->beta - sourceAmp);
   }
 
@@ -1412,6 +1415,18 @@ void TdsModel::calcNoiseSources()
     }
 
     cons->velocity = cons->flow / cons->area;
+
+    // The low-pass filtered flow lags behind the area when the glottis closes
+    // rapidly, which gives unphysical velocities. Limit them to the velocity
+    // of a jet driven by the lung pressure.
+    if ((options.limitGlottalJetVelocity) && (cons->articulator == Tube::VOCAL_FOLDS))
+    {
+      double maxVelocity = sqrt(2.0 * fabs(pressureSourceAmp) / AMBIENT_DENSITY_CGS);
+      if (cons->velocity > maxVelocity)
+      {
+        cons->velocity = maxVelocity;
+      }
+    }
 
     // ************************************************************
     // Determine the cutoff frequency of the noise shaping filter
@@ -2095,8 +2110,9 @@ void TdsModel::calcMatrix()
           L_AB+= getJunctionInductance(tubeSection[bc->sourceSection].area, tubeSection[bc->targetSection].area);
         }
 
-        G = L_AB / (timeStep*THETA) + R_AB;
-        H = - u_rate*L_AB*(THETA1/THETA) - (L_AB*u) / (timeStep*THETA) + S;
+        double theta = getBranchTheta(i);
+        G = L_AB / (timeStep*theta) + R_AB;
+        H = - u_rate*L_AB*((1.0 - theta)/theta) - (L_AB*u) / (timeStep*theta) + S;
 
         // In A inflowing currents
         if (sourceTs != NULL)
@@ -2151,7 +2167,8 @@ void TdsModel::updateVariables()
     oldCurrentRate = bc->magnitudeRate;
 
     bc->magnitude = flowVector[i];
-    bc->magnitudeRate = (bc->magnitude - oldCurrent)/(timeStep*THETA) - (THETA1/THETA)*bc->magnitudeRate;
+    double theta = getBranchTheta(i);
+    bc->magnitudeRate = (bc->magnitude - oldCurrent)/(timeStep*theta) - ((1.0 - theta)/theta)*bc->magnitudeRate;
     bc->noiseMagnitude = (1.0-noiseFilterCoeff)*bc->magnitude + noiseFilterCoeff*bc->noiseMagnitude;
   }
 
@@ -2167,7 +2184,8 @@ void TdsModel::updateVariables()
 
     oldPressure = ts->pressure;
     ts->pressure = ts->D + ts->E*netFlow;
-    ts->pressureRate = (ts->pressure - oldPressure)/(timeStep*THETA) - ts->pressureRate*(THETA1/THETA);
+    double theta = getSectionTheta(i);
+    ts->pressureRate = (ts->pressure - oldPressure)/(timeStep*theta) - ts->pressureRate*((1.0 - theta)/theta);
 
     // The current "into the wall".
     oldCurrent = ts->wallCurrent;
@@ -2246,6 +2264,37 @@ void TdsModel::solveEquationsCholesky()
       y[rowIndex[v]] -= L[v] * x;
     }
   }
+}
+
+
+// ****************************************************************************
+/// Settings that keep the simulation stable when the glottis closes within a few
+/// samples, as the self-oscillating folds with a triangular glottis may do. They
+/// are off by default and leave the other glottis models unchanged.
+// ****************************************************************************
+
+void TdsModel::setRapidGlottalClosure(bool rapid)
+{
+  options.glottalTheta = rapid ? 1.0 : THETA;
+  options.limitGlottalJetVelocity = rapid;
+}
+
+
+// ****************************************************************************
+/// Integration parameter of a branch current and of a section pressure.
+// ****************************************************************************
+
+double TdsModel::getBranchTheta(int branch)
+{
+  int target = branchCurrent[branch].targetSection;
+  bool glottal = (target >= Tube::LOWER_GLOTTIS_SECTION) && (target <= Tube::FIRST_PHARYNX_SECTION);
+  return glottal ? options.glottalTheta : THETA;
+}
+
+double TdsModel::getSectionTheta(int section)
+{
+  bool glottal = (section >= Tube::LOWER_GLOTTIS_SECTION) && (section <= Tube::UPPER_GLOTTIS_SECTION);
+  return glottal ? options.glottalTheta : THETA;
 }
 
 

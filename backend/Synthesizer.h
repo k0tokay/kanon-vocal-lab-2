@@ -30,6 +30,7 @@
 #include "GesturalScore.h"
 #include "Dsp.h"
 #include "IirFilter.h"
+#include <random>
 #include <vector>
 
 using namespace std;
@@ -131,11 +132,18 @@ private:
   IirFilter outputPressureFilter;
   bool initialShapesSet{ false };
 
+  // Background noise (see Glottis::getBackgroundNoiseLevel_dB()).
+  std::mt19937 noiseGenerator;
+  std::normal_distribution<double> noiseDistribution;
+  double noiseLowpass{ 0.0 };
+  double noiseHighpass{ 0.0 };
+
   // **************************************************************************
   // Private functions.
   // **************************************************************************
 
 private:
+  double getBackgroundNoiseSample();
   static bool parseTextLine(string line, int numValues, double *values);
 
 };

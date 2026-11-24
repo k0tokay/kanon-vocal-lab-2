@@ -239,6 +239,7 @@ void Data::init(const wxString &arg0)
   glottis[GEOMETRIC_GLOTTIS_2025] = new GeometricGlottis2025();
   glottis[GEOMETRIC_GLOTTIS_2019] = new GeometricGlottis2019();
   glottis[TRIANGULAR_GLOTTIS] = new TriangularGlottis();
+  glottis[BODY_COVER_GLOTTIS] = new BodyCoverGlottis();
 
   saveGlottisSignals = false;
   glottisSignalsFileName = wxStandardPaths::Get().GetTempDir();
