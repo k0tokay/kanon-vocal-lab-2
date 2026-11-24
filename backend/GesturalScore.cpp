@@ -928,6 +928,13 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       else
       {
         segmentSequence.appendSegment(n, d);
+        // Keep the label that selects the Japanese stop timing (see below).
+        if (origSegment->getValue("stop") == "ja")
+        {
+          Segment* last = segmentSequence.getSegment(segmentSequence.numSegments() - 1);
+          last->key[Segment::DURATION_INDEX + 1] = "stop";
+          last->value[Segment::DURATION_INDEX + 1] = "ja";
+        }
       }
     }
     else
@@ -2341,6 +2348,33 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
     }
 
     // **************************************************************
+    // Japanese stops (segment label "stop = ja"): short voice onset
+    // times that do not grow with the duration, a fast release, and
+    // voiced stops with the vocal folds adducted through the closure.
+    // See experiments/consonant-articulation.
+    // **************************************************************
+
+    bool isJapaneseStop = (isPlosive) && (s->getValue("stop") == "ja");
+
+    if (isJapaneseStop)
+    {
+      if (segmentName == "p") { voiceOnsetTime_s = 0.018; }
+      if (segmentName == "t") { voiceOnsetTime_s = 0.020; }
+      if (segmentName == "k") { voiceOnsetTime_s = 0.028; }
+      if (segmentName == "b") { voiceOnsetTime_s = 0.000; }
+      if (segmentName == "d") { voiceOnsetTime_s = 0.008; }
+      if (segmentName == "g") { voiceOnsetTime_s = 0.010; }
+      if (Sampa::isVoiced(segmentName))
+      {
+        glottalGestureName = "voiced-plosive";
+      }
+      else
+      {
+        oralGestureOffsetTau_s = 0.008;
+      }
+    }
+
+    // **************************************************************
     // Add the gestures for the PLOSIVE.
     // **************************************************************
 
@@ -2355,7 +2389,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       string a = segmentName;
       string b = nextSegmentName;
       if (((a == "p" || a == "b") && (b == "f" || b == "v")) ||
-        ((a == "t" || a == "d") && (b == "s" || b == "z" || b == "S" || b == "Z" || b == "C" || b == "j")) ||
+        ((a == "t" || a == "d") && (b == "s" || b == "z" || b == "S" || b == "Z" || b == "s\\" || b == "z\\" || b == "C" || b == "j")) ||
         ((a == "k" || a == "g") && (b == "x" || b == "r" || b == "R" || b == "C" || b == "j")))
       {
         voiceOnsetTime_s = 0.005;
@@ -2430,6 +2464,17 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       if (glottalGestureEnd_s < glottalGestureBegin_s + MIN_GLOTTAL_GESTURE_DURATION_S)
       {
         glottalGestureEnd_s = glottalGestureBegin_s + MIN_GLOTTAL_GESTURE_DURATION_S;
+      }
+
+      // Voiced: adduction takes 50 ms to become effective before the closure.
+      if (isJapaneseStop)
+      {
+        glottalGestureBegin_s = closureBegin_s - (Sampa::isVoiced(segmentName) ? 0.050 : 0.025);
+        glottalGestureEnd_s = closureEnd_s - 0.025;
+        if (glottalGestureEnd_s < glottalGestureBegin_s + 0.020)
+        {
+          glottalGestureEnd_s = glottalGestureBegin_s + 0.020;
+        }
       }
 
       // Add the oral closing gesture.

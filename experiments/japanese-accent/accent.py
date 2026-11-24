@@ -123,12 +123,17 @@ ONSET = {
 JA_ONSET = {"sh": ["s\\"], "ch": ["ts\\"], "j": ["dz\\"], "w": ["u"]}
 # Onsets that get a short palatal glide before /i/ when palatal_i=True.
 PALATALIZE = {"k", "g", "n", "m", "b", "p", "r"}
-BASE = {"p": .055, "b": .045, "t": .055, "d": .045, "k": .06, "g": .045,
-        "s": .085, "z": .06, "S": .09, "C": .08, "h": .065, "f": .07, "v": .05,
-        "ts": .08, "tS": .085, "dZ": .065, "m": .05, "n": .045, "N": .05,
-        "4": .022, "j": .06, "u": .05, "M": .04,     # j: 35 ms did not reach
-                                                     # its target in ya/yo
-        "s\\": .09, "z\\": .06, "ts\\": .085, "dz\\": .065}
+# Durations follow the consonants of 51 JVS women at the same mora length (median
+# 140 ms; experiments/consonant-articulation). VTL places closures exactly (segment
+# minus VOT), so a short segment is a short closure and a weak burst.
+BASE = {"p": .075, "b": .065, "t": .07, "d": .055, "k": .08, "g": .065,
+        "s": .10, "z": .085, "S": .115, "C": .105, "h": .075, "f": .085, "v": .06,
+        "ts": .115, "tS": .115, "dZ": .095, "m": .065, "n": .06, "N": .06,
+        "4": .035, "j": .075, "u": .065, "M": .05,
+        "s\\": .115, "z\\": .095, "ts\\": .115, "dz\\": .095}
+GLIDE = .04             # /j/ after another consonant (kya, ...)
+VELIC = 2.0             # VTL's velic openings (m N .3, n .2 cm2) give Kanon too weak a murmur at 1-3 kHz
+JA_STOPS = {"p", "t", "k", "b", "d", "g"}
 FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS", "s\\", "ts\\"}
 
 
@@ -149,11 +154,13 @@ def moraic_nasal(next_onset):
     return "N"
 
 
-def onset(consonant, vowel, japanese, palatal_i=False):
+def onset(consonant, vowel, japanese, palatal_i=False, after_vowel=False):
     """VTL segments for a mora onset, tagged for later score edits."""
     if not consonant:
         return []
-    if japanese and consonant == "h" and vowel in "iI":
+    if japanese and consonant == "j" and after_vowel:
+        names = ["z\\"]                     # aji = [aʑi], no closure between vowels
+    elif japanese and consonant == "h" and vowel in "iI":
         names = ["C"]                       # hi = [çi]
     elif japanese and consonant in JA_ONSET:
         names = JA_ONSET[consonant]
@@ -162,7 +169,7 @@ def onset(consonant, vowel, japanese, palatal_i=False):
     if japanese and palatal_i and consonant in PALATALIZE and vowel in "iI":
         names = names + ["j"]               # ki = [kʲi]
     tag = "phi" if japanese and consonant == "f" else ""
-    return [Segment(n, BASE.get(n, .04) if n != "j" or len(names) == 1 else .025,
+    return [Segment(n, BASE.get(n, .04) if n != "j" or len(names) == 1 else GLIDE,
                     tag=tag if k == 0 else "") for k, n in enumerate(names)]
 
 
@@ -185,7 +192,8 @@ def to_segments(units, mora=0.135, rate=1.0, japanese=True, palatal_i=False,
     segments, owned = [], []          # owned[i] = segments belonging to units[i]
     for i, u in enumerate(units):
         if isinstance(u, Pause):
-            seg = [Segment("", (0.12 if u.kind == "sil" else 0.22) / rate)]
+            # VTL lengthens a first pause below 100 ms, which would shift everything after it.
+            seg = [Segment("", max(.1, 0.12 / rate) if u.kind == "sil" else 0.22 / rate)]
         else:
             nxt = units[i + 1] if i + 1 < len(units) else None
             final = nxt is None or isinstance(nxt, Pause)
@@ -195,7 +203,9 @@ def to_segments(units, mora=0.135, rate=1.0, japanese=True, palatal_i=False,
             elif u.vowel == "N":
                 seg = [Segment(moraic_nasal(nxt.consonant if isinstance(nxt, Mora) else ""), mora * stretch)]
             else:
-                seg = onset(u.consonant, u.vowel, japanese, palatal_i)
+                prev = units[i - 1] if i else None
+                seg = onset(u.consonant, u.vowel, japanese, palatal_i,
+                            after_vowel=isinstance(prev, Mora) and prev.vowel in "aiueo")
                 for s in seg:
                     s.duration /= rate
                 vowel_time = max(.04 / rate, mora * stretch - sum(s.duration for s in seg))
@@ -293,8 +303,9 @@ def write_seg(segments, path):
     lines = []
     for s in segments:
         f = s.f0 if s.name else [0, 0, 0]
+        stop = " stop = ja;" if s.name in JA_STOPS else ""      # Japanese timing (GesturalScore.cpp)
         lines.append(f"name = {s.name}; duration_s = {s.duration:.6f}; "
-                     f"f0_20%_Hz = {f[0]:.2f}; f0_50%_Hz = {f[1]:.2f}; f0_80%_Hz = {f[2]:.2f};")
+                     f"f0_20%_Hz = {f[0]:.2f}; f0_50%_Hz = {f[1]:.2f}; f0_80%_Hz = {f[2]:.2f};{stop}")
     path.write_text("\n".join(lines) + "\n")
 
 
@@ -304,6 +315,7 @@ def patch_score(ges, segments):
     - devoiced vowels keep their tract shape but get an open glottis,
       together with their voiceless onset
     - fu: bilabial instead of labiodental fricative
+    - nasals: wider velic opening (VELIC)
 
     [ɯ] (M) and the alveolo-palatals (s\\ z\\ ts\\ dz\\) are handled by
     VTL itself and need no edit here.
@@ -321,6 +333,9 @@ def patch_score(ges, segments):
         elif s.tag == "phi":
             score["lip-gestures"].map_values(s.t0 - .03, t1 + .03,
                 lambda v: v.replace("ll-dental-fricative", "ll-labial-fricative"))
+    for g in score["velic-gestures"].items:
+        if any(s.name in ("m", "n", "N") and min(g[1], s.t0 + s.duration) - max(g[0], s.t0) > .005 for s in segments):
+            g[2]["value"] = f"{float(g[2]['value']) * VELIC:.6f}"       # not the open velum of the pauses
     score.save()
 
 
