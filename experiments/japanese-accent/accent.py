@@ -127,17 +127,18 @@ PALATALIZE = {"k", "g", "n", "m", "b", "p", "r"}
 # 140 ms; experiments/consonant-articulation). VTL places closures exactly (segment
 # minus VOT), so a short segment is a short closure and a weak burst.
 BASE = {"p": .075, "b": .065, "t": .07, "d": .055, "k": .08, "g": .065,
-        "s": .10, "z": .085, "S": .115, "C": .105, "h": .075, "f": .085, "v": .06,
+        "s": .10, "z": .095, "S": .115, "C": .105, "h": .075, "f": .085, "v": .06,
         "ts": .115, "tS": .115, "dZ": .095, "m": .065, "n": .06, "N": .06,
         "4": .035, "j": .075, "u": .065, "M": .05,
-        "s\\": .115, "z\\": .095, "ts\\": .115, "dz\\": .095}
+        "s\\": .115, "z\\": .105, "ts\\": .115, "dz\\": .105}
 GLIDE = .04             # /j/ after another consonant (kya, ...)
 VELIC = 2.0             # VTL's velic openings (m N .3, n .2 cm2) give Kanon too weak a murmur at 1-3 kHz
 # Segments that get the Japanese timing of GesturalScore.cpp (label "timing = ja").
 JA_TIMING = {"p", "t", "k", "b", "d", "g", "s", "z", "s\\", "z\\", "C", "f", "ts", "ts\\", "dz\\", "4",
              "m", "n", "N"}
-# Single numbers of it: the tap only has to come within .11 cm2 for 10 ms (no full closure).
-TIMING = {"4": {"contact_s": .010, "contact_cm2": .11}}
+# Single numbers of it: the tap only has to come within .13 cm2 for 14 ms (no full closure),
+# approaches slowly and leaves fast.
+TIMING = {"4": {"contact_s": .014, "contact_cm2": .13, "onset_tau_s": .010, "offset_tau_s": .006}}
 FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS", "s\\", "ts\\"}
 
 

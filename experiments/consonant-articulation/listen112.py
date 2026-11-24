@@ -1,14 +1,17 @@
-"""Listening page v1.1.1 -> v1.1.2 (synthesis only).
+"""Listening page v1.1.1 -> v1.1.2, v1.1.2 -> v1.1.3 (synthesis only).
 
     listen112.py render v111 ../../speakers/.../v1-1-1.speaker --v111-rules     (library of a86f77e)
     listen112.py render v112 ../../speakers/.../v1-1-2.speaker
-    listen112.py page            -> results/listen112.html
+    listen112.py page v111 v112      -> results/listen112.html
+    listen112.py page v112 v113      -> results/listen113.html    (v112: rendered with the library and accent.py of ed0b60f)
 """
 import sys
 
 from compare import *
 from listen import clip, load
 
+NOTE113 = {"ざ行": "声を弱め，雑音を強めた", "じゃ行": "同上", "ら行": "舌本体を前へ．離しを速く", "ら と だ": "区別がつくか",
+           "ば行": "変えていない", "だ行": "変えていない", "が行": "変えていない"}
 WORDS = {"ば行": ("かばん。そば。あぶら。えび。", "閉鎖中の声．閉鎖が長すぎた"), "だ行": ("あだな。まど。でで。からだ。", "同上"),
          "が行": ("かぎ。ごご。あがる。かげ。", "閉鎖しきらない [ɣ] 寄りにした"), "ざ行": ("かざり。みず。かぜ。なぞ。", "離しの後の気息をなくした"),
          "じゃ行": ("まじめ。じじつ。かじゅう。みじょう。", "同上"), "ら行": ("さらら。りりしい。るりいろ。それから。ろうろう。", "横に息を逃がし，閉じきらない"),
@@ -29,11 +32,12 @@ def cell(label, name):
     return f"<td>{clip([x], sr)}</td>"
 
 
-def page():
-    rows = lambda items: "".join(f"<tr><th>{a}<small>{b}</small></th>{cell('v111', n)}{cell('v112', n)}</tr>" for n, a, b in items)
-    head = "<thead><tr><th></th><th>前（v1.1.1）</th><th>後（v1.1.2）</th></tr></thead>"
+def page(old, new):
+    ver = lambda l: f"v1.1.{l[-1]}"
+    rows = lambda items: "".join(f"<tr><th>{a}<small>{b}</small></th>{cell(old, n)}{cell(new, n)}</tr>" for n, a, b in items)
+    head = f"<thead><tr><th></th><th>前（{ver(old)}）</th><th>後（{ver(new)}）</th></tr></thead>"
     tab = lambda items: f'<div class="w"><table>{head}<tbody>{rows(items)}</tbody></table></div>'
-    words = tab([(k, k, f"{t}<br>{n}") for k, (t, n) in WORDS.items()])
+    words = tab([(k, k, f"{t}<br>{NOTE113.get(k, n) if new == 'v113' else n}") for k, (t, n) in WORDS.items()])
     sent = "".join(f"<h2>文：{'ふつうの速さ' if r == 1 else f'{r:g} 倍速'}</h2>" + tab([(f"{u}-{round(r * 100)}", t, "") for u, t in SENTENCES.items()]) for r in (1.0,) + RATES)
     css = """:root{--bg:#fbfaf8;--fg:#24211e;--mut:#6d665f;--line:#ddd7cf}
 @media (prefers-color-scheme:dark){:root{--bg:#1c1a18;--fg:#ece7e1;--mut:#a39a91;--line:#3b3733}}
@@ -42,10 +46,10 @@ h1{font-size:22px}h2{font-size:17px;margin-top:36px}p{max-width:46em}.w{overflow
 th,td{border-top:1px solid var(--line);padding:8px;text-align:left;vertical-align:middle;font-weight:normal}
 thead th{font-weight:600;border-top:0}small{display:block;color:var(--mut)}audio{width:230px;height:34px}"""
     html = f"""<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>嘉音の子音 v1.1.1 → v1.1.2</title><style>{css}</style></head><body><h1>嘉音の子音 v1.1.1 → v1.1.2</h1>
-<p>すべて VocalTractLab の合成です．音量はそろえてあります．モーダルの声質と母音は変えていません．前は話者 v1.1.1 と a86f77e の規則，後は話者 v1.1.2 と新しい規則です．</p>
+<title>嘉音の子音 {ver(old)} → {ver(new)}</title><style>{css}</style></head><body><h1>嘉音の子音 {ver(old)} → {ver(new)}</h1>
+<p>すべて VocalTractLab の合成です．音量はそろえてあります．モーダルの声質と母音は変えていません．前は話者 {ver(old)} とその時の規則，後は話者 {ver(new)} と新しい規則です．</p>
 <h2>語（有声の破裂・摩擦，ら行）</h2>{words}{sent}</body></html>"""
-    (HERE / "results/listen112.html").write_text(html)
+    (HERE / f"results/listen1{new[2:]}.html").write_text(html)
     print(len(html) // 1024, "KB")
 
 
@@ -54,4 +58,4 @@ if __name__ == "__main__":
     if "--v111-rules" in a:
         a.remove("--v111-rules")
         v111_rules()
-    render(*a[1:3]) if a[0] == "render" else page()
+    render(*a[1:3]) if a[0] == "render" else page(*a[1:3])

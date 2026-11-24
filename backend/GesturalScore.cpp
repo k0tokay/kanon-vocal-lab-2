@@ -856,13 +856,14 @@ void GesturalScore::initTestScore()
 //   glottis_begin_s          begin of the glottal gesture after the closure
 //                            (stops) or segment begin (fricatives)
 //   glottis_end_s            its end after the closure or segment end
-//   glottis_tau_s            its time constant (stops)
+//   glottis_tau_s            its time constant
+//   release_s                shift of the oral release (fricatives)
 //   velic_cm2                velic leak during the closure of voiced stops
 //   contact_s, contact_cm2   taps: how long the tongue tip is at least this close
 // ****************************************************************************
 
 static const char* TIMING_LABELS[] = { "timing", "lead_s", "vot_s", "onset_tau_s", "offset_tau_s",
-  "glottis_begin_s", "glottis_end_s", "glottis_tau_s", "velic_cm2", "contact_s", "contact_cm2" };
+  "glottis_begin_s", "glottis_end_s", "glottis_tau_s", "velic_cm2", "contact_s", "contact_cm2", "release_s" };
 
 // Below this area the closure solver counts a tube section as closed.
 static const double CLOSURE_AREA_CM2 = 2.0 * Tube::MIN_AREA_CM2;
@@ -1978,7 +1979,15 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       // Oral gesture begin must be a few ms earlier.
       double oralGestureBegin_s = segmentBegin_s - halfTransitionDuration_s - 0.010;
       double oralGestureEnd_s = segmentEnd_s - halfTransitionDuration_s;
-      
+      double oralReturnTau_s = timeConstant_s;
+      if (isJapaneseFricative)
+      {
+        // The alveolo-palatal voiced fricative is released a little earlier, as its
+        // noise would otherwise last into the vowel.
+        oralGestureEnd_s += getTimingLabel(s, "release_s", (segmentName == "z\\") ? -0.008 : 0.0);
+        oralReturnTau_s = getTimingLabel(s, "offset_tau_s", timeConstant_s);
+      }
+
       setLowerLimit(oralGestureBegin_s, 0.0);
       setLowerLimit(oralGestureEnd_s, 0.0);
 
@@ -2015,7 +2024,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       g.neutral = true;   // The return gesture
       g.slope = 0.0;
       g.sVal = oralGestureName;
-      g.tau_s = timeConstant_s;
+      g.tau_s = oralReturnTau_s;
 
       gestures[gestureType].putGesture(g, oralGestureEnd_s);
 
@@ -2042,13 +2051,18 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       // at the release makes the vowel onset breathy (voiced aspirated).
       if ((isJapaneseFricative) && (Sampa::isVoiced(segmentName)))
       {
-        double shift_s = -halfTransitionDuration_s - 0.010;
-        // In fast speech at least as early as in normal speech, as otherwise the
+        double begin_s = -halfTransitionDuration_s - 0.010;
+        double end_s = -halfTransitionDuration_s - 0.020;
+        // In fast speech not much later than in normal speech, as otherwise the
         // noise gets lost (not for affricates: there it would open the closure).
         bool isAffricate = (i > 0) && (segmentSequence.getSegment(i - 1)->value[Segment::NAME_INDEX] == "d");
-        if (isAffricate == false) { setUpperLimit(shift_s, -0.053); }
-        glottalGestureBegin_s = segmentBegin_s + getTimingLabel(s, "glottis_begin_s", shift_s);
-        glottalGestureEnd_s = segmentEnd_s + getTimingLabel(s, "glottis_end_s", shift_s);
+        if (isAffricate == false)
+        {
+          setUpperLimit(begin_s, -0.050);
+          setUpperLimit(end_s, -0.060);
+        }
+        glottalGestureBegin_s = segmentBegin_s + getTimingLabel(s, "glottis_begin_s", begin_s);
+        glottalGestureEnd_s = segmentEnd_s + getTimingLabel(s, "glottis_end_s", end_s);
       }
 
       // If the current segment is a VOICELESS fricative and the next
@@ -2072,7 +2086,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       g.neutral = false;
       g.slope = 0.0;
       g.sVal = glottalGestureName;
-      g.tau_s = timeConstant_s;
+      g.tau_s = isJapaneseFricative ? getTimingLabel(s, "glottis_tau_s", timeConstant_s) : timeConstant_s;
 
       gestures[GLOTTAL_SHAPE_GESTURE].putGesture(g, glottalGestureBegin_s);
 
