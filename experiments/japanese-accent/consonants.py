@@ -58,7 +58,7 @@ def main():
                 "drop-palatal": dict(devoice="drop", palatal_i=True),
                 "keep-palatal": dict(devoice="keep", palatal_i=True)}
     for name, kw in variants.items():
-        r = render(text, OUT / f"devoicing-{name}", **kw)
+        r = render(text, OUT / f"devoicing-{name}", f0_model=None, **kw)
         sr, x = read(OUT / f"devoicing-{name}.wav")
         x = x / 32767
         voiced = [s for s in r["segments"] if s.name in ("a", "e", "o")]
@@ -83,7 +83,7 @@ def main():
         variants = [("vtl", dict(japanese=False)), ("japanese", dict(japanese=True))]
         fric[label] = {}
         for name, kw in variants:
-            r = render(word, OUT / f"{label}-{name}", **kw)
+            r = render(word, OUT / f"{label}-{name}", f0_model=None, **kw)
             sr, x = read(OUT / f"{label}-{name}.wav")
             x = x / 32767
             seg = next(s for s in r["segments"]

@@ -383,8 +383,9 @@ def synthesize(seg, wav, segments=None, speaker=SPEAKER):
 
 
 def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
-           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER, f0_model=None, f0_mean=218.0):
-    """f0_model: a model loaded with accent_f0.load; None keeps the Fujisaki rules."""
+           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER, f0_model="auto", f0_mean=218.0):
+    """f0_model: "auto" uses the learned F0 when its model file is available and params is untouched,
+    else the Fujisaki rules; None always uses the rules; or a model loaded with accent_f0.load."""
     units = parse(text)
     segments, spans = to_segments(units, rate=rate, japanese=japanese,
                                   palatal_i=palatal_i, devoice=devoice)
@@ -395,6 +396,9 @@ def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
         s.f0 = list(f0_curve(np.array([s.t0 + r * s.duration for r in (.2, .5, .8)]),
                              phrases, accents, params))
     learned = None
+    if f0_model == "auto":
+        import accent_f0
+        f0_model = accent_f0.default() if accent and params == Fujisaki() else None
     if f0_model is not None and accent:
         import accent_f0
         learned = accent_f0.apply(f0_model, units, spans, segments, f0_mean)

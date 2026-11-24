@@ -1,10 +1,14 @@
-"""F0 learned from accent features (opt-in for accent.render, trained by world-decomposition/prosody_train.py).
+"""F0 learned from accent features (default of accent.render when a model file exists, trained by
+world-decomposition/prosody_train.py).
 
 The model file holds regressors fitted to the mean contour of the JVS women. JVS audio is for research,
 non-commercial and personal use, so the file is kept out of git (as are all JVS derivatives).
 Load only a model file you trained yourself: it is a pickle.
 """
+import os
 import pickle
+import sys
+from pathlib import Path
 
 import numpy as np
 
@@ -49,6 +53,25 @@ def features(units):
 def load(path):
     with open(path, "rb") as f:
         return pickle.load(f)
+
+
+FILE = Path(os.environ.get("VTL_F0_MODEL", Path(__file__).resolve().parents[1] / "world-decomposition/out/f0-model.pkl"))
+_default = False
+
+
+def default():
+    """The model in VTL_F0_MODEL (default world-decomposition/out/f0-model.pkl), or None (rules); VTL_F0=rule turns it off."""
+    global _default
+    if os.environ.get("VTL_F0") == "rule": return None
+    if _default is False:
+        _default = None
+        if not FILE.exists():
+            why = f"no model at {FILE}"
+        else:
+            try: _default = load(FILE)
+            except ImportError as e: why = f"{e}"
+        print("F0: " + (f"learned ({FILE.name})" if _default else f"Fujisaki rules ({why})"), file=sys.stderr)
+    return _default
 
 
 def predict(model, units):

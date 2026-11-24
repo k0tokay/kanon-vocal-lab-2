@@ -17,7 +17,7 @@ def read_wav(path):
 
 def rule(text, stem):
     stem.parent.mkdir(parents=True, exist_ok=True)
-    r = accent.render(text, stem)
+    r = accent.render(text, stem, f0_model=None)
     return read_wav(stem.with_suffix(".wav")), r
 
 
