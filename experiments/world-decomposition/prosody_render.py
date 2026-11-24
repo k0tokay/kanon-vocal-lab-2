@@ -36,8 +36,8 @@ def pick(R, preds, n=6):
     return out[:n]
 
 
-def build(text, cond, pred, ref, q, u):
-    """Segments with the requested F0 and timing; q = fitted Fujisaki parameters."""
+def build(text, cond, pred, ref, q, u, sd=None):
+    """Segments with the requested F0 and timing; q = fitted Fujisaki parameters; sd = SD in semitones to scale the F0 to."""
     units = accent.parse(text); segs, spans = accent.to_segments(units)
     p = accent.Fujisaki(**q) if cond == "fit" else accent.Fujisaki()
     ph, ac = accent.commands(units, spans, p)
@@ -47,8 +47,7 @@ def build(text, cond, pred, ref, q, u):
     for m, (a, b) in moras:
         own = [s for s in segs if a - 1e-6 <= s.t0 < b - 1e-6]
         vowel_on.append(own[-1].t0 if m.consonant and len(own) > 1 else a)
-    src = {"vvF": pred, "vv": pred, "jvs": ref}.get(cond)
-    new = None
+    src = {"vvF": pred, "vv": pred, "stat": pred, "jvsF": ref, "jvs": ref}.get(cond)
     if cond in ("vv", "jvs"):
         K = src["time"]; t = 0.0; old, nw = [0.0], [0.0]
         i = 0
@@ -76,10 +75,10 @@ def build(text, cond, pred, ref, q, u):
         pc = PchipInterpolator(kx, ky)
         F = lambda tt: pc(np.clip(np.atleast_1d(tt), kx[0], kx[-1]))
     mid = np.array([float(F((v0 + s[1]) / 2)[0]) for (m, s), v0 in zip(moras, vowel_on) if m.vowel in "aiueoN"])
-    shift = 12 * np.log2(MEAN / 100) - mid.mean()
+    gain = sd / mid.std() if sd else 1.0; centre = 12 * np.log2(MEAN / 100)
     for s in segs:
         tt = np.array([s.t0 + r * s.duration for r in (.2, .5, .8)])
-        s.f0 = [float(100 * 2 ** ((f + shift) / 12)) for f in F(tt)]
+        s.f0 = [float(100 * 2 ** ((centre + gain * (f - mid.mean())) / 12)) for f in F(tt)]
     # Contiguous times after the warp.
     t = 0.0
     for s in segs:
