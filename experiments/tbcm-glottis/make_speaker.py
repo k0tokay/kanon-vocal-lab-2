@@ -23,6 +23,8 @@ STATIC = [  # name, abbr, unit, min, max, default, value for Kanon
     ("Maximal strain", "max_strain", "", 0, .6, .3, .3),
     ("Aspiration strength", "aspiration_strength", "dB", -60, 0, -40, -34),
     ("Aspiration cutoff", "aspiration_cutoff", "Hz", 300, 8000, 1000, 2000),
+    ("Background noise level", "background_noise_level", "dB", -120, 0, -120, -120),
+    ("Background noise cutoff", "background_noise_cutoff", "Hz", 20, 20000, 300, 300),
 ]
 CONTROL = [  # name, abbr, unit, min, max, default
     ("f0", "f0", "Hz", 40, 1000, 220), ("Subglottal pressure", "pressure", "dPa", 0, 30000, 8000),

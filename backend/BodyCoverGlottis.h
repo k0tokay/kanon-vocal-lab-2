@@ -74,6 +74,8 @@ public:
     MAX_STRAIN,
     ASPIRATION_STRENGTH,
     ASPIRATION_CUTOFF,
+    BACKGROUND_NOISE_LEVEL,
+    BACKGROUND_NOISE_CUTOFF,
     NUM_STATIC_PARAMS
   };
 
@@ -106,6 +108,8 @@ public:
   int getApertureParamIndex();
   double getAspirationStrength_dB();
   double getAspirationCutoff_Hz();
+  double getBackgroundNoiseLevel_dB();
+  double getBackgroundNoiseCutoff_Hz();
   bool hasRapidClosure() { return true; }
 
 private:

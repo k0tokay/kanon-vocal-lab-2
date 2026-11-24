@@ -48,6 +48,9 @@ public:
   /// Aspiration noise level at which TdsModel uses its original source gain.
   static const double DEFAULT_ASPIRATION_STRENGTH_DB;
   static const double DEFAULT_ASPIRATION_CUTOFF_HZ;
+  /// At or below this level no background noise is added.
+  static const double BACKGROUND_NOISE_OFF_DB;
+  static const double DEFAULT_BACKGROUND_NOISE_CUTOFF_HZ;
 
   struct Parameter
   {
@@ -94,6 +97,11 @@ public:
   virtual double getAspirationStrength_dB();
   /// Lowpass cutoff of the aspiration noise source above the glottis.
   virtual double getAspirationCutoff_Hz();
+  /// RMS level of a stationary noise added to the radiated sound (room or
+  /// microphone noise), in dB relative to the amplitude 1 of the output.
+  virtual double getBackgroundNoiseLevel_dB();
+  /// Corner of the first-order lowpass that shapes this noise.
+  virtual double getBackgroundNoiseCutoff_Hz();
   /// Folds that close within few samples; see TdsModel::setRapidGlottalClosure().
   virtual bool hasRapidClosure() { return false; }
 

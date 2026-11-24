@@ -72,7 +72,10 @@ BodyCoverGlottis::BodyCoverGlottis()
     { "F0 control", "f0_control", "", 1, "", 0.0, 1.0, 1.0, 0.0 },
     { "Maximal strain", "max_strain", "", 100, "%", 0.0, 0.6, 0.3, 0.0 },
     { "Aspiration strength", "aspiration_strength", "dB", 1, "dB", -60.0, 0.0, -40.0, 0.0 },
-    { "Aspiration cutoff", "aspiration_cutoff", "Hz", 1, "Hz", 300.0, 8000.0, 1000.0, 0.0 }
+    { "Aspiration cutoff", "aspiration_cutoff", "Hz", 1, "Hz", 300.0, 8000.0, 1000.0, 0.0 },
+    // Stationary noise added to the radiated sound (Synthesizer), not to the flow.
+    { "Background noise level", "background_noise_level", "dB", 1, "dB", -120.0, 0.0, -120.0, 0.0 },
+    { "Background noise cutoff", "background_noise_cutoff", "Hz", 1, "Hz", 20.0, 20000.0, 300.0, 0.0 }
   };
 
   Parameter dp[NUM_DERIVED_PARAMS] =
@@ -520,4 +523,16 @@ double BodyCoverGlottis::getAspirationStrength_dB()
 double BodyCoverGlottis::getAspirationCutoff_Hz()
 {
   return staticParams[ASPIRATION_CUTOFF].x;
+}
+
+
+double BodyCoverGlottis::getBackgroundNoiseLevel_dB()
+{
+  return staticParams[BACKGROUND_NOISE_LEVEL].x;
+}
+
+
+double BodyCoverGlottis::getBackgroundNoiseCutoff_Hz()
+{
+  return staticParams[BACKGROUND_NOISE_CUTOFF].x;
 }
