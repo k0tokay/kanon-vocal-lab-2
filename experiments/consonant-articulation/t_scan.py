@@ -19,7 +19,7 @@ from voiced_scan import spans
 TEXT = {"t1": "あた、また、かたな、わたし。", "t2": "あて、みて、てがみ。", "t3": "おと、こと、ととのう。", "t4": "いたい、うたう、ひとつ。",
         "d1": "あだ、まだ、から、でも、おど。", "k1": "あか、こけ、かき、くき。"}
 LONG = dict(offset_tau="offset_tau_s", onset_tau="onset_tau_s", vot="vot_s", lead="lead_s", begin="glottis_begin_s", end="glottis_end_s")
-KEYS = ["burst_1k", "burst_2k", "burst_4k", "burst_mid", "vot_ms", "cv_ms", "closure_ms"]
+KEYS = ["burst_1k", "burst_2k", "burst_4k", "burst_mid", "vot_ms", "cv_ms", "closure_ms", "closure_low", "voice_min"]
 
 
 def shape(speaker, out, ts3, front):
