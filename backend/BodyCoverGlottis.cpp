@@ -417,7 +417,7 @@ void BodyCoverGlottis::incTime(const double dt, const double pressure_dPa[])
 void BodyCoverGlottis::measureF0(double dt)
 {
   const double TAU = 0.02;
-  const double MIN_AMPLITUDE = 1.5e-5;     // m, mean deviation of the lower mass
+  const double MIN_AMPLITUDE = 4.0e-6;     // m, mean deviation of the lower mass
   meanX += (x[0] - meanX)*dt / TAU;
   double y = x[0] - meanX;
   meanAbs += (fabs(y) - meanAbs)*dt / TAU;
