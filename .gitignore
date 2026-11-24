@@ -1,3 +1,5 @@
 /build-mac/
 .DS_Store
 bib/
+
+**/draft.md
