@@ -721,7 +721,7 @@ GesturalScore::GesturalScore(VocalTract *vocalTract, Glottis *glottis)
     -0.1, 1.5, 0.0, 0.0, 0.005, 0.04, false);
 
   gestures[GLOTTAL_SHAPE_GESTURE].init("Glottal shape g.", "glottal-shape-gestures", "", 
-    0.0, 0.0, 0.0, 0.0, 0.01, 0.04, true);
+    0.0, 0.0, 0.0, 0.0, 0.005, 0.04, true);
 
   // For f0 gestures, we need a very big range for the slope from
   // -200 to +200 st/s, because of the rapid f0 drops during glottal stops.
@@ -847,6 +847,48 @@ void GesturalScore::initTestScore()
 
 
 // ****************************************************************************
+// Optional timing labels of a segment, used for Japanese consonants (see
+// experiments/consonant-articulation). "timing = ja" selects the Japanese
+// rules below; the others (s, cm^2) override single numbers of them.
+//   lead_s, vot_s            closure begin after the segment begin, release
+//                            before the segment end
+//   onset_tau_s, offset_tau_s  time constants of closing and release
+//   glottis_begin_s          begin of the glottal gesture after the closure
+//                            (stops) or segment begin (fricatives)
+//   glottis_end_s            its end after the closure or segment end
+//   glottis_tau_s            its time constant (stops)
+//   velic_cm2                velic leak during the closure of voiced stops
+//   contact_s, contact_cm2   taps: how long the tongue tip is at least this close
+// ****************************************************************************
+
+static const char* TIMING_LABELS[] = { "timing", "lead_s", "vot_s", "onset_tau_s", "offset_tau_s",
+  "glottis_begin_s", "glottis_end_s", "glottis_tau_s", "velic_cm2", "contact_s", "contact_cm2" };
+
+// Below this area the closure solver counts a tube section as closed.
+static const double CLOSURE_AREA_CM2 = 2.0 * Tube::MIN_AREA_CM2;
+static double closureArea_cm2 = CLOSURE_AREA_CM2;
+
+static void copyTimingLabels(Segment* from, Segment* to)
+{
+  int index = Segment::DURATION_INDEX + 1;
+  for (const char* key : TIMING_LABELS)
+  {
+    if (from->getValue(key) != "")
+    {
+      to->key[index] = key;
+      to->value[index] = from->getValue(key);
+      index++;
+    }
+  }
+}
+
+static double getTimingLabel(Segment* s, const char* key, double defaultValue)
+{
+  string v = s->getValue(key);
+  return (v == "") ? defaultValue : atof(v.c_str());
+}
+
+// ****************************************************************************
 /// Create the gestural score from the given segment sequence (i.e., phones
 /// and their durations and f0 values).
 // ****************************************************************************
@@ -923,18 +965,14 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
         // The fricative part is everything after the first character
         // (e.g. "s\" in "ts\").
         segmentSequence.appendSegment(n.substr(0, 1), plosiveRatio * d);
+        copyTimingLabels(origSegment, segmentSequence.getSegment(segmentSequence.numSegments() - 1));
         segmentSequence.appendSegment(n.substr(1), (1.0 - plosiveRatio) * d);
+        copyTimingLabels(origSegment, segmentSequence.getSegment(segmentSequence.numSegments() - 1));
       }
       else
       {
         segmentSequence.appendSegment(n, d);
-        // Keep the label that selects the Japanese stop timing (see below).
-        if (origSegment->getValue("stop") == "ja")
-        {
-          Segment* last = segmentSequence.getSegment(segmentSequence.numSegments() - 1);
-          last->key[Segment::DURATION_INDEX + 1] = "stop";
-          last->value[Segment::DURATION_INDEX + 1] = "ja";
-        }
+        copyTimingLabels(origSegment, segmentSequence.getSegment(segmentSequence.numSegments() - 1));
       }
     }
     else
@@ -1922,6 +1960,18 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
     if (isFricative)
     {
       double timeConstant_s = DEFAULT_TIME_CONSTANT_S;
+
+      // Japanese: the gesture lasts 10 ms longer than the segment and needs about
+      // 11 time constants to reach its target, so short fricatives are faster.
+      bool isJapaneseFricative = (s->getValue("timing") == "ja");
+      if (isJapaneseFricative)
+      {
+        timeConstant_s = (segmentSequence.getSegment(i)->duration_s + 0.010) / 11.0;
+        setUpperLimit(timeConstant_s, DEFAULT_TIME_CONSTANT_S);
+        setLowerLimit(timeConstant_s, 0.005);
+        timeConstant_s = getTimingLabel(s, "onset_tau_s", timeConstant_s);
+      }
+
       double transitionDuration_s = 10.0 * timeConstant_s;
       double halfTransitionDuration_s = 0.5 * transitionDuration_s;
 
@@ -1979,6 +2029,27 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
 
       double glottalGestureBegin_s = segmentBegin_s - halfTransitionDuration_s;
       double glottalGestureEnd_s = segmentEnd_s - halfTransitionDuration_s;
+
+      // Japanese, short voiceless fricatives: open the glottis a little longer,
+      // as otherwise the voice goes through in fast speech.
+      if ((isJapaneseFricative) && (Sampa::isVoiced(segmentName) == false))
+      {
+        glottalGestureBegin_s -= 3.0 * (DEFAULT_TIME_CONSTANT_S - timeConstant_s);
+        glottalGestureEnd_s += 1.0 * (DEFAULT_TIME_CONSTANT_S - timeConstant_s);
+      }
+
+      // Japanese voiced fricatives: back to modal before the release. An open glottis
+      // at the release makes the vowel onset breathy (voiced aspirated).
+      if ((isJapaneseFricative) && (Sampa::isVoiced(segmentName)))
+      {
+        double shift_s = -halfTransitionDuration_s - 0.010;
+        // In fast speech at least as early as in normal speech, as otherwise the
+        // noise gets lost (not for affricates: there it would open the closure).
+        bool isAffricate = (i > 0) && (segmentSequence.getSegment(i - 1)->value[Segment::NAME_INDEX] == "d");
+        if (isAffricate == false) { setUpperLimit(shift_s, -0.053); }
+        glottalGestureBegin_s = segmentBegin_s + getTimingLabel(s, "glottis_begin_s", shift_s);
+        glottalGestureEnd_s = segmentEnd_s + getTimingLabel(s, "glottis_end_s", shift_s);
+      }
 
       // If the current segment is a VOICELESS fricative and the next
       // segment is a VOICELESS plosive, extend the glottal gesture 
@@ -2227,7 +2298,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
     // timing targets are provisional, not fitted to articulatory data.
     if (segmentName == "4")
     {
-      const double contactDuration_s = 0.010;
+      const double contactDuration_s = getTimingLabel(s, "contact_s", 0.010);
       const double center_s = 0.5 * (segmentBegin_s + segmentEnd_s);
       const double begin_s = max(0.0, center_s - 0.5 * contactDuration_s);
       // Maekawa (2023), Table 2: medial taps depend primarily on the
@@ -2236,8 +2307,10 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       if (context.size() == 2 && context[1] == ':') { context.resize(1); }
       string target = "tt-tap-" + context;
       if (vocalTract->getShapeIndex(target) < 0) { target = "tt-alveolar-closure"; }
-      addClosingGesture(TONGUE_TIP_GESTURE, target,
-        begin_s, begin_s + contactDuration_s, 0.008, 0.008, false);
+      closureArea_cm2 = getTimingLabel(s, "contact_cm2", CLOSURE_AREA_CM2);
+      addClosingGesture(TONGUE_TIP_GESTURE, target, begin_s, begin_s + contactDuration_s,
+        getTimingLabel(s, "onset_tau_s", 0.008), getTimingLabel(s, "offset_tau_s", 0.008), false);
+      closureArea_cm2 = CLOSURE_AREA_CM2;
     }
 
     if (segmentName == "t")
@@ -2348,29 +2421,64 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
     }
 
     // **************************************************************
-    // Japanese stops (segment label "stop = ja"): short voice onset
-    // times that do not grow with the duration, a fast release, and
-    // voiced stops with the vocal folds adducted through the closure.
-    // See experiments/consonant-articulation.
+    // Japanese stops (segment label "timing = ja"): short voice onset
+    // times that do not grow with the duration, and a fast release.
+    // Voiced: a short closure in the middle of the segment, the vocal
+    // folds adducted before the closure and until after the release,
+    // and a small velic leak, so that the voice goes on. /g/ hardly
+    // closes. See experiments/consonant-articulation.
     // **************************************************************
 
-    bool isJapaneseStop = (isPlosive) && (s->getValue("stop") == "ja");
+    bool isHomorganicAffricate = ((segmentName == "t") || (segmentName == "d")) &&
+      ((nextSegmentName == "s") || (nextSegmentName == "z") || (nextSegmentName == "s\\") || (nextSegmentName == "z\\"));
+    bool isJapaneseStop = (isPlosive) && (s->getValue("timing") == "ja") &&
+      ((isHomorganicAffricate == false) || (Sampa::isVoiced(segmentName)));
+    bool isJapaneseVoicedStop = (isJapaneseStop) && (Sampa::isVoiced(segmentName));
+    double closureLead_s = 0.0;
+    double velicLeak_cm2 = 0.0;
 
     if (isJapaneseStop)
     {
       if (segmentName == "p") { voiceOnsetTime_s = 0.018; }
       if (segmentName == "t") { voiceOnsetTime_s = 0.020; }
       if (segmentName == "k") { voiceOnsetTime_s = 0.028; }
-      if (segmentName == "b") { voiceOnsetTime_s = 0.000; }
-      if (segmentName == "d") { voiceOnsetTime_s = 0.008; }
-      if (segmentName == "g") { voiceOnsetTime_s = 0.010; }
-      if (Sampa::isVoiced(segmentName))
+      if (segmentName == "b") { closureLead_s = 0.015; voiceOnsetTime_s = 0.015; oralGestureOnsetTau_s = 0.012; oralGestureOffsetTau_s = 0.014; velicLeak_cm2 = 0.04; }
+      if (segmentName == "d") { closureLead_s = 0.005; voiceOnsetTime_s = 0.020; oralGestureOnsetTau_s = 0.010; oralGestureOffsetTau_s = 0.012; velicLeak_cm2 = 0.04; }
+      if (segmentName == "g") { closureLead_s = 0.022; voiceOnsetTime_s = 0.025; oralGestureOnsetTau_s = 0.016; oralGestureOffsetTau_s = 0.014; velicLeak_cm2 = 0.02; }
+      if (isJapaneseVoicedStop)
       {
         glottalGestureName = "voiced-plosive";
       }
       else
       {
         oralGestureOffsetTau_s = 0.008;
+      }
+
+      // Short segments (fast speech): everything in proportion.
+      double scale = segmentDur_s / 0.060;
+      setUpperLimit(scale, 1.0);
+      closureLead_s *= scale;
+      voiceOnsetTime_s *= scale;
+      if (isJapaneseVoicedStop)
+      {
+        oralGestureOnsetTau_s *= scale;
+        oralGestureOffsetTau_s *= scale;
+        setLowerLimit(oralGestureOnsetTau_s, 0.006);
+        setLowerLimit(oralGestureOffsetTau_s, 0.006);
+      }
+
+      // The numbers may be given per segment, too.
+      closureLead_s = getTimingLabel(s, "lead_s", closureLead_s);
+      voiceOnsetTime_s = getTimingLabel(s, "vot_s", voiceOnsetTime_s);
+      oralGestureOnsetTau_s = getTimingLabel(s, "onset_tau_s", oralGestureOnsetTau_s);
+      oralGestureOffsetTau_s = getTimingLabel(s, "offset_tau_s", oralGestureOffsetTau_s);
+      velicLeak_cm2 = getTimingLabel(s, "velic_cm2", velicLeak_cm2);
+
+      // After a pause the closure is made in the pause.
+      if (prevSegmentName == "")
+      {
+        closureLead_s = 0.0;
+        velicLeak_cm2 = 0.0;
       }
     }
 
@@ -2396,7 +2504,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
         oralGestureOffsetTau_s = 0.006;
       }
 
-      double closureBegin_s = modSegmentBegin_s;  // May reach into a pause left from this segment.
+      double closureBegin_s = modSegmentBegin_s + closureLead_s;  // May reach into a pause left from this segment.
       double closureEnd_s = segmentEnd_s - voiceOnsetTime_s;
 
       setLowerLimit(closureBegin_s, 0.0);
@@ -2466,14 +2574,36 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
         glottalGestureEnd_s = glottalGestureBegin_s + MIN_GLOTTAL_GESTURE_DURATION_S;
       }
 
-      // Voiced: adduction takes 50 ms to become effective before the closure.
+      double glottalGestureTau_s = DEFAULT_TIME_CONSTANT_S;
+
       if (isJapaneseStop)
       {
-        glottalGestureBegin_s = closureBegin_s - (Sampa::isVoiced(segmentName) ? 0.050 : 0.025);
+        glottalGestureBegin_s = closureBegin_s - 0.025;
         glottalGestureEnd_s = closureEnd_s - 0.025;
+
+        if (isJapaneseVoicedStop)
+        {
+          glottalGestureBegin_s = closureBegin_s + getTimingLabel(s, "glottis_begin_s", -0.070);
+          glottalGestureEnd_s = closureEnd_s + getTimingLabel(s, "glottis_end_s", 0.010);
+          glottalGestureTau_s = getTimingLabel(s, "glottis_tau_s", 0.006);
+        }
+
+        else
+        {
+          // Short segments: a faster opening, as it would not be reached otherwise.
+          glottalGestureTau_s = DEFAULT_TIME_CONSTANT_S * segmentDur_s / 0.060;
+          setUpperLimit(glottalGestureTau_s, DEFAULT_TIME_CONSTANT_S);
+          setLowerLimit(glottalGestureTau_s, 0.005);
+        }
+
         if (glottalGestureEnd_s < glottalGestureBegin_s + 0.020)
         {
           glottalGestureEnd_s = glottalGestureBegin_s + 0.020;
+        }
+
+        if ((velicLeak_cm2 > 0.0) && (Sampa::isNasal(prevSegmentName) == false) && (closureEnd_s - closureBegin_s > 0.012))
+        {
+          addVelicOpeningGesture(closureBegin_s, closureEnd_s - 0.010, velicLeak_cm2);
         }
       }
 
@@ -2497,7 +2627,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
         g.neutral = false;
         g.slope = 0.0;
         g.sVal = glottalGestureName;
-        g.tau_s = DEFAULT_TIME_CONSTANT_S;
+        g.tau_s = glottalGestureTau_s;
       }
 
       gestures[GLOTTAL_SHAPE_GESTURE].putGesture(g, glottalGestureBegin_s);
@@ -2512,6 +2642,15 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
       {
         double closureBegin_s = modSegmentBegin_s;
         double closureEnd_s = modSegmentEnd_s;
+
+        // Japanese: the velic gesture lasts at least 100 ms, also in fast speech
+        // (it needs that long to open); the vowels next to it get more nasal.
+        if (s->getValue("timing") == "ja")
+        {
+          double extension_s = 0.5 * (0.100 - segmentDur_s);
+          setUpperLimit(extension_s, 0.040);
+          setLowerLimit(velicOpeningExtension_s, extension_s);
+        }
 
         // Default for vowels.
         double velicOpeningBegin_s = modSegmentBegin_s - velicOpeningExtension_s;
@@ -3095,7 +3234,7 @@ bool GesturalScore::hasVocalTactClosure(GestureType gestureType, string gestureN
   {
     ts = &tube.pharynxMouthSections[i];
 
-    if (ts->area_cm2 < 2.0 * Tube::MIN_AREA_CM2)
+    if (ts->area_cm2 < closureArea_cm2)
     {
       // Position in the middle of the closed tube section.
       pos_cm = ts->pos_cm + 0.5 * ts->length_cm;

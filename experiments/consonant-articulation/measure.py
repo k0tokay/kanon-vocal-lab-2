@@ -62,7 +62,9 @@ def token(sp, a, b, v1, phone):
     o["voice_min"] = float(low[win].min() - Rl)
     if phone in STOPS or phone in AFFR:
         # closure = the longest run within 8 dB of the lowest 1-7.8 kHz level and >= 12 dB below the vowel
-        y = mid[win]
+        # (deeper than any recording's noise floor counts as equally silent: in a geminate the synthesis
+        # decays for tens of ms, and the run within 8 dB of its minimum would be only the end of it)
+        y = np.maximum(mid[win], Rm - 60)
         thr = max(y.min() + 8, min(Rm - 25, y.min() + 14))
         low_run = y < min(thr, Rm - 10)
         e = np.flatnonzero(np.diff(np.r_[0, low_run.astype(int), 0])).reshape(-1, 2)

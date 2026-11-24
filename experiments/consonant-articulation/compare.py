@@ -1,6 +1,6 @@
 """Consonant measures of synthesised sentences against 51 JVS women, token by token.
 
-    compare.py [--old-rules] <label>=<speaker file> ...      e.g.  v110=../../speakers/.../v1-1-0.speaker
+    compare.py [--old-rules | --v111-rules] <label>=<speaker file> ...      e.g.  v110=../../speakers/.../v1-1-0.speaker
 
 Each consonant token of the five sentences is measured (measure.py) in every JVS recording
 (boundaries: align.py) and in the rule synthesis (boundaries: the segment file). The same
@@ -126,12 +126,30 @@ def old_rules():
     accent.BASE = {"p": .055, "b": .045, "t": .055, "d": .045, "k": .06, "g": .045, "s": .085, "z": .06, "S": .09,
                    "C": .08, "h": .065, "f": .07, "v": .05, "ts": .08, "tS": .085, "dZ": .065, "m": .05, "n": .045,
                    "N": .05, "4": .022, "j": .06, "u": .05, "M": .04, "s\\": .09, "z\\": .06, "ts\\": .085, "dz\\": .065}
-    accent.GLIDE, accent.VELIC, accent.JA_STOPS = .025, 1.0, set()
+    accent.GLIDE, accent.VELIC, accent.JA_TIMING, accent.TIMING = .025, 1.0, set(), {}
     new = accent.onset
     accent.onset = lambda *a, after_vowel=False, **k: new(*a, **k)
 
 
+def v111_rules():
+    """The rules of a86f77e (label "stop = ja"). VTL_LIB must be a library of that commit, too."""
+    accent.JA_TIMING, accent.TIMING = set(), {}
+    new = accent.write_seg
+
+    def write_seg(segments, path):
+        new(segments, path)
+        lines = path.read_text().splitlines()
+        for i, s in enumerate(segments):
+            if s.name in ("p", "t", "k", "b", "d", "g"):
+                lines[i] += " stop = ja;"
+        path.write_text("\n".join(lines) + "\n")
+    accent.write_seg = write_seg
+
+
 def main(args):
+    if "--v111-rules" in args:
+        args.remove("--v111-rules")
+        v111_rules()
     if "--old-rules" in args:
         args.remove("--old-rules")
         old_rules()

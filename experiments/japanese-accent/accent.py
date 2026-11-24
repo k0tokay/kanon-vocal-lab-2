@@ -133,7 +133,11 @@ BASE = {"p": .075, "b": .065, "t": .07, "d": .055, "k": .08, "g": .065,
         "s\\": .115, "z\\": .095, "ts\\": .115, "dz\\": .095}
 GLIDE = .04             # /j/ after another consonant (kya, ...)
 VELIC = 2.0             # VTL's velic openings (m N .3, n .2 cm2) give Kanon too weak a murmur at 1-3 kHz
-JA_STOPS = {"p", "t", "k", "b", "d", "g"}
+# Segments that get the Japanese timing of GesturalScore.cpp (label "timing = ja").
+JA_TIMING = {"p", "t", "k", "b", "d", "g", "s", "z", "s\\", "z\\", "C", "f", "ts", "ts\\", "dz\\", "4",
+             "m", "n", "N"}
+# Single numbers of it: the tap only has to come within .11 cm2 for 10 ms (no full closure).
+TIMING = {"4": {"contact_s": .010, "contact_cm2": .11}}
 FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS", "s\\", "ts\\"}
 
 
@@ -303,9 +307,10 @@ def write_seg(segments, path):
     lines = []
     for s in segments:
         f = s.f0 if s.name else [0, 0, 0]
-        stop = " stop = ja;" if s.name in JA_STOPS else ""      # Japanese timing (GesturalScore.cpp)
+        ja = " timing = ja;" if s.name in JA_TIMING else ""
+        ja += "".join(f" {k} = {v:.4f};" for k, v in TIMING.get(s.name, {}).items())
         lines.append(f"name = {s.name}; duration_s = {s.duration:.6f}; "
-                     f"f0_20%_Hz = {f[0]:.2f}; f0_50%_Hz = {f[1]:.2f}; f0_80%_Hz = {f[2]:.2f};{stop}")
+                     f"f0_20%_Hz = {f[0]:.2f}; f0_50%_Hz = {f[1]:.2f}; f0_80%_Hz = {f[2]:.2f};{ja}")
     path.write_text("\n".join(lines) + "\n")
 
 
@@ -331,8 +336,9 @@ def patch_score(ges, segments):
                 k -= 1
             score["glottal-shape-gestures"].paint(start, t1, "voiceless-fricative")
         elif s.tag == "phi":
-            score["lip-gestures"].map_values(s.t0 - .03, t1 + .03,
-                lambda v: v.replace("ll-dental-fricative", "ll-labial-fricative"))
+            for g in score["lip-gestures"].items:       # any overlap: in fast speech the gesture lies before the segment
+                if g[0] < t1 and g[1] > s.t0 - .06:
+                    g[2]["value"] = g[2]["value"].replace("ll-dental-fricative", "ll-labial-fricative")
     for g in score["velic-gestures"].items:
         if any(s.name in ("m", "n", "N") and min(g[1], s.t0 + s.duration) - max(g[0], s.t0) > .005 for s in segments):
             g[2]["value"] = f"{float(g[2]['value']) * VELIC:.6f}"       # not the open velum of the pauses
