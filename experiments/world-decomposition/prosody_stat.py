@@ -15,44 +15,15 @@ import numpy as np
 os.environ.setdefault("VTL_SPEAKER", "x")
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "japanese-accent"))
 import accent                                        # noqa: E402
+import accent_f0                                     # noqa: E402
 from prosody_eval import lev, reference, score        # noqa: E402
 
 KEY = lambda c, v: (c, v.lower() if v != "cl" else v)
-VOICED = {"g", "z", "d", "b", "n", "m", "r", "y", "w", "j", "gy", "ny", "my", "ry", "by", "dy", "v", ""}
 
 
 def features(text):
     """(moras, feature matrix)."""
-    units = accent.parse(text)
-    ph, br, cur = [], [], None
-    for m in units:
-        if isinstance(m, accent.Pause): continue
-        if cur != (m.breath_id, m.phrase_id):
-            ph.append([]); br.append(m.breath_id); cur = (m.breath_id, m.phrase_id)
-        ph[-1].append(m)
-    moras = [m for p in ph for m in p]; rows = []
-    n, nb = len(moras), max(br) + 1 if br else 1
-    hl = []
-    for p in ph:
-        t = p[0].accent_type; L = len(p)
-        for k in range(1, L + 1):
-            hl.append(int(k == 1 and (t == 1 or L == 1) or k > 1 and (t == 0 or k <= t)))
-    i = 0
-    for q, p in enumerate(ph):
-        t, L = p[0].accent_type, len(p)
-        same = [x for x in range(len(ph)) if br[x] == br[q]]
-        for k, m in enumerate(p, 1):
-            nuc = t if t else L + 1
-            b0 = sum(len(ph[x]) for x in same if x < q); bn = sum(len(ph[x]) for x in same)
-            pv, nx = (ph[q - 1] if q and br[q - 1] == br[q] else None), (ph[q + 1] if q + 1 < len(ph) and br[q + 1] == br[q] else None)
-            acc = [x for x in same if x < q and ph[x][0].accent_type]
-            v = "aiueoN".find(m.vowel.lower() if m.vowel != "N" else "N")
-            rows.append([k, L - k, L, t, int(t == 0), k - nuc, int(k > nuc), int(k == nuc), hl[i], hl[i - 1] if i else 0, hl[i + 1] if i + 1 < n else 0,
-                         min(k, 4), int(k == 1), int(k == 2), q, len(ph) - q, same.index(q), len(same), len(same) - same.index(q), br[q], nb, b0 + k, bn - b0 - k, bn, i / n,
-                         len(acc), len(pv) if pv else 0, (pv[0].accent_type if pv else -1), int(pv is not None and pv[0].accent_type > 0), len(nx) if nx else 0, nx[0].accent_type if nx else -1,
-                         int(m.consonant in VOICED), int(bool(m.consonant)), *(int(v == z) for z in range(6)), int(m.vowel.isupper())])
-            i += 1
-    return moras, np.array(rows, float)
+    return accent_f0.features(accent.parse(text))
 
 
 if __name__ == "__main__":

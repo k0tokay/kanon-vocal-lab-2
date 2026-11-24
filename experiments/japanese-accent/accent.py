@@ -383,7 +383,8 @@ def synthesize(seg, wav, segments=None, speaker=SPEAKER):
 
 
 def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
-           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER):
+           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER, f0_model=None, f0_mean=218.0):
+    """f0_model: a model loaded with accent_f0.load; None keeps the Fujisaki rules."""
     units = parse(text)
     segments, spans = to_segments(units, rate=rate, japanese=japanese,
                                   palatal_i=palatal_i, devoice=devoice)
@@ -393,10 +394,14 @@ def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
     for s in segments:
         s.f0 = list(f0_curve(np.array([s.t0 + r * s.duration for r in (.2, .5, .8)]),
                              phrases, accents, params))
+    learned = None
+    if f0_model is not None and accent:
+        import accent_f0
+        learned = accent_f0.apply(f0_model, units, spans, segments, f0_mean)
     out_stem.parent.mkdir(parents=True, exist_ok=True)
     seg = out_stem.with_suffix(".seg")
     write_seg(segments, seg)
     synthesize(seg, out_stem.with_suffix(".wav"), segments if japanese else None, speaker)
     t = np.arange(0, segments[-1].t0 + segments[-1].duration, .005)
     return dict(text=text, units=units, segments=segments, spans=spans, phrases=phrases,
-                accents=accents, t=t, f0=f0_curve(t, phrases, accents, params))
+                accents=accents, t=t, f0=learned(t) if learned else f0_curve(t, phrases, accents, params))
