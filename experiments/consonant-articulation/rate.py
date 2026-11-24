@@ -30,7 +30,7 @@ ART = {"k": BODY, "t": TIP, "g": BODY, "d": TIP, "p": LIP, "b": LIP, "s": TIP, "
 GROUP = {"k": "k t", "t": "k t", "ky": "k t", "b": "b d g", "d": "b d g", "g": "b d g", "by": "b d g", "gy": "b d g", "s": "s", "sh": "sh",
          "ch": "ch", "ts": "ts", "z": "z", "j": "j", "hy": "hy f", "f": "hy f", "m": "m n", "n": "m n", "my": "m n", "ny": "m n", "r": "r", "ry": "r",
          "y": "y w", "w": "y w"}
-GLOTTIS = {"s": .17, "sh": .17, "ch": .17, "ts": .17, "hy": .17, "k": .153, "t": .153, "b": .025, "d": .025, "g": .025}   # x_bottom of the shapes
+GLOTTIS = {"s": .17, "sh": .17, "ch": .17, "ts": .17, "hy": .17, "k": .153, "t": .153, "b": .018, "d": .018, "g": .018}   # x_bottom of the shapes (b d g: v1.1.4; .025 before)
 REL = {"LIP": (.94, 1.01), "TIP": (.80, .97), "BODY": (.45, .85)}
 ACOUSTIC = {"無声破裂 k t": ["closure_ms", "burst_mid", "vot_ms"], "有声破裂 b d g": ["closure_ms", "closure_low", "burst_mid"], "s": ["fric_cog", "fb_6k", "fric_voice", "fric_level"],
             "ɕ (sh)": ["fric_cog", "fb_6k", "fric_voice", "fric_level"], "tɕ (ch)": ["closure_ms", "fric_cog", "fb_6k", "fric_voice"], "z": ["fric_cog", "fb_6k", "fric_voice"],
