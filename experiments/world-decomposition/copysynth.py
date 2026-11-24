@@ -1,4 +1,4 @@
-"""Render v1.1.0: rule prosody ("rule") and the timing + F0 of one JVS recording ("copy")."""
+"""Render Kanon: rule prosody ("rule") and the timing + F0 of one JVS recording ("copy")."""
 import contextlib
 import io
 

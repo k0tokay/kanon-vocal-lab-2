@@ -1,4 +1,4 @@
-"""Figure of the WORLD statistics: JVS women (mean and 5-95 % range) against v1.1.0."""
+"""Figure of the WORLD statistics: JVS women (mean and 5-95 % range) against Kanon."""
 import json
 
 import matplotlib
@@ -6,11 +6,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
-from common import HERE, MEL_F
+from common import HERE, LABEL, MEL_F, OUT, VER
 
 plt.rcParams.update({"font.family": ["Hiragino Sans", "sans-serif"], "font.size": 10, "axes.spines.top": False, "axes.spines.right": False,
                      "axes.edgecolor": "#c3c2b7", "axes.labelcolor": "#52514e", "xtick.color": "#52514e", "ytick.color": "#52514e"})
-D = json.loads((HERE / "out/stats.json").read_text())
+D = json.loads((OUT / "stats.json").read_text())
 Q = np.arange(33) * 200 / 64
 
 
@@ -19,8 +19,8 @@ def panel(ax, key, x, title, xl, yl, sl=slice(None), log=False):
     ax.fill_between(x, *np.nanpercentile(P, [5, 95], 0), color="#d9d8d1", lw=0, label="JVS女性51名（5〜95%）")
     ax.plot(x, np.nanmean(P, 0), color="#52514e", lw=1.5, label="JVS女性の平均")
     C = np.mean([v[key] for k, v in D["vtl"].items() if k != "rule"], 0)[sl]
-    ax.plot(x, C, color="#2a78d6", lw=2, label="v1.1.0（実声の時間・F0を写す）")
-    ax.plot(x, np.array(D["vtl"]["rule"][key])[sl], color="#eb6834", lw=2, label="v1.1.0（ルール韻律）")
+    ax.plot(x, C, color="#2a78d6", lw=2, label=f"{LABEL}（実声の時間・F0を写す）")
+    ax.plot(x, np.array(D["vtl"]["rule"][key])[sl], color="#eb6834", lw=2, label=f"{LABEL}（ルール韻律）")
     ax.set_title(title, fontsize=11, loc="left", color="#0b0b0b"); ax.set_xlabel(xl); ax.set_ylabel(yl)
     ax.grid(axis="y", color="#e1e0d9", lw=.6); ax.set_axisbelow(True)
     if log:
@@ -36,4 +36,4 @@ panel(ax[1, 1], "am", Q, "雑音/調波比の変動スペクトル（3 kHz帯）
 panel(ax[1, 2], "fm", Q, "F0の変動スペクトル", "変動の速さ (Hz)", "dB re 1 cent²/Hz", slice(1, 25))
 h, l = ax[0, 0].get_legend_handles_labels()
 fig.legend(h, l, loc="upper center", ncol=4, frameon=False)
-fig.tight_layout(rect=(0, 0, 1, .95)); fig.savefig(HERE / "results/stats.png", dpi=110, facecolor="white")
+fig.tight_layout(rect=(0, 0, 1, .95)); fig.savefig(HERE / f"results/stats-{VER}.png", dpi=110, facecolor="white")

@@ -1,12 +1,12 @@
-"""Render all v1.1.0 audio used below into out/audio (git-ignored).
+"""Render all Kanon audio used below into out/<version>/audio (git-ignored).
 
-    VTL_LIB=... python render.py jvs0xx jvs0yy ...
+    KANON=v1-1-3 VTL_LIB=... python render.py jvs0xx jvs0yy ...
 """
 import sys
 import json
 from copysynth import *
 
-OUT = HERE / "out/audio"
+OUT = OUT / "audio"
 
 if __name__ == "__main__":
     info = {}

@@ -1,26 +1,54 @@
-# WORLD による実声と v1.1.0 の分解・差し替え
+# WORLD による実声と嘉音（v1.1.0、v1.1.3）の分解・差し替え
 
-JVS の女性 51 名（voiceactress100 の5文、16 kHz）と、嘉音 v1.1.0 で合成した同じ文を WORLD（Harvest + StoneMask、CheapTrick、D4C）で分解した。統計を比べ、部品を差し替えて再合成した。
+JVS の女性 51 名（voiceactress100 の5文、16 kHz）と、嘉音で合成した同じ文を WORLD（Harvest + StoneMask、CheapTrick、D4C）で分解した。統計を比べ、部品を差し替えて再合成した。
 
 ## 実行
 
-    JVS_NPZ=<jvs-v1> VTL_LIB=<libVocalTractLabApi> python render.py jvs064 jvs053 jvs015
-    python stats.py && python plot.py      # 統計（results/）
-    python swap.py jvs064 jvs053 jvs015    # 差し替え（out/swap/）
-    python page.py                         # 試聴ページ（out/listen.html）
+    export KANON=v1-1-3 JVS_NPZ=<jvs-v1> VTL_LIB=<libVocalTractLabApi>
+    python render.py jvs064 jvs053 jvs015  # 合成（out/<版>/audio）
+    python stats.py && python plot.py      # 統計（results/stats-<版>.*）
+    python swap.py jvs064 jvs053 jvs015    # 差し替え（out/<版>/swap/）
+    python page.py                         # 試聴ページ（out/<版>/listen.html、v1.1.0 も並べる）
+    ALIGN=<consonant-articulation/out/align.pkl> python vowels.py v1-1-0 v1-1-3       # 母音の中央だけ
+    ALIGN=... python onset_peaks.py v1-1-0 v1-1-3                                     # 有声破裂の後の音量
 
-numpy 1.26、scipy、matplotlib、pyworld、pyopenjtalk-prebuilt を使う。VTL は main（23aeb32）の backend から作ったもの。`out/` は JVS の音声を含むので git に入れない。
+numpy 1.26、scipy、matplotlib、pyworld、pyopenjtalk-prebuilt を使う。版の話者と規則は組で使う：v1.1.0 は 23aeb32 の backend と `accent.py`、v1.1.3 は 6f38671。`out/` は JVS の音声を含むので git に入れない。
 
 ## 合成音
 
 - **ルール韻律**：`accent.py` の発話そのまま（F0 も継続長もルール）。
-- **写し**：JVS の録音に DTW で合わせた継続長・ポーズと、録音の F0（分節ごとに3点）を入れた v1.1.0。最後に定数ラグと DTW で録音の時間軸に載せる。有声フレームの F0 誤差は中央値 17〜33 cent。
+- **写し**：JVS の録音に DTW で合わせた継続長・ポーズと、録音の F0（分節ごとに3点）を入れた嘉音。最後に定数ラグと DTW で録音の時間軸に載せる。有声フレームの F0 誤差は中央値 17〜33 cent。
 
-先頭のポーズが 100 ms 未満だと、VTL は調音を後ろへずらす一方で F0 ジェスチャを動かさない（`GesturalScore.cpp`）。最初の版はこれで F0 が約 90 ms 早かった。`accent.py` は先頭ポーズを 0.12/rate 秒にするので、rate > 1.2 で同じことが起きる。
+先頭のポーズが 100 ms 未満だと、VTL は調音を後ろへずらす一方で F0 ジェスチャを動かさない（`GesturalScore.cpp`）。最初の版はこれで F0 が約 90 ms 早かった。`accent.py` の同じ問題（rate > 1.2）は v1.1.1 の規則で直っている。
 
-## 結果
+## v1.1.3 の結果
 
-[図](results/stats.png)、[全数値](results/stats.json)。z は JVS 女性 51 名の平均と標準偏差に対する値。
+[図](results/stats-v1-1-3.png)、[全数値](results/stats-v1-1-3.json)。「z」は JVS 女性 51 名に対する値（v1.1.0 → v1.1.3）。
+
+| 量 | JVS | ルール | 写し | z ルール | z 写し |
+|---|---:|---:|---:|---:|---:|
+| 3 kHz 帯の雑音/調波比 (dB) | −9.6 | −4.0 → −5.2 | −4.7 → −5.9 | 2.0 → 1.6 | 1.8 → 1.3 |
+| 同 時間変動 SD (dB) | 6.5 | 4.5 → 5.3 | 5.1 → 5.5 | −2.9 → −1.8 | −2.0 → −1.5 |
+| 高次ケプストラム c5–12 の SD (dB) | 9.0 | 7.6 → 7.9 | 7.8 → 8.1 | −3.6 → −2.9 | −3.0 → −2.4 |
+| 無声区間 1–4 kHz (dB) | −30.4 | −21.0 → −24.8 | −21.9 → −25.3 | 4.4 → 2.6 | 4.0 → 2.4 |
+| 有声区間の平均 2–4 kHz (dB) | −24.4 | −27.3 → −24.4 | −27.5 → −24.8 | −0.7 → 0.0 | −0.8 → −0.1 |
+| F0 変動 9–25 Hz (dB) | 16.3 | 7.3 → 8.4 | 15.6 → 16.6 | −4.9 → −4.3 | −0.4 → 0.2 |
+| 音量変動 3–8 Hz (dB) | 1.0 | −0.5 → −2.1 | 0.1 → −0.7 | −1.3 → −2.7 | −0.8 → −1.5 |
+| 音量変動 9–25 Hz (dB) | −6.7 | −7.5 → −6.0 | −7.0 → −4.2 | −0.6 → 0.6 | −0.2 → 2.1 |
+| 有声の割合 | 0.87 | 0.89 → 0.84 | 0.88 → 0.82 | 1.2 → −2.0 | 0.5 → −3.2 |
+
+無音を除く 27 量の平均 |z| は、ルール 1.78 → 1.50、写し 1.10 → 1.13（良くなった量と悪くなった量が打ち消し合う）。
+
+**母音の中央だけの雑音**（`vowels.py`、[results/vowels.json](results/vowels.json)）。3 kHz 帯の雑音/調波比は JVS −11.1 ± 3.0、v1.1.0 −5.5／−5.6、v1.1.3 −5.9／−6.1 dB（ルール／写しの平均）。同じ話者との差は写しで +7.1 → +6.6 dB。上の表で減った分は、母音の外側（子音と移行）で起きたか、有声と判定されるフレームが変わったことによる。**母音の息っぽさは残っている**。子音の修正はモーダルの声質を変えていないので、これは予想どおり。
+
+**母音間のスペクトル差**（同）。5 母音の平均スペクトルの SD は 440–740 Hz で JVS 4.2–5.6 dB に対して 1.6–3.4 dB（v1.1.0、v1.1.3 とも）。ルール v1.1.3 では 3.4 kHz は小さく、3.7 と 4 kHz は大きい（4.7、4.0 → 7.7、7.9 dB）。F1 のあたりの母音の区別が弱い。F1 の鈍り（声門の漏れ）の可能性があるが確かめていない。
+
+**有声破裂の後の音量**（`onset_peaks.py`）。b d g の後の母音の頭 60 ms のピーク（全体の RMS 比、60 Hz 以上）の中央値は JVS 8.9、v1.1.0 10.6／9.9、v1.1.3 **16.0／15.3 dB**（ルール／写し）。ほかの子音の後は 7.3、v1.1.0 7.8／8.1、v1.1.3 7.1／6.9 dB で変わらない。図で確かめた2例では離しの 30〜35 ms 後が最大。v1.1.3 で最大の8か所はすべて d・g に隣り合う所で、うち1つは d の前の母音、1つは g の閉鎖前だった（`voiced-plosive` は閉鎖の 70 ms 前から始まる）。`voiced-plosive` の声門（強い内転）から漏れの多いモーダルとの間を移る途中で声が強くなる、という仮説（未確認）。上の音量変動 9–25 Hz の増加とも合う。
+
+
+## v1.1.0 の結果
+
+[図](results/stats-v1-1-0.png)、[全数値](results/stats-v1-1-0.json)。z は JVS 女性 51 名の平均と標準偏差に対する値。
 
 | 量 | JVS 平均 ± SD | ルール | 写し | z（ルール / 写し） |
 |---|---:|---:|---:|---:|

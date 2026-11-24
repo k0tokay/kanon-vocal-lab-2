@@ -1,4 +1,4 @@
-"""Shared pieces: JVS loading, WORLD analysis/synthesis, DTW and the v1.1.0 renderer.
+"""Shared pieces: JVS loading, WORLD analysis/synthesis, DTW and the Kanon version under test.
 
 Everything is analysed at 24 kHz after a common 16 kHz band limit, because JVS is
 stored at 16 kHz: at 16 kHz D4C returns a single aperiodicity band (3 kHz), at
@@ -17,7 +17,10 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 JVS = Path(os.environ.get("JVS_NPZ", ROOT.parent /
            "voice-articulation-parameter-estimation-89f316/experiments/anatomy-inversion/data/jvs-v1"))
-os.environ.setdefault("VTL_SPEAKER", str(ROOT / "speakers/fulkhisa-kanon/fulkhisa-kanon-v1-1-0.speaker"))
+VER = os.environ.get("KANON", "v1-1-3")          # speaker version; results and audio are kept per version
+LABEL = VER.replace("-", ".")
+OUT = HERE / "out" / VER
+os.environ.setdefault("VTL_SPEAKER", str(ROOT / f"speakers/fulkhisa-kanon/fulkhisa-kanon-{VER}.speaker"))
 sys.path.insert(0, str(ROOT / "experiments/japanese-accent"))
 
 RS, FS, HOP_MS, FFT = 16000, 24000, 5.0, 2048

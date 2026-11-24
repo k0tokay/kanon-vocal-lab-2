@@ -1,11 +1,10 @@
-"""WORLD statistics of v1.1.0 (rule prosody / copied prosody) against all JVS women."""
+"""WORLD statistics of Kanon (rule prosody / copied prosody) against all JVS women."""
 import json
 from concurrent.futures import ProcessPoolExecutor
 
 from common import *
 from copysynth import read_wav
 
-OUT = HERE / "out"
 SPK = ["jvs064", "jvs053", "jvs015"]
 
 
@@ -102,4 +101,4 @@ if __name__ == "__main__":
                         z_pairs=float(np.mean([r[1 + i] - pop[s]["scalar"][k] for i, s in enumerate(SPK)])))
         print(f"{k:26s}{np.nanmean(x):9.2f}{np.nanstd(x):7.2f}{np.nanmin(x):8.2f}{np.nanmax(x):8.2f}  " + "  ".join(f"{a:11.2f}" for a in r) + f"   {z(r[0]):6.1f} {z(np.mean(r[1:])):6.1f}")
     (HERE / "results").mkdir(exist_ok=True)
-    (HERE / "results/stats.json").write_text(json.dumps({k: {a: round(float(b), 3) for a, b in t.items()} for k, t in table.items()}, indent=1))
+    (HERE / f"results/stats-{VER}.json").write_text(json.dumps({k: {a: round(float(b), 3) for a, b in t.items()} for k, t in table.items()}, indent=1))

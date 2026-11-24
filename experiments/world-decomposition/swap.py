@@ -1,11 +1,11 @@
-"""Swap WORLD components between a JVS recording (R) and v1.1.0 with the same timing (V).
+"""Swap WORLD components between a JVS recording (R) and Kanon with the same timing (V).
 
 log SP(t, f) = E(t) + S(f) + D(t, f):
   E  frame power (loudness contour); it is restored after S or D is swapped
   S  mean of the power-normalised log spectrum over the active frames (long-term tone)
   D  the rest (movement of the spectral shape)
 F0 and AP keep the voiced/unvoiced decision of the base signal.
-Writes out/swap/<spk>-<utt>-<base>-<component>.wav and out/swap/index.json.
+Writes out/<version>/swap/<spk>-<utt>-<base>-<component>.wav and index.json.
 """
 import json
 import sys
@@ -15,7 +15,7 @@ from scipy.io import wavfile
 from common import *
 from copysynth import read_wav
 
-OUT = HERE / "out/swap"
+AUDIO, OUT = OUT / "audio", OUT / "swap"
 COMP = ["F0", "AP", "S", "E", "D"]
 
 
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     OUT.mkdir(parents=True, exist_ok=True); info = {}
     for spk in sys.argv[1:]:
         for u, real in load_jvs(spk, SENTENCES).items():
-            v = read_wav(HERE / f"out/audio/{spk}/{u}.wav")
+            v = read_wav(AUDIO / f"{spk}/{u}.wav")
             R, Pv = analyse(real), analyse(v)
             V, lag, score = warp_to(Pv, R)
             e = [logmel(P["sp"]).mean(1) for P in (R, V)]
