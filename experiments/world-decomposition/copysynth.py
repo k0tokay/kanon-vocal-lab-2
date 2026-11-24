@@ -31,8 +31,11 @@ def find_pauses(x16, min_len=.15):
     return [(a, b) for a, b in edges.reshape(-1, 2) if (b - a) * HOP_MS / 1000 >= min_len], n
 
 
-def copy(text, stem, real16, P_real, rounds=3):
-    """Time-align rule synthesis to the recording, then resynthesise with its timing and F0."""
+def copy(text, stem, real16, P_real, rounds=3, cuts=None):
+    """Time-align rule synthesis to the recording, then resynthesise with its timing and F0.
+
+    cuts: segment index after which each recorded pause falls (otherwise the nearest vowel end
+    of the DTW, which can be a mora or two off); the boundary is then pinned to the pause."""
     stem.parent.mkdir(parents=True, exist_ok=True)
     units = accent.parse(text)
     segs, _ = accent.to_segments([u for u in units if not (isinstance(u, accent.Pause) and u.kind == "pau")])
@@ -55,12 +58,19 @@ def copy(text, stem, real16, P_real, rounds=3):
     scale = len(idx) * hop / durs[core].sum()
     bounds = np.r_[0, np.cumsum(durs[core] * scale)]  # on the pause-free real timeline
     score = None
+    pins = {}
+    if cuts is not None:
+        assert len(cuts) == len(inner), (cuts, inner)
+        pins = {k: np.searchsorted(idx, a) * hop for k, (a, b) in zip(cuts, inner)}
     for it in range(rounds):
         d = np.maximum(np.diff(bounds), .018)
         bounds = np.r_[0, np.cumsum(d)]
         bounds *= len(idx) * hop / bounds[-1]
+        if pins:
+            q = [0, *pins, len(core)]
+            bounds = np.interp(bounds, bounds[q], [0, *pins.values(), bounds[-1]])
         path = stem.with_suffix(".seg")
-        write(segs, core, bounds, inner, idx, lf, lo, N, path, it == rounds - 1)
+        write(segs, core, bounds, inner, idx, lf, lo, N, path, it == rounds - 1, pins)
         if it == rounds - 1:
             break
         with contextlib.redirect_stdout(io.StringIO()):
@@ -95,7 +105,7 @@ def final_segs(segs):
     return _final.get(id(segs), segs)
 
 
-def write(segs, core, bounds, inner, idx, lf, lo, N, path, with_pauses):
+def write(segs, core, bounds, inner, idx, lf, lo, N, path, with_pauses, pins=()):
     """Write the seg file; on the last round put the recorded pauses back in."""
     hop = HOP_MS / 1000
     if not with_pauses:
@@ -113,7 +123,7 @@ def write(segs, core, bounds, inner, idx, lf, lo, N, path, with_pauses):
     cut = {}
     for a, b in inner:
         p = np.searchsorted(idx, a) * hop
-        k = min(ends, key=lambda q: abs(bounds[q] - p))
+        k = min(pins or ends, key=lambda q: abs(bounds[q] - p))
         cut[k] = (b - a) * hop, p
     for k, (_, p) in cut.items():
         bounds[k] = p
