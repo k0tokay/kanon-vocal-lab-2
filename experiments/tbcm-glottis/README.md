@@ -107,4 +107,4 @@ python3 listen.py                          # results/ を作る
 - LCA を下げて PCA 0 のまま漏らすと(前回のやさしい中)，VP も PGO も大きくなり，倍音は一番滑らかだが息も一番多い．VP が同じでも PGO が大きいほど息が増える．滑らかさ(倍音)は主に VP，息は VP と PGO と気息の強さで決まる．
 - **気息の強さ(dB)は倍音と独立**なので，滑らかさを変えずに息だけ増減できる：.51 / .36 / 0 で −35 dB なら −28.6 dB，−40 dB なら −33.3 dB．
 
-話者ファイル `…-tbcm-smooth` は .54 / .47 / 0，TA .10，気息 −33 dB．聴取は未評価．試聴は [results/smooth](results/smooth)．
+話者ファイル `…-tbcm-smooth` は .54 / .47 / 0，TA .10，気息 −33 dB．聴取は未評価．**試聴の10番(.51 / .36 / 0，TA .10，気息 −35 dB)を [v1.2.0](../../speakers/fulkhisa-kanon/fulkhisa-kanon-v1-2-0.speaker) とした(暫定)．** 試聴は [results/smooth](results/smooth)．

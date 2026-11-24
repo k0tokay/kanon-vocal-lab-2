@@ -48,6 +48,7 @@ if __name__ == '__main__':
         J[n] = dict(F0=rf['F0'], H1H3=rh['H1H3'], centroid=rh['centroid'], tilt=rh['tilt'], power=rh['power'], breath=float(np.mean(b)), voiced=rf['voiced'])
         print(f'{n:26} {rf["F0"]:4.0f} {rh["H1H3"]:5.1f} {rh["centroid"]:6.0f} {rh["tilt"]:6.1f} {rh["power"]:6.1f} {np.mean(b):6.1f} {rf["voiced"]:.2f}')
     make('../../speakers/fulkhisa-kanon/fulkhisa-kanon-v1-1-0-tbcm-smooth.speaker', modal=(.54, .47, 0, .115, .10, 25), static=dict(aspiration_strength=-33))
+    make('../../speakers/fulkhisa-kanon/fulkhisa-kanon-v1-2-0.speaker', modal=(.51, .36, 0, .115, .10, 25), static=dict(aspiration_strength=-35))  # number 10
     json.dump(J, open(f'{OUT}/features.json', 'w'), ensure_ascii=False, indent=1)
     gap = np.zeros(24000); k = 0; t = 0
     for s in ('ame', 'tenki'):
