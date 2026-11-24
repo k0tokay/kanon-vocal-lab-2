@@ -276,7 +276,7 @@ C_EXPORT int vtlSynthesisAddTract(int numNewSamples, double* audio,
 // a new synthesis.
 //
 // Input parameters:
-// o glottisName: "Geometric glottis 2025" | "Geometric glottis 2019" | "Triangular glottis"
+// o glottisName: "Geometric glottis 2025" | "Geometric glottis 2019" | "Triangular glottis" | "Triangular body-cover glottis"
 // o staticGlottisParams: Array of static parameters of the selected glottis.
 // o tracheaLength_cm, ..., piriformFossaVolume_cm3: Static tube params.
 // 

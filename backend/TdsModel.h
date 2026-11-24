@@ -111,6 +111,12 @@ public:
     // overriding the glottis model's (0 = use the glottis model's).
     double glottalNoiseGainFactor;
     double glottalNoiseCutoff_Hz;
+    // Limit the jet velocity that determines the aspiration noise.
+    bool limitGlottalJetVelocity;
+    // Integration parameter of the currents and pressures of the glottis: 0.5 is
+    // the trapezoidal rule as elsewhere, 1 the implicit Euler rule, which does not
+    // ring when the glottis closes rapidly.
+    double glottalTheta;
     RadiationCharacteristic radiationCharacteristic;
   };
 
@@ -278,6 +284,7 @@ public:
   void setTube(Tube *tube, bool filtering = false);
   void getTube(Tube *tube);
   void setFlowSource(double flow_cm3_s, int section);
+  void setRapidGlottalClosure(bool rapid);
   void setPressureSource(double pressure_dPa, int section = Tube::FIRST_TRACHEA_SECTION);
   double proceedTimeStep(double &mouthFlow_cm3_s, double &nostrilFlow_cm3_s, 
     double &skinFlow_cm3_s);
@@ -321,6 +328,8 @@ private:
   void calcNoiseSample(NoiseSource *s, double ampThreshold);
 
   double getCurrentIn(const int section);
+  double getBranchTheta(int branch);
+  double getSectionTheta(int section);
   double getCurrentOut(const int section);
   double getCurrentIn(const TubeSection *ts);
   double getCurrentOut(const TubeSection *ts);

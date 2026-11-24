@@ -28,6 +28,8 @@
 // This constant should have the same value as the same constant in Tube.h/cpp
 const double Glottis::DEFAULT_ASPIRATION_STRENGTH_DB = -40.0;
 const double Glottis::DEFAULT_ASPIRATION_CUTOFF_HZ = 1000.0;
+const double Glottis::BACKGROUND_NOISE_OFF_DB = -120.0;
+const double Glottis::DEFAULT_BACKGROUND_NOISE_CUTOFF_HZ = 300.0;
 
 // ****************************************************************************
 /// Default implementation.
@@ -47,6 +49,24 @@ double Glottis::getAspirationStrength_dB()
 double Glottis::getAspirationCutoff_Hz()
 {
   return DEFAULT_ASPIRATION_CUTOFF_HZ;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double Glottis::getBackgroundNoiseLevel_dB()
+{
+  return BACKGROUND_NOISE_OFF_DB;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double Glottis::getBackgroundNoiseCutoff_Hz()
+{
+  return DEFAULT_BACKGROUND_NOISE_CUTOFF_HZ;
 }
 
 

@@ -247,6 +247,8 @@
     <ClCompile Include="Sources\Backend\TimeFunction.cpp" />
     <ClCompile Include="Sources\Backend\TlModel.cpp" />
     <ClCompile Include="Sources\Backend\TriangularGlottis.cpp" />
+    <ClCompile Include="Sources\Backend\LaryngealPosture.cpp" />
+    <ClCompile Include="Sources\Backend\BodyCoverGlottis.cpp" />
     <ClCompile Include="Sources\Backend\Tube.cpp" />
     <ClCompile Include="Sources\Backend\VocalTract.cpp" />
     <ClCompile Include="Sources\Backend\VoiceQualityEstimator.cpp" />
@@ -328,6 +330,8 @@
     <ClInclude Include="Sources\Backend\TimeFunction.h" />
     <ClInclude Include="Sources\Backend\TlModel.h" />
     <ClInclude Include="Sources\Backend\TriangularGlottis.h" />
+    <ClInclude Include="Sources\Backend\LaryngealPosture.h" />
+    <ClInclude Include="Sources\Backend\BodyCoverGlottis.h" />
     <ClInclude Include="Sources\Backend\Tube.h" />
     <ClInclude Include="Sources\Backend\TubeSequence.h" />
     <ClInclude Include="Sources\Backend\VocalTract.h" />

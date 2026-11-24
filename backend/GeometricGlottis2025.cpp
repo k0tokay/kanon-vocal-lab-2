@@ -70,7 +70,10 @@ GeometricGlottis2025::GeometricGlottis2025()
     // Aspiration noise above the glottis (TdsModel). -40 dB and 1000 Hz give
     // VTL's original source; the gain changes by 20 dB per factor of 10.
     { "Aspiration strength", "aspiration_strength", "dB", 1, "dB", -60.0, 0.0, -40.0, -40.0 },
-    { "Aspiration cutoff", "aspiration_cutoff", "Hz", 1, "Hz", 300.0, 8000.0, 1000.0, 1000.0 }
+    { "Aspiration cutoff", "aspiration_cutoff", "Hz", 1, "Hz", 300.0, 8000.0, 1000.0, 1000.0 },
+    // Stationary noise added to the radiated sound (Synthesizer), not to the flow.
+    { "Background noise level", "background_noise_level", "dB", 1, "dB", -120.0, 0.0, -120.0, -120.0 },
+    { "Background noise cutoff", "background_noise_cutoff", "Hz", 1, "Hz", 20.0, 20000.0, 300.0, 300.0 }
   };
 
   staticParams.clear();
@@ -746,4 +749,22 @@ double GeometricGlottis2025::getAspirationStrength_dB()
 double GeometricGlottis2025::getAspirationCutoff_Hz()
 {
   return staticParams[ASPIRATION_CUTOFF].x;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double GeometricGlottis2025::getBackgroundNoiseLevel_dB()
+{
+  return staticParams[BACKGROUND_NOISE_LEVEL].x;
+}
+
+
+// ****************************************************************************
+// ****************************************************************************
+
+double GeometricGlottis2025::getBackgroundNoiseCutoff_Hz()
+{
+  return staticParams[BACKGROUND_NOISE_CUTOFF].x;
 }
