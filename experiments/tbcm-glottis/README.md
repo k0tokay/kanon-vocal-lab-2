@@ -85,6 +85,6 @@ python3 listen.py                          # results/ を作る
 
 - 喉頭を上げる(HY を +8 mm まで)操作は重心をほとんど変えなかった．嘉音の形状はもともと HY が下限にあり，動かせる量が小さい．
 - 厚さ .15–.30 cm，粘膜の剛性 2000–5000 dPa もほとんど効かない．長さを 1.15 cm にすると音量が 3 dB 上がり，傾斜が 1 dB/oct 急になる．
-- 無声の声門形状を 25 ms 早く閉じ始めると，母音の有声区間が 2–4 ポイント増えた(`synth.advance_closing`)．
+- 無声の声門形状を 25 ms 早く閉じ始めると，母音の有声区間が 2–6 ポイント増えた(`synth.advance_closing`)．
 
 話者ファイルは `…-tbcm-gentle`(やさしい 中)と `…-tbcm-gentle-boy`(少年 息を少し残す．F0 の下げは話者ではなくスコア側で与える)．試聴は [results/gentle](results/gentle)．聴取は未評価．
