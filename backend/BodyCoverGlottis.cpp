@@ -417,6 +417,7 @@ void BodyCoverGlottis::incTime(const double dt, const double pressure_dPa[])
 void BodyCoverGlottis::measureF0(double dt)
 {
   const double TAU = 0.02;
+  const double MIN_AMPLITUDE = 1.5e-5;     // m, mean deviation of the lower mass
   meanX += (x[0] - meanX)*dt / TAU;
   double y = x[0] - meanX;
   meanAbs += (fabs(y) - meanAbs)*dt / TAU;
@@ -430,10 +431,11 @@ void BodyCoverGlottis::measureF0(double dt)
       {
         measuredF0 = f;
         // Slow correction of the remaining error of the F0 prediction.
+        // Not during voice onsets and offsets with their small amplitudes.
         double error = log(controlParams[FREQUENCY].x / f);
-        if (fabs(error) < 0.45)
+        if ((fabs(error) < 0.45) && (meanAbs > MIN_AMPLITUDE))
         {
-          f0Correction += 0.12*error;
+          f0Correction += 0.3*error;
           f0Correction = std::min(0.5, std::max(-0.5, f0Correction));
         }
       }
@@ -441,6 +443,7 @@ void BodyCoverGlottis::measureF0(double dt)
     lastCrossing_s = t;
   }
   prevX = y;
+  if (meanAbs < MIN_AMPLITUDE) { f0Correction *= 1.0 - dt / TAU; }
   if (time_s - lastCrossing_s > 0.05) { measuredF0 = 0.0; }
 }
 
