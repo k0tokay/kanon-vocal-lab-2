@@ -75,11 +75,10 @@ def njd_phrases(text):
     for n in pyopenjtalk.run_frontend(text):
         if n["pos"] == "記号" or n["mora_size"] == 0:
             continue
+        # The first word of a phrase carries the accent of the whole phrase; the other
+        # words keep values of their own (a particle's made heiban phrases odaka).
         if n["chain_flag"] != 1 or not phrases:
-            phrases.append([0, 0])
-        moras, acc = phrases[-1]
-        if acc == 0 and n["acc"] != 0:
-            phrases[-1][1] = moras + n["acc"]
+            phrases.append([0, n["acc"]])
         phrases[-1][0] += n["mora_size"]
     return phrases
 

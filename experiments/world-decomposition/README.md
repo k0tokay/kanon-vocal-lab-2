@@ -70,6 +70,39 @@ numpy 1.26、scipy、matplotlib、pyworld、pyopenjtalk-prebuilt を使う。版
 - 6 パラメータ（ap、aa、α、β、lead）を 4 文の平均に合わせて 2.91、さらに核の位置（句の切れ目は固定）も合わせて 2.04 半音。同じ 4 文に当てはめた値なので、上限の目安にすぎない（新しい文では悪くなる）。
 - したがって、パラメータだけでは足りず、アクセント（核の位置と句の切り方）の付け方の寄与が大きい。残りの 2 半音は句の切り方、句末、分節ごとの細かい動きなどと考えられるが、分けていない。
 
+### 韻律モデルの比較（100文）
+
+voiceactress100 の 100 文 × JVS 女性 51 名で、母音中央の F0 と、モーラ長の誤差を比べた。奇数番の 50 文で規則の数値を合わせ、残りの 50 文で採点した。文と読みは声優統計コーパスと Hiroshiba/jvs_hiho（CC BY-SA 4.0）、アラインメントは手元の HMM（`prosody_data.py`）。読点は、JVS の過半数が 100 ms 以上黙る所だけに置いた。
+
+    VA100=<dir> ALIGN=<align.pkl> VTL_LIB=... python prosody_data.py          # out/prosody-jvs.pkl
+    VA100=<dir> python prosody_text.py out/prosody-jvs.pkl texts.json
+    python prosody_pred.py rule|kana|vv ...; python prosody_fit.py ...
+    python prosody_eval.py out/prosody-jvs.pkl pred-*.json
+    python prosody_render.py ...; python prosody_render_rule.py ...; python prosody_page.py texts.json
+
+| | F0 の RMSE（半音） | 相関 | モーラ長の相関 | 読み誤り（モーラ） |
+|---|---:|---:|---:|---:|
+| F0 を一定にした場合 | 3.62 | — | — | — |
+| 今のルール（pyopenjtalk） | 2.90 | 0.62 | 0.50 | 1.8 % |
+| ＋pyopenjtalk-plus | 2.75 | 0.66 | 0.50 | 1.3 % |
+| pyopenjtalk の数値をJVSに合わせる | 2.59 | 0.70 | 0.50 | 1.8 % |
+| pyopenjtalk-plus ＋ JVS に合わせた数値 | 2.47 | 0.73 | 0.50 | 1.3 % |
+| VOICEVOX 四国めたん（そのまま） | 2.22 | 0.79 | 0.76 | 1.8 % |
+| VOICEVOX 四国めたん（plus のアクセント） | 2.16 | 0.81 | 0.76 | 1.3 % |
+| VOICEVOX 春日部つむぎ | 2.75 | 0.67 | 0.75 | 1.8 % |
+| VOICEVOX ずんだもん | 3.18 | 0.60 | 0.76 | 1.8 % |
+| JVS 女性1人（残りの平均に対して） | 1.60（1.12〜2.63） | — | — | — |
+
+文ごとの差（50 文のブートストラップ、95 % 区間）：今のルール → plus +0.14 [+0.03, +0.25]、plus → 数値も合わせる +0.31 [+0.24, +0.37]、それ → VOICEVOX めたん＋plus +0.30 [+0.19, +0.41]、VOICEVOX に plus のアクセントを渡す効果 +0.05 [−0.06, +0.16]（差なし）。
+
+- 4 文での「ルールは F0 一定とほぼ同じ（3.48 対 3.60）」は、100 文では成り立たない（2.90 対 3.62）。4 文は難しい語が多く、`accent.py` の平板の不具合もあった。アクセント（plus）の効きも、4 文から見えたより小さい。
+- 基準は JVS の平均なので、感情や癖の強い声（ずんだもん）ほど悪く出る。自然さの順位とは限らない。
+- VOICEVOX の数値は、公式のライブラリ（voicevox_core 0.17.1、0.vvm）の音声クエリから得ている。モデルの解析はしていない。規約は `out/voicevox/voicevox_core/models/TERMS.txt`（クレジット必須）。数値だけの利用と、予測器の学習への利用は明記がない。配布する前に確認が要る。モデルは git に入れていない。
+
+accent.py：平板の句を、助詞などの余りの `acc` で尾高にしていた（100 文の 860 句中 36 句）。句の先頭の語の値だけを使うよう直した。
+
+試聴ページは `out/<版>/prosody-models.html`（盲検、6 文 × 5 条件、採点はブラウザ）。結果はまだない。
+
 ## v1.1.0 の結果
 
 [図](results/stats-v1-1-0.png)、[全数値](results/stats-v1-1-0.json)。z は JVS 女性 51 名の平均と標準偏差に対する値。
