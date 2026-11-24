@@ -18,7 +18,7 @@ def convert(src, dst, modal=None, pulse_shape=0.5, jitter=10.0, statics_from_201
         s = re.sub(r'(<param index="4" [^>]*value=")[^"]+', rf'\g<1>{jitter:.6f}', s)
         g25 = g25.replace(g25[g25.index('<static_params>'):g25.index('</static_params>')], s)
         shapes = []
-        for m in re.finditer(r'<shape name="(\w+)">(.*?)</shape>', g19, re.S):
+        for m in re.finditer(r'<shape name="([^"]+)">(.*?)</shape>', g19, re.S):
             v = [float(x) for x in re.findall(r'value="([^"]+)"', m.group(2))]
             if m.group(1) == 'modal' and modal:
                 for k, x in modal.items(): v[k] = x
