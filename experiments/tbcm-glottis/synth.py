@@ -7,12 +7,32 @@ LIB = os.environ.get('VTL_LIB', os.path.join(os.path.dirname(os.path.abspath(__f
 lib = ct.CDLL(LIB)
 
 
-def synth(seg, speaker, stem, log=False):
+def advance_closing(ges, d):
+    """Let the voiceless glottal gestures end d seconds earlier. The folds need a few
+    periods to build up their vibration, unlike those of the geometric glottis."""
+    t = open(ges).read(); i = t.index('glottal-shape-gestures'); j = t.index('</gesture_sequence>', i)
+    L = t[i:j].split('\n'); carry = 0
+    for k, l in enumerate(L):
+        m = re.search(r'duration_s="([\d.]+)"', l)
+        if not m: continue
+        v = float(m.group(1)) + carry; carry = 0
+        if re.search(r'value="voiceless', l):
+            e = min(d, .5*v); v -= e; carry = e
+        L[k] = l.replace(m.group(0), 'duration_s="%.6f"' % v)
+    open(ges, 'w').write(t[:i] + '\n'.join(L) + t[j:])
+
+
+def synth(seg, speaker, stem, log=False, pressure=1.0, advance=0.0):
     assert lib.vtlInitialize(speaker.encode()) == 0
     c = [ct.c_int() for _ in range(4)]
     assert lib.vtlGetConstants(*map(ct.byref, c)) == 0
     ges = stem + '.ges'
     assert lib.vtlSegmentSequenceToGesturalScore(seg.encode(), ges.encode()) == 0
+    if advance:
+        advance_closing(ges, advance)
+    if pressure != 1.0:
+        lib.vtlGesScoreChangeSubglottalPressure.argtypes = [ct.c_char_p, ct.c_char_p, ct.c_double]
+        lib.vtlGesScoreChangeSubglottalPressure(ges.encode(), ges.encode(), pressure)
     n = ct.c_int()
     lib.vtlGesturalScoreToAudio(ges.encode(), b'', b'', None, ct.byref(n), 0, 0)
     buf = (ct.c_double*n.value)()
