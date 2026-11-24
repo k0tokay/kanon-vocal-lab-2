@@ -12,6 +12,7 @@
 #include <iostream>
 #include <sstream>
 #include <cmath>
+#include <cstdlib>
 #include <complex>
 using namespace std;
 
@@ -77,9 +78,17 @@ int main(int argc, char** argv)
       double rms = 0; for (int i = N - 9600; i < N; i++) { rms += P[i]*P[i]/9600; }
       printf(" F0 %.1f r %.2f Umean %.0f Umin %.0f Umax %.0f CQ %.2f MFDR %.0f H1H2 %.1f H1H2k %.1f lev %.1f", f0, r0, mean, mn, mx, cq, mfdr/1000, harm(du, f0)-harm(du, 2*f0), harm(du, f0)-harm(du, round(2000/f0)*f0), 10*log10(rms+1e-12));
     }
+    // Levels of the harmonics of the differentiated flow (dU) and the radiated pressure (P).
+    if (getenv("PROBE_HARM") && !bad && f0 > 0 && r0 >= 0.5)
+    {
+      vector<double> du(u.size(), 0.0), pp(P.end() - 9600, P.end());
+      for (size_t i = 1; i < u.size(); i++) { du[i] = (u[i]-u[i-1])*48000; }
+      printf(" dU"); for (int h = 1; h <= 24; h++) { printf(" %.2f", harm(du, h*f0)); }
+      printf(" P"); for (int h = 1; h <= 24; h++) { printf(" %.2f", harm(pp, h*f0)); }
+    }
     if (m == "bcg") { printf(" eps %.3f vp %.3f mm pgo %.2f mm2 nf0 %.0f mf0 %.1f", g->derivedParams[BodyCoverGlottis::STRAIN].x, 10*g->derivedParams[BodyCoverGlottis::VOCAL_PROCESS_X].x, 100*g->derivedParams[BodyCoverGlottis::POSTERIOR_AREA].x, g->derivedParams[BodyCoverGlottis::NATURAL_F0].x, g->derivedParams[BodyCoverGlottis::MEASURED_F0].x); }
     printf("\n"); fflush(stdout);
-    if (argc > 4) { char fn[512]; snprintf(fn, 512, "%s%02d.f64", argv[4], count); FILE* f = fopen(fn, "wb"); fwrite(P.data(), 8, P.size(), f); fclose(f); }
+    if (argc > 4) { char fn[512]; snprintf(fn, 512, "%s%02d.f64", argv[4], count); FILE* f = fopen(fn, "wb"); vector<double> &W = getenv("PROBE_FLOW") ? U : P; fwrite(W.data(), 8, W.size(), f); fclose(f); }
     count++; delete g;
   }
 }
