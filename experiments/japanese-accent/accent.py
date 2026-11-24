@@ -138,7 +138,9 @@ JA_TIMING = {"p", "t", "k", "b", "d", "g", "s", "z", "s\\", "z\\", "C", "f", "ts
              "m", "n", "N"}
 # Single numbers of it: the tap only has to come within .13 cm2 for 14 ms (no full closure),
 # approaches slowly and leaves fast.
-TIMING = {"4": {"contact_s": .014, "contact_cm2": .13, "onset_tau_s": .010, "offset_tau_s": .006}}
+# /t/: the glottis closes earlier than for /k/ (aspiration 10 dB too strong otherwise).
+TIMING = {"t": {"glottis_end_s": -.040},
+          "4": {"contact_s": .014, "contact_cm2": .13, "onset_tau_s": .010, "offset_tau_s": .006}}
 FRICATIVE = {"s", "S", "C", "h", "f", "ts", "tS", "s\\", "ts\\"}
 
 

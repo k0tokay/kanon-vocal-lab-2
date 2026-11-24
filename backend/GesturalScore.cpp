@@ -2592,8 +2592,8 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
 
       if (isJapaneseStop)
       {
-        glottalGestureBegin_s = closureBegin_s - 0.025;
-        glottalGestureEnd_s = closureEnd_s - 0.025;
+        glottalGestureBegin_s = closureBegin_s + getTimingLabel(s, "glottis_begin_s", -0.025);
+        glottalGestureEnd_s = closureEnd_s + getTimingLabel(s, "glottis_end_s", -0.025);
 
         if (isJapaneseVoicedStop)
         {
@@ -2608,6 +2608,7 @@ void GesturalScore::createFromSegmentSequence(SegmentSequence *origSegmentSequen
           glottalGestureTau_s = DEFAULT_TIME_CONSTANT_S * segmentDur_s / 0.060;
           setUpperLimit(glottalGestureTau_s, DEFAULT_TIME_CONSTANT_S);
           setLowerLimit(glottalGestureTau_s, 0.005);
+          glottalGestureTau_s = getTimingLabel(s, "glottis_tau_s", glottalGestureTau_s);
         }
 
         if (glottalGestureEnd_s < glottalGestureBegin_s + 0.020)
