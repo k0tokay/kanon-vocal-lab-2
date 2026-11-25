@@ -28,7 +28,7 @@ def main():
     summary = {}
     fig, axes = plt.subplots(len(SENTENCES), 1, figsize=(9, 2.2 * len(SENTENCES)))
     for ax, (key, text) in zip(axes, SENTENCES.items()):
-        r = render(text, OUT / key)
+        r = render(text, OUT / key, f0_model=None)
         flat = render(text, OUT / f"{key}-monotone", accent=False)
         ax.plot(r["t"], r["f0"], label="accent")
         ax.plot(flat["t"], flat["f0"], "--", lw=.8, label="phrase only")

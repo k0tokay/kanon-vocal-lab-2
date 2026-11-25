@@ -118,7 +118,7 @@ def measure(name, speaker, order):
     rows = {}
     for v, word in CONTEXTS.items():
         stem = OUT / name / v
-        r = render(word, stem, speaker=speaker)
+        r = render(word, stem, speaker=speaker, f0_model=None)
         sr, x = read(stem.with_suffix(".wav"))
         x = x / 32767
         seg = next(s for s in r["segments"] if s.name == "s\\")

@@ -75,11 +75,10 @@ def njd_phrases(text):
     for n in pyopenjtalk.run_frontend(text):
         if n["pos"] == "記号" or n["mora_size"] == 0:
             continue
+        # The first word of a phrase carries the accent of the whole phrase; the other
+        # words keep values of their own (a particle's made heiban phrases odaka).
         if n["chain_flag"] != 1 or not phrases:
-            phrases.append([0, 0])
-        moras, acc = phrases[-1]
-        if acc == 0 and n["acc"] != 0:
-            phrases[-1][1] = moras + n["acc"]
+            phrases.append([0, n["acc"]])
         phrases[-1][0] += n["mora_size"]
     return phrases
 
@@ -386,7 +385,9 @@ def synthesize(seg, wav, segments=None, speaker=SPEAKER):
 
 
 def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
-           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER):
+           japanese=True, palatal_i=False, devoice="keep", speaker=SPEAKER, f0_model="auto", f0_mean=218.0):
+    """f0_model: "auto" uses the learned F0 when its model file is available and params is untouched,
+    else the Fujisaki rules; None always uses the rules; or a model loaded with accent_f0.load."""
     units = parse(text)
     segments, spans = to_segments(units, rate=rate, japanese=japanese,
                                   palatal_i=palatal_i, devoice=devoice)
@@ -396,10 +397,17 @@ def render(text, out_stem, params=Fujisaki(), accent=True, rate=1.0,
     for s in segments:
         s.f0 = list(f0_curve(np.array([s.t0 + r * s.duration for r in (.2, .5, .8)]),
                              phrases, accents, params))
+    learned = None
+    if f0_model == "auto":
+        import accent_f0
+        f0_model = accent_f0.default() if accent and params == Fujisaki() else None
+    if f0_model is not None and accent:
+        import accent_f0
+        learned = accent_f0.apply(f0_model, units, spans, segments, f0_mean)
     out_stem.parent.mkdir(parents=True, exist_ok=True)
     seg = out_stem.with_suffix(".seg")
     write_seg(segments, seg)
     synthesize(seg, out_stem.with_suffix(".wav"), segments if japanese else None, speaker)
     t = np.arange(0, segments[-1].t0 + segments[-1].duration, .005)
     return dict(text=text, units=units, segments=segments, spans=spans, phrases=phrases,
-                accents=accents, t=t, f0=f0_curve(t, phrases, accents, params))
+                accents=accents, t=t, f0=learned(t) if learned else f0_curve(t, phrases, accents, params))
