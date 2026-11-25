@@ -1,7 +1,7 @@
 # 声道を大きくしてフォルマントを下げる（調音はそのまま）
 
 v1.3.1 の声道（/a/ で 11.9 cm）を 1.08〜1.25 倍にし，フォルマントを下げた．声門と規則は v1.3.1 のまま．
-話者は `speakers/fulkhisa-kanon/fulkhisa-kanon-v1-3-1-tract-{1-08,1-14,1-2,1-25}.speaker`，試聴は [results/listen.html](results/listen.html)（合成音だけ）．どれも採用前の候補．
+**1.14 倍を採用し，v1.4.0（`speakers/fulkhisa-kanon/fulkhisa-kanon-v1-4-0.speaker`）とした．** ほかの候補は `fulkhisa-kanon-v1-3-1-tract-{1-08,1-2,1-25}.speaker`，試聴は [results/listen.html](results/listen.html)（合成音だけ）．
 
 ## 方法
 
