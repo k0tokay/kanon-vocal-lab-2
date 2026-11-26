@@ -32,34 +32,39 @@ body { background: var(--paper); color: var(--ink); font: 400 var(--t-body)/var(
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 button:disabled { color: var(--ink-3); cursor: default; }
 button:focus-visible, [role="slider"]:focus-visible { outline: none; box-shadow: inset 0 -2px 0 var(--accent); }
+/* Long text in a fixed space: cut with "…", the full text is in the title attribute. */
+.clip { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mono { font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small); color: var(--ink-2); }
 .err { color: var(--vermilion); }
 
 /* top bar */
-.top { display: flex; align-items: baseline; gap: var(--s4); padding: var(--s1) var(--s4); border-bottom: var(--rule-thick); min-width: 0; }
-.app { font-weight: 600; white-space: nowrap; }
-.tabs { display: flex; gap: var(--s1); flex: 1; min-width: 0; }
-.tab { padding: 0 var(--s2); border-bottom: 2px solid transparent; white-space: nowrap; }
+.top { display: flex; align-items: baseline; gap: var(--s4); padding: var(--s1) var(--s4); border-bottom: var(--rule-thick); min-width: 0; overflow: hidden; }
+/* when space runs out, the app name gives way long before the workspace tabs */
+.app { font-weight: 600; flex: 0 100 auto; }
+.tabs { display: flex; gap: var(--s1); flex: 1 1 auto; min-width: 0; }
+.tab { padding: 0 var(--s2); border-bottom: 2px solid transparent; flex: 0 1 auto; }
 .tab:hover { background: var(--paper-2); }
 .tab[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--accent); }
-.toggles { display: flex; gap: var(--s4); white-space: nowrap; }
+.toggles { display: flex; gap: var(--s4); white-space: nowrap; flex: 0 0 auto; }
 .toggle { color: var(--ink-2); padding: 0 var(--s1); }
 .toggle:hover { background: var(--paper-2); }
 .toggle[aria-pressed="true"] { color: var(--accent); font-weight: 600; }
 .sep { color: var(--ink-3); }
 
 /* areas */
-.main { display: grid; grid-template-columns: 1fr 2px 320px; grid-template-rows: 1fr 2px 220px; min-height: 0; }
-.area { display: grid; grid-template-rows: 32px 1fr; min-width: 0; min-height: 0; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 2px 320px; grid-template-rows: minmax(0, 1fr) 2px 220px; min-height: 0; min-width: 0; }
+.area { display: grid; grid-template-rows: 32px minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); min-width: 0; min-height: 0; overflow: hidden; }
 .split-v { background: var(--ink); grid-row: 1 / 4; grid-column: 2; }
 .split-h { background: var(--ink); grid-column: 1; grid-row: 2; }
-.ahead { display: flex; align-items: baseline; gap: var(--s2); padding: var(--s1) var(--s2); border-bottom: var(--rule-thin); min-width: 0; white-space: nowrap; }
-.etype { padding: 0 var(--s2); }
+/* in a panel header the editor name keeps its width; the info text beside it is cut first */
+.ahead > .clip { flex: 0 100 auto; }
+.ahead { display: flex; align-items: baseline; gap: var(--s2); padding: var(--s1) var(--s2); border-bottom: var(--rule-thin); min-width: 0; overflow: hidden; white-space: nowrap; }
+.etype { padding: 0 var(--s2); flex: 0 1 auto; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .etype:hover { background: var(--paper-2); }
 .etype::after { content: " ▾"; font-family: var(--font-mono); font-size: var(--t-small); color: var(--ink-2); }
 .grow { flex: 1; }
 .abody { position: relative; min-height: 0; min-width: 0; overflow: hidden; }
-.bottom-pair { display: grid; grid-template-columns: 1fr 2px 1fr; min-height: 0; min-width: 0; grid-column: 1; grid-row: 3; }
+.bottom-pair { display: grid; grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr); min-height: 0; min-width: 0; grid-column: 1; grid-row: 3; }
 .bottom-pair .bar { background: var(--rule); }
 .empty { padding: var(--s4); color: var(--ink-2); }
 
@@ -80,19 +85,21 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .plot .peaklab { font: var(--t-small) var(--font-mono); fill: var(--accent); }
 
 /* sidebar */
-.side-col { grid-column: 3; grid-row: 1 / 4; display: grid; grid-template-rows: 32px 200px 32px 1fr; min-height: 0; min-width: 0; }
-.list { overflow: auto; border-bottom: var(--rule-thick); }
+.side-col { grid-column: 3; grid-row: 1 / 4; display: grid; grid-template-rows: 32px 200px 32px minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); min-height: 0; min-width: 0; overflow: hidden; }
+.list { overflow-y: auto; overflow-x: hidden; border-bottom: var(--rule-thick); min-width: 0; }
 .row { display: flex; align-items: baseline; gap: var(--s2); height: 24px; padding: 0 var(--s2); border-left: 2px solid transparent;
   width: 100%; text-align: left; white-space: nowrap; }
 .row:hover { background: var(--paper-2); }
 .row.sel { background: var(--accent-paper); border-left-color: var(--accent); }
-.row .mark { width: 16px; color: var(--accent); }
+.row .mark { width: 16px; flex: 0 0 16px; color: var(--accent); }
+.row .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .row.edited .name { color: var(--accent); }
-.params { overflow: auto; padding: var(--s2) 0; }
+.params { overflow-y: auto; overflow-x: hidden; padding: var(--s2) 0; min-width: 0; }
 .group { margin: 0 var(--s2) var(--s4); padding-left: var(--s2); border-left: var(--rule-thick); }
 .group h3 { font-size: var(--t-small); line-height: var(--lh-small); font-weight: 600; color: var(--ink-2); }
-.param { display: grid; grid-template-columns: 40px 1fr 72px; align-items: center; gap: var(--s2); height: 24px; }
-.param .v { text-align: right; font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small);
+/* the value column keeps its width; the slider gives way */
+.param { display: grid; grid-template-columns: 40px minmax(0, 1fr) 72px; align-items: center; gap: var(--s2); height: 24px; }
+.param .v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small);
   padding: 0 var(--s1); color: var(--ink); }
 .param .v:hover { background: var(--paper-2); }
 .param.edited .v { color: var(--accent); }
@@ -102,13 +109,18 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .slider { position: relative; height: 24px; cursor: ew-resize; touch-action: none; }
 .slider::before { content: ""; position: absolute; left: 0; right: 0; top: 11px; border-top: var(--rule-thin); }
 .slider .fill { position: absolute; left: 0; top: 10px; height: 0; border-top: 2px solid var(--ink); }
-.slider .knob { position: absolute; top: 4px; width: 8px; height: 16px; background: var(--ink); margin-left: -4px; }
+/* the knob stays inside the track: its left edge runs over 0 .. width - 8px */
+.slider .knob { position: absolute; top: 4px; width: 8px; height: 16px; background: var(--ink); }
 .param.edited .fill { border-top-color: var(--accent); }
 .param.edited .knob { background: var(--accent); }
 
 /* status bar */
-.status { display: flex; align-items: baseline; gap: var(--s4); padding: var(--s1) var(--s4); border-top: var(--rule-thick); white-space: nowrap; min-width: 0; }
+.status { display: flex; align-items: baseline; gap: var(--s4); padding: var(--s1) var(--s4); border-top: var(--rule-thick); white-space: nowrap; min-width: 0; overflow: hidden; }
+.status > * { flex: 0 0 auto; }
+.status > .clip { flex: 0 1 auto; }
+.status > .grow { flex: 1 1 0; min-width: 0; }
 .tbtn { padding: 0 var(--s2); }
+.tab, .app { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tbtn:hover:not(:disabled) { background: var(--paper-2); }
 
 /* floating note (principles §5: frame and a hard offset shadow) */

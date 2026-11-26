@@ -96,11 +96,11 @@ export function App() {
   return (
     <>
       <header className="top">
-        <span className="app">{c.app || " "}</span>
+        <span className="app" title={c.app}>{c.app || " "}</span>
         <nav className="tabs">
           {WORKSPACES.map((w) => (
             <button key={w} className="tab" aria-selected={w === "tract"}
-              onClick={() => { if (w !== "tract") notYet(t("ws." + w)); }}>{t("ws." + w)}</button>
+              title={t("ws." + w)} onClick={() => { if (w !== "tract") notYet(t("ws." + w)); }}>{t("ws." + w)}</button>
           ))}
         </nav>
         <div className="toggles">
@@ -132,8 +132,8 @@ export function App() {
           <>
             <section className="area" style={{ gridColumn: 1, gridRow: 1 }}>
               <div className="ahead">
-                <button className="etype" onClick={() => notYet(t("note.editor_menu"))}>{t("ed.tract")}</button>
-                <span className="mono">{speaker} · {shape}</span>
+                <button className="etype" title={t("ed.tract")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.tract")}</button>
+                <span className="mono clip" title={`${speaker} · ${shape}`}>{speaker} · {shape}</span>
               </div>
               <TractView speaker={speaker} cur={cur} saved={ref} t={t} />
             </section>
@@ -142,25 +142,25 @@ export function App() {
             <div className="bottom-pair">
               <section className="area">
                 <div className="ahead">
-                  <button className="etype" onClick={() => notYet(t("note.editor_menu"))}>{t("ed.area")}</button>
+                  <button className="etype" title={t("ed.area")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.area")}</button>
                   <span className="grow" />
-                  <span className="mono">{t("ax.area")} × cm</span>
+                  <span className="mono clip" title={`${t("ax.area")} × cm`}>{t("ax.area")} × cm</span>
                 </div>
                 <AreaPlot cur={cur} saved={ref} t={t} />
               </section>
               <div className="bar" />
               <section className="area">
                 <div className="ahead">
-                  <button className="etype" onClick={() => notYet(t("note.editor_menu"))}>{t("ed.spectrum")}</button>
+                  <button className="etype" title={t("ed.spectrum")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.spectrum")}</button>
                   <span className="grow" />
-                  <span className="mono">{formants}</span>
+                  <span className="mono clip" title={formants}>{formants}</span>
                 </div>
                 <SpectrumPlot cur={cur} saved={ref} fmax={FMAX} />
               </section>
             </div>
             <aside className="side-col">
               <div className="ahead">
-                <button className="etype" onClick={() => notYet(t("note.editor_menu"))}>{t("ed.shapes")}</button>
+                <button className="etype" title={t("ed.shapes")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.shapes")}</button>
                 <span className="grow" />
                 {speakers.length > 1 && <SpeakerPicker speakers={speakers} value={speaker} onChange={setSpeaker} />}
                 <span className="mono">{shapeNames.length}</span>
@@ -170,14 +170,14 @@ export function App() {
                   <button key={n} className={"row" + (n === shape ? " sel" : "") + (editedShapes.has(n) ? " edited" : "")}
                     onClick={() => setShape(n)}>
                     <span className="mono mark">{editedShapes.has(n) ? "●" : ""}</span>
-                    <span className="name">{n}</span>
+                    <span className="name" title={n}>{n}</span>
                   </button>
                 ))}
               </div>
               <div className="ahead">
-                <button className="etype" onClick={() => notYet(t("note.editor_menu"))}>{t("ed.params")}</button>
+                <button className="etype" title={t("ed.params")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.params")}</button>
                 <span className="grow" />
-                <span className="mono">{shape}</span>
+                <span className="mono clip" title={shape}>{shape}</span>
               </div>
               <Params speaker={speaker} shape={shape} t={t} />
             </aside>
@@ -196,7 +196,7 @@ export function App() {
 function SpeakerPicker({ speakers, value, onChange }: { speakers: string[]; value: string; onChange: (s: string) => void }) {
   // Cycles through the open speakers; a proper picker comes with the speaker workspace.
   return (
-    <button className="toggle mono" onClick={() => onChange(speakers[(speakers.indexOf(value) + 1) % speakers.length])}>
+    <button className="toggle mono clip" title={value} onClick={() => onChange(speakers[(speakers.indexOf(value) + 1) % speakers.length])}>
       {value} ▸
     </button>
   );
@@ -208,6 +208,7 @@ function StatusBar({ t, speaker, onPlay, canUndo, canRedo, undoLabel, redoLabel 
 }) {
   const c = useClient();
   const n = c.editedCount();
+  const status = (n ? t("status.unsaved", { n }) : t("status.saved")) + (speaker ? " · " + t("status.speaker", { name: speaker }) : "");
   return (
     <footer className="status">
       <button className="tbtn" onClick={onPlay} title={t("play")} aria-label={t("play")}>▶</button>
@@ -218,12 +219,9 @@ function StatusBar({ t, speaker, onPlay, canUndo, canRedo, undoLabel, redoLabel 
         title={redoLabel ? t("redo.what", { label: redoLabel }) : undefined}>{t("redo")}</button>
       <span className="grow" />
       {c.status !== "open" ? (
-        <span className={"mono" + (c.status === "closed" ? " err" : "")}>{t(c.status === "connecting" ? "status.connecting" : "status.disconnected")}</span>
+        <span className={"mono clip" + (c.status === "closed" ? " err" : "")}>{t(c.status === "connecting" ? "status.connecting" : "status.disconnected")}</span>
       ) : (
-        <span className="mono">
-          {n ? t("status.unsaved", { n }) : t("status.saved")}
-          {speaker ? " · " + t("status.speaker", { name: speaker }) : ""}
-        </span>
+        <span className="mono clip" title={status}>{status}</span>
       )}
     </footer>
   );

@@ -151,7 +151,9 @@ export function SpectrumPlot({ cur, saved, fmax }: { cur: Computed | null; saved
         {peaks.map((f, i) => (
           <g key={i}>
             <line className="peak" x1={X(f)} x2={X(f)} y1={M.t} y2={Y(bottom)} />
-            <text className="peaklab" x={X(f) + 4} y={M.t + 12}>F{i + 1}</text>
+            {/* a label that would run into the previous one goes one line lower */}
+            <text className="peaklab" x={X(f) + 4}
+              y={M.t + 12 + (i > 0 && X(f) - X(peaks[i - 1]) < 24 ? 20 : 0)}>F{i + 1}</text>
           </g>
         ))}
         {saved?.spectrum && <polyline className="ref" points={line(saved.spectrum)} />}

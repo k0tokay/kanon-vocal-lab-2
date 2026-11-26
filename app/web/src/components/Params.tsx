@@ -39,7 +39,7 @@ function Slider({ info, value, onDrag, onDragEnd, onStep }: {
       }}
     >
       <div className="fill" style={{ width: `${frac * 100}%` }} />
-      <div className="knob" style={{ left: `${frac * 100}%` }} />
+      <div className="knob" style={{ left: `calc(${frac} * (100% - 8px))` }} />
     </div>
   );
 }
@@ -84,7 +84,7 @@ function ParamRow({ speaker, shape, info, value }: {
       <span className="mono">{info.name}</span>
       <Slider info={info} value={shown} onDrag={onDrag} onDragEnd={onDragEnd} onStep={(v) => void send(v)} />
       {typing === null ? (
-        <button className="v" onClick={() => setTyping(value.toFixed(4))}>{shown.toFixed(3)}</button>
+        <button className="v" title={shown.toFixed(4)} onClick={() => setTyping(value.toFixed(4))}>{shown.toFixed(3)}</button>
       ) : (
         <input
           className="v" autoFocus value={typing} aria-label={info.name}
