@@ -49,7 +49,8 @@ def compute(project: Project, req: dict) -> dict:
         out["formants"] = b.formants(sp, params)
     if "spectrum" in what:
         f, mag, _ = b.spectrum(sp, params, int(req.get("n", 2048)))
-        out["spectrum"] = {"freq": f.tolist(), "magnitude": mag.tolist()}
+        keep = f <= float(req.get("fmax", f[-1]))
+        out["spectrum"] = {"freq": f[keep].tolist(), "magnitude": mag[keep].tolist()}
     if "contours" in what:
         out["contours"] = {k: v.tolist() for k, v in b.contours(sp, params).items()}
     return out
@@ -136,6 +137,15 @@ def make_app(project: Project) -> web.Application:
     for kind in ("op", "drag_end", "undo", "redo", "save", "compute"):
         app.router.add_post(f"/api/{kind}", route(kind))
     app.router.add_get("/ws", ws_handler)
+
+    # The built screen (`npm run build` in app/web). In development Vite serves
+    # it instead and forwards /api and /ws here.
+    dist = Path(__file__).resolve().parents[1] / "web" / "dist"
+    if (dist / "index.html").exists():
+        async def index(request: web.Request) -> web.FileResponse:
+            return web.FileResponse(dist / "index.html")
+        app.router.add_get("/", index)
+        app.router.add_static("/assets", dist / "assets")
     return app
 
 

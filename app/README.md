@@ -2,11 +2,19 @@
 
 VocalTractLab の wxWidgets の GUI を置き換える新しい GUI．アプリ名は未定で，仮の名前は [app_core/names.py](app_core/names.py) の定数だけにある(フォルダ `app/` とパッケージ `app_core` も仮)．
 
-いまは **第1段**：画面はまだ無く，データ・操作・元に戻す・VTL の呼び出し・最小のサーバーだけがある．
+いまは **第2段**：データ・操作・元に戻す・VTL の呼び出し・サーバー(第1段)に，声道ワークスペースの画面(第2段)が付いた．
+
+## すぐ試す
+
+```bash
+app/start.sh
+```
+
+リポジトリ直下で実行し，http://127.0.0.1:5173 を開く．サーバーと画面が一緒に起動する．Ctrl+C で両方止まる．既定では嘉音 v1.4.1 と JD2 を開く．別の話者は `app/start.sh --speaker 名前=パス ...` で開く．同じページを2つの窓で開くと，一方の編集がもう一方にも出る．
 
 ## 構成
 
-ローカルの Python サーバーがデータをすべて持ち，画面(第2段から．React + Vite をブラウザで開く)は操作を送って変更の通知を受け，描き直す．計算は VTL の C++ backend を `libVocalTractLabApi.dylib`(ctypes)経由で使う．
+ローカルの Python サーバーがデータをすべて持ち，画面(React + Vite，ブラウザで開く)は操作を送って変更の通知を受け，描き直す．計算は VTL の C++ backend を `libVocalTractLabApi.dylib`(ctypes)経由で使う．
 
 | ファイル | 役割 |
 |---|---|
@@ -20,6 +28,8 @@ VocalTractLab の wxWidgets の GUI を置き換える新しい GUI．アプリ�
 | [app_core/server.py](app_core/server.py) | HTTP と WebSocket の最小のサーバー |
 | [examples/edit_speaker.py](examples/edit_speaker.py) | Python から操作を呼ぶ例 |
 | [tests/](tests/) | テスト(標準の `unittest`) |
+| [start.sh](start.sh) | サーバーと画面を1つのコマンドで起動する |
+| [web/](web/) | 画面(React 19 + Vite + TypeScript) |
 
 ### 話者
 
@@ -57,9 +67,12 @@ project.call("tract.set_param", {...}, drag="slider-TCX")                       
 
 ```json
 {"type": "changed", "source": "do|undo|redo", "op": "...",
- "changes": [{"speaker": "kanon", "address": ["tract_shape", "a", "TCX"], "value": 0.3}],
+ "changes": [{"speaker": "kanon", "address": ["tract_shape", "a", "TCX"], "value": 0.3,
+              "edited": true, "saved": -0.8236}],
  "history": {"can_undo": true, "can_redo": false, "undo_label": "...", "redo_label": null, "open": null}}
 ```
+
+`edited` は値が前回の保存(または開いたとき)の値 `saved` と違うかどうか．`Project.edited(id)` とプロジェクトの JSON の `edited` にも同じものがある．
 
 保存(`Project.save_speaker`)は `.speaker` を書き，横の `foo.meta.json` の `saves` に，時刻，ファイルの sha256，前回の保存からの操作一覧(実行，元に戻す，やり直す)を足す．
 
@@ -72,7 +85,34 @@ API は話者をファイルからしか読めず，同時に1人しか持てな
 - `formants`：そのスペクトルの山(dB の放物線補間．既定 8192 点 = 5.9 Hz 刻み)．
 - `contours`：正中断面の輪郭．既存の `vtlExportTractSvg` が書く SVG の折れ線 14 本を読み，cm(VTL の座標，唇が +x，上が +y)に戻す．名前は `CONTOUR_NAMES`．1回約 12 ms．backend に手は入れていない．速さが足りなければ，同じ折れ線を配列で返す API 関数を足せばよい．
 
-## 起動
+## 画面(web/)
+
+| ファイル | 役割 |
+|---|---|
+| [web/src/store.ts](web/src/store.ts) | サーバーのデータの写し．WebSocket で通知を受けて当てはめ，操作・元に戻す・計算を送る |
+| [web/src/compute.ts](web/src/compute.ts) | VTL の計算の依頼．同時に1つだけ送り，待つ間に来た入力は最新だけ残す(ドラッグで溜まらない) |
+| [web/src/App.tsx](web/src/App.tsx) | 声道ワークスペースの配置，上の帯，下の帯，キー操作 |
+| [web/src/components/plots.tsx](web/src/components/plots.tsx) | 正中断面，面積関数，スペクトル |
+| [web/src/components/Params.tsx](web/src/components/Params.tsx) | パラメタのスライダと数値入力 |
+| [web/src/i18n/](web/src/i18n/) | 翻訳ファイル(`en.json` が既定，`ja.json`) |
+| [web/src/styles.css](web/src/styles.css) | トークンと見た目(schedule2 の principles.md に従う) |
+
+- 形状を選ぶと，その形状の正中断面・面積関数・スペクトル(F1–F3)が出る．計算はサーバーの VTL．
+- スライダのドラッグは `drag` で履歴の1歩にまとめる．動かしている間も図が付いてくる．値を押すと数値を直接入力できる(Enter か欄を離れると確定，Esc で取り消し)．スライダは矢印キーでも動く(Shift で10倍)．
+- 元に戻す・やり直す：下の帯のボタン，Cmd/Ctrl+Z，Shift+Cmd/Ctrl+Z．
+- 保存したときから変わった値は，値と形状に「●」と特色(`--accent`)の印が付く．図には保存した形が特色の点線で重なる．下の帯の件数は，保存したときと違う値の個数．「保存」は第3段以降．
+- 明暗と言語は右上で切り替え，ブラウザが覚える(`localStorage` の `ui.theme`，`ui.lang`)．文言はすべて `web/src/i18n/*.json` にある．言語を足すには，同じキーを持つ JSON(例：`kono.json`，`_name` は切り替えに出す名前，`_order` は並び順)を置くだけでよい．
+- ほかのワークスペースのタブ，エディタ名の ▾，再生はまだ無い(押すと「まだ無い機能です」と出る)．声道の図の操作点，区画の分割，別窓も第3段以降．
+
+開発中は `app/web` で次を実行して型を確かめる：
+
+```bash
+npx tsc --noEmit
+```
+
+`npm run build` で `web/dist/` に作っておくと，Python のサーバーだけで画面も出せる(`http://127.0.0.1:8765/`)．
+
+## 起動(部品ごと)
 
 Python は main の checkout の venv(`build-mac/venv`)を使う．依存は [requirements.txt](requirements.txt)：
 
@@ -125,6 +165,6 @@ Python から：
 
 VTL のライブラリが無いと，VTL を使うテストは飛ばす．
 
-## まだ無いもの(第2段以降)
+## まだ無いもの(第3段以降)
 
-画面，トラック・クリップ・作品・プロジェクトのファイル，保存していない変更の自動退避，操作の種類(今は2つ)．
+声道ワークスペース以外の画面，保存の操作，トラック・クリップ・作品・プロジェクトのファイル，保存していない変更の自動退避，操作の種類(今は2つ)．

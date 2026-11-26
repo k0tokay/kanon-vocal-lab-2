@@ -33,6 +33,9 @@ class Project:
         self.ops = OpsNamespace(self)
         self._listeners: list[Listener] = []
         self._unsaved_log: dict[str, list[dict]] = {}
+        # Per speaker: address -> value at the last save (or open), for every
+        # address changed since. An address is "edited" while its value differs.
+        self._saved: dict[str, dict[tuple, Any]] = {}
 
     # -- speakers -----------------------------------------------------------
 
@@ -44,6 +47,7 @@ class Project:
             raise KeyError(f"speaker id {sid!r} is already in use")
         self.speakers[sid] = sp
         self._unsaved_log[sid] = []
+        self._saved[sid] = {}
         self._emit({"type": "speaker_opened", "speaker": sid})
         return sid
 
@@ -69,6 +73,7 @@ class Project:
         })
         mp.write_text(json.dumps(meta, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         self._unsaved_log[speaker_id] = []
+        self._saved[speaker_id] = {}
         self._emit({"type": "speaker_saved", "speaker": speaker_id, "path": str(out)})
         return out
 
@@ -84,8 +89,21 @@ class Project:
         for fn in list(self._listeners):
             fn(event)
 
+    def edited(self, speaker_id: str) -> dict[tuple, Any]:
+        """Addresses whose value differs from the last save -> the saved value."""
+        sp = self.speakers[speaker_id]
+        return {a: v for a, v in self._saved[speaker_id].items() if sp.get(a) != v}
+
     def _changes_json(self, changes: list[Change], use_old: bool = False) -> list[dict]:
-        return [c.to_json(c.old if use_old else c.new) for c in changes]
+        out = []
+        for c in changes:
+            saved = self._saved[c.speaker].setdefault(c.address, c.new if use_old else c.old)
+            value = c.old if use_old else c.new
+            d = c.to_json(value)
+            d["edited"] = value != saved
+            d["saved"] = saved
+            out.append(d)
+        return out
 
     # -- operations -----------------------------------------------------------
 
@@ -198,8 +216,10 @@ class Project:
 
     def to_json(self) -> dict:
         return {
-            "speakers": {sid: sp.to_json() | {"modified": self.is_modified(sid)}
-                         for sid, sp in self.speakers.items()},
+            "speakers": {sid: sp.to_json() | {
+                "modified": self.is_modified(sid),
+                "edited": [{"address": list(a), "saved": v} for a, v in self.edited(sid).items()],
+            } for sid, sp in self.speakers.items()},
             "history": self.history.state(),
             "operations": {n: {"label": o.label, "doc": o.doc} for n, o in OPERATORS.items()},
         }

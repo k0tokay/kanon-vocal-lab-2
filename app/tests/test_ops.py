@@ -110,11 +110,26 @@ class Notifications(Base):
         self.p.undo()
         do, undo = self.events
         self.assertEqual(do["source"], "do")
-        self.assertEqual(do["changes"], [{"speaker": "kanon", "address": list(TCX), "value": 0.5}])
+        self.assertEqual(do["changes"], [{"speaker": "kanon", "address": list(TCX), "value": 0.5,
+                                          "edited": True, "saved": -0.8236}])
         self.assertEqual(undo["source"], "undo")
         self.assertEqual(undo["changes"][0]["value"], -0.8236)
+        self.assertFalse(undo["changes"][0]["edited"])
         self.assertTrue(undo["history"]["can_redo"])
         json.dumps(self.events)  # events go over the wire as JSON
+
+
+class Edited(Base):
+    def test_edited_against_the_last_save(self):
+        self.p.ops.tract.set_param(speaker="kanon", shape="a", param="TCX", value=0.5)
+        self.p.ops.tract.set_param(speaker="kanon", shape="i", param="TCY", value=0.0)
+        self.assertEqual(self.p.edited("kanon"), {TCX: -0.8236, ("tract_shape", "i", "TCY"): -0.3734})
+        self.p.ops.tract.set_param(speaker="kanon", shape="a", param="TCX", value=-0.8236)
+        self.assertEqual(list(self.p.edited("kanon")), [("tract_shape", "i", "TCY")])
+        self.assertEqual(len(self.p.to_json()["speakers"]["kanon"]["edited"]), 1)
+        with tempfile.TemporaryDirectory() as d:
+            self.p.save_speaker("kanon", Path(d) / "s.speaker")
+        self.assertEqual(self.p.edited("kanon"), {})
 
 
 class Save(Base):
