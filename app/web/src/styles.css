@@ -61,10 +61,13 @@ button:focus-visible, [role="slider"]:focus-visible { outline: none; box-shadow:
 .divider.dv-row { cursor: col-resize; margin: 0 -4px; padding: 0 4px; }
 .divider.dv-column { cursor: row-resize; margin: -4px 0; padding: 4px 0; }
 .area { display: grid; grid-template-rows: 32px minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); min-width: 0; min-height: 0; overflow: hidden; }
-/* in a panel header the editor name keeps its width; the info text beside it is cut first */
-.ahead > .clip { flex: 0 100 auto; }
+/* in a panel header everything may shrink, so the header never pushes past its area:
+   the info beside the editor name is cut first, the editor name last */
+.ahead > * { min-width: 0; flex: 0 100 auto; overflow: hidden; text-overflow: ellipsis; }
+.ahead > .grow { flex: 1 1 0; }
 .ahead { display: flex; align-items: baseline; gap: var(--s2); padding: var(--s1) var(--s2); border-bottom: var(--rule-thin); min-width: 0; overflow: hidden; white-space: nowrap; }
-.etype { padding: 0 var(--s2); flex: 0 0 auto; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ahead > .etype { flex: 0 1 auto; }
+.etype { padding: 0 var(--s2); max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .etype:hover { background: var(--paper-2); }
 .etype::after { content: " ▾"; font-family: var(--font-mono); font-size: var(--t-small); color: var(--ink-2); }
 .grow { flex: 1; }
@@ -99,14 +102,15 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .params { overflow-y: auto; overflow-x: hidden; padding: var(--s2) 0; min-width: 0; min-height: 0; }
 .group { margin: 0 var(--s2) var(--s4); padding-left: var(--s2); border-left: var(--rule-thick); }
 .group h3 { font-size: var(--t-small); line-height: var(--lh-small); font-weight: 600; color: var(--ink-2); }
-/* the value column keeps its width; the slider gives way */
-.param { display: grid; grid-template-columns: 40px minmax(0, 1fr) 72px; align-items: center; gap: var(--s2); height: 24px; }
+/* the value column keeps its width while it can; the slider gives way first, and in a
+   very narrow area every column shrinks so the row stays inside it */
+.param { display: grid; grid-template-columns: minmax(0, 40px) minmax(0, 1fr) minmax(0, 72px); align-items: center; gap: var(--s2); height: 24px; }
 .param .v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small);
   padding: 0 var(--s1); color: var(--ink); }
 .param .v:hover { background: var(--paper-2); }
 .param.edited .v { color: var(--accent); }
 .param.edited .v::before { content: "● "; }
-.param input.v { width: 72px; height: 24px; border: 0; border-bottom: 2px solid var(--accent); background: var(--paper-2);
+.param input.v { width: 100%; min-width: 0; height: 24px; border: 0; border-bottom: 2px solid var(--accent); background: var(--paper-2);
   outline: none; color: var(--ink); }
 .slider { position: relative; height: 24px; cursor: ew-resize; touch-action: none; }
 .slider::before { content: ""; position: absolute; left: 0; right: 0; top: 11px; border-top: var(--rule-thin); }

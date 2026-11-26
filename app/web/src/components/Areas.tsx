@@ -120,10 +120,11 @@ function Divider({ split, index, container }: { split: Split; index: number; con
         const d = drag.current;
         if (!d || !e.currentTarget.hasPointerCapture(e.pointerId)) return;
         const pair = d.px[index] + d.px[index + 1];
-        // both neighbours keep at least their minimum size
+        // Dragging never makes a neighbour smaller than its minimum. When the window is too
+        // small for both minimums, they are scaled down to fit the space the pair has.
+        const k = Math.min(1, pair / (mins[index] + mins[index + 1]));
         let a = d.px[index] + ((row ? e.clientX : e.clientY) - d.start);
-        a = Math.max(mins[index], Math.min(pair - mins[index + 1], a));
-        if (pair < mins[index] + mins[index + 1]) return;
+        a = Math.max(mins[index] * k, Math.min(pair - mins[index + 1] * k, a));
         const px = [...d.px];
         px[index] = a;
         px[index + 1] = pair - a;
@@ -140,10 +141,10 @@ function SplitView({ split, t, onNote }: { split: Split; t: T; onNote: (s: strin
   const tracks: string[] = [];
   const parts: ReactNode[] = [];
   split.children.forEach((c, i) => {
-    const m = minSize(c, editorMin);
-    // factors x100: CSS grid counts a flex sum below 1 as 1, which would leave space unused
-    // once some tracks are held at their minimum
-    tracks.push(`minmax(${row ? m.w : m.h}px, ${(split.sizes[i] * 100).toFixed(3)}fr)`);
+    // The window's size wins over the areas' minimum sizes: tracks may shrink to 0 and an
+    // area that gets too small cuts its content. Minimums only bound dragging (Divider).
+    // Factors x100: CSS grid counts a flex sum below 1 as 1.
+    tracks.push(`minmax(0, ${(split.sizes[i] * 100).toFixed(3)}fr)`);
     parts.push(<NodeView key={c.id} node={c} t={t} onNote={onNote} />);
     if (i < split.children.length - 1) {
       tracks.push(`${DIVIDER}px`);
