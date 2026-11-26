@@ -35,7 +35,8 @@ export function useComputed(speaker: string | null, params: number[] | null, wha
         const [sp, p] = JSON.parse(k);
         try {
           const r = await client.request<Computed>("compute", { speaker: sp, params: p, what, fmax, n: 2048 });
-          if (s.alive) setResult(r);
+          // a late answer must not bring back a result after the input went away
+          if (s.alive && s.latest !== null) setResult(r);
         } catch { /* reconnecting; the next change retries */ }
         if (s.latest === k) break;
       }

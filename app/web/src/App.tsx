@@ -1,26 +1,36 @@
-import { useEffect, useMemo, useState } from "react";
-import { useComputed } from "./compute";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { EDITOR_IDS } from "./editors";
 import { LOCALES, setLang, useT, type T } from "./i18n";
+import { defaultLayout, leaves, loadLayout, newId, removeArea, saveLayout, setEditor, type Leaf, type Node } from "./layout";
 import { client, useClient } from "./store";
-import { Params } from "./components/Params";
-import { AreaPlot, SpectrumPlot, TractView } from "./components/plots";
+import { WorkspaceProvider, useWorkspace } from "./workspace";
+import { AreaView, LayoutProvider, NodeView } from "./components/Areas";
 
 const WORKSPACES = ["tract", "glottis", "articulation", "speak", "sing", "compare"];
-const FMAX = 5000;
+
+// A detached area is this page with ?editor=<kind> (and the workspace).
+const query = new URLSearchParams(location.search);
+const DETACHED = query.get("editor");
+const WORKSPACE = query.get("ws") ?? "tract";
 
 // ---------------------------------------------------------------------------
-// Theme (remembered per browser)
-
-function initialTheme(): "light" | "dark" {
-  return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
-}
+// Theme (remembered per browser; other windows follow through the storage event)
 
 function useTheme() {
-  const [theme, setTheme] = useState(initialTheme);
+  const [theme, setTheme] = useState<"light" | "dark">(
+    document.documentElement.dataset.theme === "dark" ? "dark" : "light");
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem("ui.theme", theme); } catch { /* ignore */ }
   }, [theme]);
+  useEffect(() => {
+    const f = (e: StorageEvent) => {
+      if (e.key === "ui.theme" && (e.newValue === "light" || e.newValue === "dark")) setTheme(e.newValue);
+      if (e.key === "ui.lang" && e.newValue) setLang(e.newValue);
+    };
+    window.addEventListener("storage", f);
+    return () => window.removeEventListener("storage", f);
+  }, []);
   return [theme, setTheme] as const;
 }
 
@@ -34,24 +44,11 @@ function useNote() {
     const id = setTimeout(() => setNote(null), 3000);
     return () => clearTimeout(id);
   }, [note]);
-  return [note, (text: string, error = false) => setNote({ text, error })] as const;
+  const show = useCallback((text: string, error = false) => setNote({ text, error }), []);
+  return [note, show] as const;
 }
 
-// ---------------------------------------------------------------------------
-
-export function App() {
-  const c = useClient();
-  const [t, lang] = useT();
-  const [theme, setTheme] = useTheme();
-  const [note, show] = useNote();
-  const notYet = (what: string) => show(t("note.not_yet", { what }));
-
-  useEffect(() => {
-    const f = (m: string) => show(t("note.error", { message: m }), true);
-    c.errors.add(f);
-    return () => { c.errors.delete(f); };
-  }, [c, t]); // eslint-disable-line react-hooks/exhaustive-deps
-
+function useKeys() {
   // Undo and redo from the keyboard, except while typing in a field.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -63,163 +60,134 @@ export function App() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
-
-  const speakers = c.project ? Object.keys(c.project.speakers) : [];
-  const [speakerSel, setSpeaker] = useState<string | null>(null);
-  const speaker = speakerSel && speakers.includes(speakerSel) ? speakerSel : speakers[0] ?? null;
-  const sp = speaker ? c.project!.speakers[speaker] : null;
-  const shapeNames = sp ? Object.keys(sp.tract.shapes) : [];
-  const [shapeSel, setShape] = useState<string | null>(null);
-  const shape = shapeSel && shapeNames.includes(shapeSel) ? shapeSel : shapeNames[0] ?? null;
-
-  // Current parameters, and the saved ones when the shape has edits (drawn dashed).
-  const params = sp && shape ? [...sp.tract.shapes[shape]] : null;
-  const savedParams = useMemo(() => {
-    if (!sp || !shape || !params || !speaker) return null;
-    let any = false;
-    const out = sp.tract.params.map((p, i) => {
-      const a = ["tract_shape", shape, p.name];
-      if (c.isEdited(speaker, a)) { any = true; return c.savedValue(speaker, a) as number; }
-      return params[i];
-    });
-    return any ? out : null;
-  }, [c.version, speaker, shape]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const cur = useComputed(speaker, params, ["tube", "formants", "spectrum", "contours"], FMAX);
-  const ref = useComputed(speaker, savedParams, ["tube", "spectrum", "contours"], FMAX);
-  const editedShapes = new Set(
-    speaker ? c.editedAddresses(speaker).filter((a) => a[0] === "tract_shape").map((a) => a[1] as string) : [],
-  );
-  const formants = cur?.formants?.slice(0, 3).map((f, i) => `F${i + 1} ${f.toFixed(0)}`).join(" · ") ?? "";
-  const h = c.project?.history;
-
-  return (
-    <>
-      <header className="top">
-        <span className="app" title={c.app}>{c.app || " "}</span>
-        <nav className="tabs">
-          {WORKSPACES.map((w) => (
-            <button key={w} className="tab" aria-selected={w === "tract"}
-              title={t("ws." + w)} onClick={() => { if (w !== "tract") notYet(t("ws." + w)); }}>{t("ws." + w)}</button>
-          ))}
-        </nav>
-        <div className="toggles">
-          <span>
-            {LOCALES.map((l, i) => (
-              <span key={l.code}>
-                {i > 0 && <span className="sep"> / </span>}
-                <button className="toggle" aria-pressed={l.code === lang} onClick={() => setLang(l.code)}>{l.name}</button>
-              </span>
-            ))}
-          </span>
-          <span>
-            {(["light", "dark"] as const).map((m, i) => (
-              <span key={m}>
-                {i > 0 && <span className="sep"> / </span>}
-                <button className="toggle" aria-pressed={m === theme} onClick={() => setTheme(m)}>{t("theme." + m)}</button>
-              </span>
-            ))}
-          </span>
-        </div>
-      </header>
-
-      <main className="main">
-        {!sp || !shape || !speaker ? (
-          <div className="empty" style={{ gridColumn: "1 / 4", gridRow: "1 / 4" }}>
-            {c.project ? t("no_speaker") : t("loading")}
-          </div>
-        ) : (
-          <>
-            <section className="area" style={{ gridColumn: 1, gridRow: 1 }}>
-              <div className="ahead">
-                <button className="etype" title={t("ed.tract")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.tract")}</button>
-                <span className="mono clip" title={`${speaker} · ${shape}`}>{speaker} · {shape}</span>
-              </div>
-              <TractView speaker={speaker} cur={cur} saved={ref} t={t} />
-            </section>
-            <div className="split-v" />
-            <div className="split-h" />
-            <div className="bottom-pair">
-              <section className="area">
-                <div className="ahead">
-                  <button className="etype" title={t("ed.area")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.area")}</button>
-                  <span className="grow" />
-                  <span className="mono clip" title={`${t("ax.area")} × cm`}>{t("ax.area")} × cm</span>
-                </div>
-                <AreaPlot cur={cur} saved={ref} t={t} />
-              </section>
-              <div className="bar" />
-              <section className="area">
-                <div className="ahead">
-                  <button className="etype" title={t("ed.spectrum")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.spectrum")}</button>
-                  <span className="grow" />
-                  <span className="mono clip" title={formants}>{formants}</span>
-                </div>
-                <SpectrumPlot cur={cur} saved={ref} fmax={FMAX} />
-              </section>
-            </div>
-            <aside className="side-col">
-              <div className="ahead">
-                <button className="etype" title={t("ed.shapes")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.shapes")}</button>
-                <span className="grow" />
-                {speakers.length > 1 && <SpeakerPicker speakers={speakers} value={speaker} onChange={setSpeaker} />}
-                <span className="mono">{shapeNames.length}</span>
-              </div>
-              <div className="list">
-                {shapeNames.map((n) => (
-                  <button key={n} className={"row" + (n === shape ? " sel" : "") + (editedShapes.has(n) ? " edited" : "")}
-                    onClick={() => setShape(n)}>
-                    <span className="mono mark">{editedShapes.has(n) ? "●" : ""}</span>
-                    <span className="name" title={n}>{n}</span>
-                  </button>
-                ))}
-              </div>
-              <div className="ahead">
-                <button className="etype" title={t("ed.params")} onClick={() => notYet(t("note.editor_menu"))}>{t("ed.params")}</button>
-                <span className="grow" />
-                <span className="mono clip" title={shape}>{shape}</span>
-              </div>
-              <Params speaker={speaker} shape={shape} t={t} />
-            </aside>
-          </>
-        )}
-      </main>
-
-      <StatusBar t={t} speaker={speaker} onPlay={() => notYet(t("note.play"))}
-        canUndo={!!h?.can_undo} canRedo={!!h?.can_redo} undoLabel={h?.undo_label} redoLabel={h?.redo_label} />
-
-      {note && <div className={"note" + (note.error ? " err" : "")} role="status">{note.text}</div>}
-    </>
-  );
 }
 
-function SpeakerPicker({ speakers, value, onChange }: { speakers: string[]; value: string; onChange: (s: string) => void }) {
-  // Cycles through the open speakers; a proper picker comes with the speaker workspace.
-  return (
-    <button className="toggle mono clip" title={value} onClick={() => onChange(speakers[(speakers.indexOf(value) + 1) % speakers.length])}>
-      {value} ▸
-    </button>
-  );
-}
+// ---------------------------------------------------------------------------
 
-function StatusBar({ t, speaker, onPlay, canUndo, canRedo, undoLabel, redoLabel }: {
-  t: T; speaker: string | null; onPlay: () => void; canUndo: boolean; canRedo: boolean;
-  undoLabel?: string | null; redoLabel?: string | null;
-}) {
+export function App() {
   const c = useClient();
+  const [t, lang] = useT();
+  const [theme, setTheme] = useTheme();
+  const [note, show] = useNote();
+  useKeys();
+
+  useEffect(() => {
+    const f = (m: string) => show(t("note.error", { message: m }), true);
+    c.errors.add(f);
+    return () => { c.errors.delete(f); };
+  }, [c, t, show]);
+
+  const noteView = note && <div className={"note" + (note.error ? " err" : "")} role="status">{note.text}</div>;
+
+  if (DETACHED) return <Detached t={t} editor={DETACHED} onNote={show} note={noteView} />;
+
+  return (
+    <WorkspaceProvider>
+      <div className="app-grid">
+        <header className="top">
+          <span className="app" title={c.app}>{c.app || " "}</span>
+          <nav className="tabs">
+            {WORKSPACES.map((w) => (
+              <button key={w} className="tab" aria-selected={w === WORKSPACE}
+                title={t("ws." + w)} onClick={() => { if (w !== WORKSPACE) show(t("note.not_yet", { what: t("ws." + w) })); }}>
+                {t("ws." + w)}
+              </button>
+            ))}
+          </nav>
+          <div className="toggles">
+            <span>
+              {LOCALES.map((l, i) => (
+                <span key={l.code}>
+                  {i > 0 && <span className="sep"> / </span>}
+                  <button className="toggle" aria-pressed={l.code === lang} onClick={() => setLang(l.code)}>{l.name}</button>
+                </span>
+              ))}
+            </span>
+            <span>
+              {(["light", "dark"] as const).map((m, i) => (
+                <span key={m}>
+                  {i > 0 && <span className="sep"> / </span>}
+                  <button className="toggle" aria-pressed={m === theme} onClick={() => setTheme(m)}>{t("theme." + m)}</button>
+                </span>
+              ))}
+            </span>
+          </div>
+        </header>
+        <Layout workspace={WORKSPACE} t={t} onNote={show} />
+        <StatusBar t={t} onPlay={() => show(t("note.not_yet", { what: t("note.play") }))} />
+      </div>
+      {noteView}
+    </WorkspaceProvider>
+  );
+}
+
+function Layout({ workspace, t, onNote }: { workspace: string; t: T; onNote: (s: string, e?: boolean) => void }) {
+  const [root, setRoot] = useState<Node>(() => loadLayout(workspace, EDITOR_IDS));
+  useEffect(() => saveLayout(workspace, root), [workspace, root]);
+  const actions = {
+    root,
+    set: setRoot,
+    reset: () => setRoot(defaultLayout(workspace)),
+    setEditor: (a: Leaf, editor: string) => setRoot((r) => setEditor(r, a.id, editor)),
+    detach: (a: Leaf, rect: DOMRect) => {
+      const url = `${location.pathname}?ws=${encodeURIComponent(workspace)}&editor=${encodeURIComponent(a.editor)}`;
+      const w = window.open(url, `area-${newId()}`,
+        `popup,width=${Math.round(Math.max(rect.width, 320))},height=${Math.round(Math.max(rect.height, 240))}`);
+      if (!w) { onNote(t("note.popup_blocked"), true); return; }
+      // The area moves to the new window; the last area of the workspace stays.
+      if (leaves(root).length > 1) setRoot((r) => removeArea(r, a.id));
+    },
+  };
+  return (
+    <LayoutProvider value={actions}>
+      <main className="main"><NodeView node={root} t={t} onNote={onNote} /></main>
+    </LayoutProvider>
+  );
+}
+
+function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (s: string) => void; note: ReactNode }) {
+  const [area, setArea] = useState<Leaf>({ type: "area", id: "detached", editor: EDITOR_IDS.has(editor) ? editor : "tract" });
+  useEffect(() => { document.title = t("ed." + area.editor); }, [t, area.editor]);
+  const actions = {
+    root: null,
+    set: () => {},
+    reset: () => {},
+    detach: () => {},
+    setEditor: (_: Leaf, e: string) => {
+      setArea((a) => ({ ...a, editor: e }));
+      history.replaceState(null, "", `?ws=${encodeURIComponent(WORKSPACE)}&editor=${encodeURIComponent(e)}`);
+    },
+  };
+  return (
+    <WorkspaceProvider>
+      <LayoutProvider value={actions}>
+        <div className="detached"><AreaView area={area} t={t} onNote={onNote} /></div>
+      </LayoutProvider>
+      {note}
+    </WorkspaceProvider>
+  );
+}
+
+function StatusBar({ t, onPlay }: { t: T; onPlay: () => void }) {
+  const c = useClient();
+  const w = useWorkspace();
+  const h = c.project?.history;
   const n = c.editedCount();
-  const status = (n ? t("status.unsaved", { n }) : t("status.saved")) + (speaker ? " · " + t("status.speaker", { name: speaker }) : "");
+  const status = (n ? t("status.unsaved", { n }) : t("status.saved"))
+    + (w.speaker ? " · " + t("status.speaker", { name: w.speaker }) : "");
   return (
     <footer className="status">
       <button className="tbtn" onClick={onPlay} title={t("play")} aria-label={t("play")}>▶</button>
       <span className="mono">0.000 s</span>
-      <button className="tbtn" disabled={!canUndo} onClick={() => void c.undo()}
-        title={undoLabel ? t("undo.what", { label: undoLabel }) : undefined}>{t("undo")}</button>
-      <button className="tbtn" disabled={!canRedo} onClick={() => void c.redo()}
-        title={redoLabel ? t("redo.what", { label: redoLabel }) : undefined}>{t("redo")}</button>
+      <button className="tbtn" disabled={!h?.can_undo} onClick={() => void c.undo()}
+        title={h?.undo_label ? t("undo.what", { label: h.undo_label }) : undefined}>{t("undo")}</button>
+      <button className="tbtn" disabled={!h?.can_redo} onClick={() => void c.redo()}
+        title={h?.redo_label ? t("redo.what", { label: h.redo_label }) : undefined}>{t("redo")}</button>
       <span className="grow" />
       {c.status !== "open" ? (
-        <span className={"mono clip" + (c.status === "closed" ? " err" : "")}>{t(c.status === "connecting" ? "status.connecting" : "status.disconnected")}</span>
+        <span className={"mono clip" + (c.status === "closed" ? " err" : "")}>
+          {t(c.status === "connecting" ? "status.connecting" : "status.disconnected")}
+        </span>
       ) : (
         <span className="mono clip" title={status}>{status}</span>
       )}

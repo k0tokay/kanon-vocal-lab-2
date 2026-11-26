@@ -38,9 +38,19 @@
   "status.connecting": "サーバーにつないでいます…",
   "status.disconnected": "サーバーにつながっていません",
   "note.not_yet": "まだ無い機能です：{what}",
-  "note.editor_menu": "エディタの切り替え",
   "note.play": "再生",
   "note.error": "エラー：{message}",
   "loading": "読み込み中…",
-  "no_speaker": "話者が開かれていません．サーバーを --speaker 付きで起動してください．"
+  "no_speaker": "話者が開かれていません．サーバーを --speaker 付きで起動してください．",
+  "menu.split_row": "左右に分ける",
+  "menu.split_column": "上下に分ける",
+  "menu.join.left": "左の{editor}と合わせる",
+  "menu.join.right": "右の{editor}と合わせる",
+  "menu.join.above": "上の{editor}と合わせる",
+  "menu.join.below": "下の{editor}と合わせる",
+  "menu.close": "この区画を閉じる",
+  "menu.detach": "新しい窓で開く",
+  "menu.reset": "初期配置に戻す",
+  "note.layout_reset": "このワークスペースの配置を初期のものに戻しました．",
+  "note.popup_blocked": "ブラウザが新しい窓を開けませんでした．"
 }

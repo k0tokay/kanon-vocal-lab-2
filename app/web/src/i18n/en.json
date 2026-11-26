@@ -38,9 +38,19 @@
   "status.connecting": "connecting to the server…",
   "status.disconnected": "no connection to the server",
   "note.not_yet": "Not available yet: {what}",
-  "note.editor_menu": "editor menu",
   "note.play": "playback",
   "note.error": "Error: {message}",
   "loading": "Loading…",
-  "no_speaker": "No speaker is open. Start the server with --speaker."
+  "no_speaker": "No speaker is open. Start the server with --speaker.",
+  "menu.split_row": "Split left and right",
+  "menu.split_column": "Split top and bottom",
+  "menu.join.left": "Join with {editor} on the left",
+  "menu.join.right": "Join with {editor} on the right",
+  "menu.join.above": "Join with {editor} above",
+  "menu.join.below": "Join with {editor} below",
+  "menu.close": "Close this area",
+  "menu.detach": "Open in a new window",
+  "menu.reset": "Reset the layout",
+  "note.layout_reset": "The layout of this workspace is back to the initial one.",
+  "note.popup_blocked": "The browser blocked the new window."
 }

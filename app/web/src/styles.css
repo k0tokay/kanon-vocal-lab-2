@@ -28,7 +28,8 @@
 html, body, #root { height: 100%; }
 body { background: var(--paper); color: var(--ink); font: 400 var(--t-body)/var(--lh-body) var(--font-text);
   font-variant-numeric: tabular-nums; overflow: hidden; }
-#root { display: grid; grid-template-rows: 32px 1fr 32px; }
+.app-grid { height: 100%; display: grid; grid-template-rows: 32px minmax(0, 1fr) 32px; grid-template-columns: minmax(0, 1fr); }
+.detached { height: 100%; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); }
 button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
 button:disabled { color: var(--ink-3); cursor: default; }
 button:focus-visible, [role="slider"]:focus-visible { outline: none; box-shadow: inset 0 -2px 0 var(--accent); }
@@ -52,20 +53,22 @@ button:focus-visible, [role="slider"]:focus-visible { outline: none; box-shadow:
 .sep { color: var(--ink-3); }
 
 /* areas */
-.main { display: grid; grid-template-columns: minmax(0, 1fr) 2px 320px; grid-template-rows: minmax(0, 1fr) 2px 220px; min-height: 0; min-width: 0; }
+.main { display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); min-height: 0; min-width: 0; overflow: hidden; }
+/* a split lays its children out with a CSS grid; tracks come from the layout tree */
+.split { display: grid; min-width: 0; min-height: 0; overflow: hidden; }
+/* the thick rule between areas: 2px drawn (content box), 4px more on each side to grab */
+.divider { background: var(--ink); background-clip: content-box; position: relative; z-index: 1; touch-action: none; }
+.divider.dv-row { cursor: col-resize; margin: 0 -4px; padding: 0 4px; }
+.divider.dv-column { cursor: row-resize; margin: -4px 0; padding: 4px 0; }
 .area { display: grid; grid-template-rows: 32px minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); min-width: 0; min-height: 0; overflow: hidden; }
-.split-v { background: var(--ink); grid-row: 1 / 4; grid-column: 2; }
-.split-h { background: var(--ink); grid-column: 1; grid-row: 2; }
 /* in a panel header the editor name keeps its width; the info text beside it is cut first */
 .ahead > .clip { flex: 0 100 auto; }
 .ahead { display: flex; align-items: baseline; gap: var(--s2); padding: var(--s1) var(--s2); border-bottom: var(--rule-thin); min-width: 0; overflow: hidden; white-space: nowrap; }
-.etype { padding: 0 var(--s2); flex: 0 1 auto; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.etype { padding: 0 var(--s2); flex: 0 0 auto; max-width: 100%; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .etype:hover { background: var(--paper-2); }
 .etype::after { content: " ▾"; font-family: var(--font-mono); font-size: var(--t-small); color: var(--ink-2); }
 .grow { flex: 1; }
 .abody { position: relative; min-height: 0; min-width: 0; overflow: hidden; }
-.bottom-pair { display: grid; grid-template-columns: minmax(0, 1fr) 2px minmax(0, 1fr); min-height: 0; min-width: 0; grid-column: 1; grid-row: 3; }
-.bottom-pair .bar { background: var(--rule); }
 .empty { padding: var(--s4); color: var(--ink-2); }
 
 /* drawings */
@@ -84,9 +87,8 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .plot .peak { stroke: var(--accent); stroke-width: 1; }
 .plot .peaklab { font: var(--t-small) var(--font-mono); fill: var(--accent); }
 
-/* sidebar */
-.side-col { grid-column: 3; grid-row: 1 / 4; display: grid; grid-template-rows: 32px 200px 32px minmax(0, 1fr); grid-template-columns: minmax(0, 1fr); min-height: 0; min-width: 0; overflow: hidden; }
-.list { overflow-y: auto; overflow-x: hidden; border-bottom: var(--rule-thick); min-width: 0; }
+/* lists */
+.list { overflow-y: auto; overflow-x: hidden; min-width: 0; min-height: 0; }
 .row { display: flex; align-items: baseline; gap: var(--s2); height: 24px; padding: 0 var(--s2); border-left: 2px solid transparent;
   width: 100%; text-align: left; white-space: nowrap; }
 .row:hover { background: var(--paper-2); }
@@ -94,7 +96,7 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .row .mark { width: 16px; flex: 0 0 16px; color: var(--accent); }
 .row .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .row.edited .name { color: var(--accent); }
-.params { overflow-y: auto; overflow-x: hidden; padding: var(--s2) 0; min-width: 0; }
+.params { overflow-y: auto; overflow-x: hidden; padding: var(--s2) 0; min-width: 0; min-height: 0; }
 .group { margin: 0 var(--s2) var(--s4); padding-left: var(--s2); border-left: var(--rule-thick); }
 .group h3 { font-size: var(--t-small); line-height: var(--lh-small); font-weight: 600; color: var(--ink-2); }
 /* the value column keeps its width; the slider gives way */
@@ -126,3 +128,9 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 /* floating note (principles §5: frame and a hard offset shadow) */
 .note { position: fixed; right: var(--s4); bottom: 48px; max-width: 320px; background: var(--paper); border: var(--layer);
   box-shadow: var(--layer-shadow); padding: var(--s2) var(--s3); font-size: var(--t-small); line-height: var(--lh-small); z-index: 10; }
+
+/* floating menu (principles §5) */
+.menu { position: fixed; z-index: 20; min-width: 200px; max-width: 320px; background: var(--paper); border: var(--layer);
+  box-shadow: var(--layer-shadow); padding: var(--s1) 0; }
+.menu .row { padding: 0 var(--s3); border-left-width: 2px; }
+.menu .msep { border-top: var(--rule-thin); margin: var(--s1) 0; }
