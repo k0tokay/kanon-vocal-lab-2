@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { EDITOR_IDS } from "./editors";
 import { LOCALES, setLang, useT, type T } from "./i18n";
 import { defaultLayout, leaves, loadLayout, newId, removeArea, saveLayout, setEditor, type Leaf, type Node } from "./layout";
+import { player, usePlayer } from "./player";
 import { client, useClient } from "./store";
 import { WorkspaceProvider, useWorkspace } from "./workspace";
 import { AreaView, LayoutProvider, NodeView } from "./components/Areas";
+import { SaveDialog, refusalNote, suggestName } from "./components/SaveDialog";
 
 const WORKSPACES = ["tract", "glottis", "articulation", "speak", "sing", "compare"];
 
@@ -48,20 +50,6 @@ function useNote() {
   return [note, show] as const;
 }
 
-function useKeys() {
-  // Undo and redo from the keyboard, except while typing in a field.
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (!(e.metaKey || e.ctrlKey) || e.key.toLowerCase() !== "z") return;
-      if ((e.target as HTMLElement).closest("input, textarea")) return;
-      e.preventDefault();
-      void (e.shiftKey ? client.redo() : client.undo());
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-}
-
 // ---------------------------------------------------------------------------
 
 export function App() {
@@ -69,7 +57,6 @@ export function App() {
   const [t, lang] = useT();
   const [theme, setTheme] = useTheme();
   const [note, show] = useNote();
-  useKeys();
 
   useEffect(() => {
     const f = (m: string) => show(t("note.error", { message: m }), true);
@@ -114,7 +101,7 @@ export function App() {
           </div>
         </header>
         <Layout workspace={WORKSPACE} t={t} onNote={show} />
-        <StatusBar t={t} onPlay={() => show(t("note.not_yet", { what: t("note.play") }))} />
+        <Commands t={t} onNote={show} />
       </div>
       {noteView}
     </WorkspaceProvider>
@@ -145,7 +132,7 @@ function Layout({ workspace, t, onNote }: { workspace: string; t: T; onNote: (s:
   );
 }
 
-function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (s: string) => void; note: ReactNode }) {
+function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (s: string, e?: boolean) => void; note: ReactNode }) {
   const [area, setArea] = useState<Leaf>({ type: "area", id: "detached", editor: EDITOR_IDS.has(editor) ? editor : "tract" });
   useEffect(() => { document.title = t("ed." + area.editor); }, [t, area.editor]);
   const actions = {
@@ -162,27 +149,97 @@ function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (
     <WorkspaceProvider>
       <LayoutProvider value={actions}>
         <div className="detached"><AreaView area={area} t={t} onNote={onNote} /></div>
+        <Commands t={t} onNote={onNote} bar={false} />
       </LayoutProvider>
       {note}
     </WorkspaceProvider>
   );
 }
 
-function StatusBar({ t, onPlay }: { t: T; onPlay: () => void }) {
+// ---------------------------------------------------------------------------
+// Commands of a window: play / stop, save / save as, undo / redo, from the
+// status bar and the keyboard. A detached window has the keys but no bar.
+
+function Commands({ t, onNote, bar = true }: { t: T; onNote: (s: string, e?: boolean) => void; bar?: boolean }) {
   const c = useClient();
   const w = useWorkspace();
+  const p = usePlayer();
+  const [dialog, setDialog] = useState<string | null>(null); // initial path of "save as"
+  const sp = w.speaker ? c.project?.speakers[w.speaker] : undefined;
+
+  const play = () => {
+    if (p.status !== "idle") { player.stop(); return; }
+    if (!w.speaker || !w.shape || !sp) return;
+    // the values on screen now, edits included
+    player.play(w.speaker, [...sp.tract.shapes[w.shape]])
+      .catch((e: Error) => onNote(t("note.play_failed", { message: e.message }), true));
+  };
+  const saveAs = () => { if (w.speaker) setDialog(suggestName(sp?.path ?? null, w.speaker)); };
+  const save = async () => {
+    if (!w.speaker) return;
+    try {
+      const r = await c.save(w.speaker);
+      if (r.ok) { onNote(t("note.saved", { path: r.path })); return; }
+      onNote(refusalNote(t, r as typeof r & { ok: false }), true);
+      saveAs();
+    } catch (e) { c.report(e as Error); }
+  };
+
+  // keys: Space plays / stops, Cmd/Ctrl+S saves, +Shift saves as, Cmd/Ctrl+Z undoes
+  const latest = useRef({ play, save, saveAs });
+  latest.current = { play, save, saveAs };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const el = e.target instanceof Element ? e.target : document.body;
+      const typing = !!el.closest("input, textarea, [contenteditable]");
+      if (el.closest(".dialog")) return;
+      const mod = e.metaKey || e.ctrlKey;
+      const k = e.key.toLowerCase();
+      if (mod && k === "s") {
+        e.preventDefault();
+        void (e.shiftKey ? latest.current.saveAs() : latest.current.save());
+      } else if (mod && k === "z" && !typing) {
+        e.preventDefault();
+        void (e.shiftKey ? client.redo() : client.undo());
+      } else if (e.key === " " && !mod && !typing && !e.repeat) {
+        e.preventDefault(); // also keeps a focused button from being clicked
+        latest.current.play();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  // Closing the main window with unsaved values asks first.
+  useEffect(() => {
+    if (!bar) return;
+    const f = (e: BeforeUnloadEvent) => { if (client.editedCount() > 0) e.preventDefault(); };
+    window.addEventListener("beforeunload", f);
+    return () => window.removeEventListener("beforeunload", f);
+  }, [bar]);
+
+  const dialogView = dialog !== null && w.speaker && (
+    <SaveDialog t={t} speaker={w.speaker} initial={dialog} onClose={() => setDialog(null)}
+      onDone={(path) => { setDialog(null); onNote(t("note.saved", { path })); }} />
+  );
+  if (!bar) return dialogView || null;
+
   const h = c.project?.history;
   const n = c.editedCount();
   const status = (n ? t("status.unsaved", { n }) : t("status.saved"))
     + (w.speaker ? " · " + t("status.speaker", { name: w.speaker }) : "");
+  const playing = p.status !== "idle";
   return (
     <footer className="status">
-      <button className="tbtn" onClick={onPlay} title={t("play")} aria-label={t("play")}>▶</button>
-      <span className="mono">0.000 s</span>
+      <button className="tbtn icon" onClick={play} disabled={!w.shape} aria-pressed={playing}
+        title={playing ? t("stop") : t("play")} aria-label={playing ? t("stop") : t("play")}>{playing ? "■" : "▶"}</button>
+      <span className="mono">{p.position.toFixed(3)} s</span>
       <button className="tbtn" disabled={!h?.can_undo} onClick={() => void c.undo()}
         title={h?.undo_label ? t("undo.what", { label: h.undo_label }) : undefined}>{t("undo")}</button>
       <button className="tbtn" disabled={!h?.can_redo} onClick={() => void c.redo()}
         title={h?.redo_label ? t("redo.what", { label: h.redo_label }) : undefined}>{t("redo")}</button>
+      <button className="tbtn" disabled={!w.speaker} onClick={() => void save()} title={t("save")}>{t("save")}</button>
+      <button className="tbtn long" disabled={!w.speaker} onClick={saveAs} title={t("save_as")}>{t("save_as")}</button>
       <span className="grow" />
       {c.status !== "open" ? (
         <span className={"mono clip" + (c.status === "closed" ? " err" : "")}>
@@ -191,6 +248,7 @@ function StatusBar({ t, onPlay }: { t: T; onPlay: () => void }) {
       ) : (
         <span className="mono clip" title={status}>{status}</span>
       )}
+      {dialogView}
     </footer>
   );
 }

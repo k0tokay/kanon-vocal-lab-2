@@ -38,7 +38,6 @@
   "status.connecting": "サーバーにつないでいます…",
   "status.disconnected": "サーバーにつながっていません",
   "note.not_yet": "まだ無い機能です：{what}",
-  "note.play": "再生",
   "note.error": "エラー：{message}",
   "loading": "読み込み中…",
   "no_speaker": "話者が開かれていません．サーバーを --speaker 付きで起動してください．",
@@ -52,5 +51,18 @@
   "menu.detach": "新しい窓で開く",
   "menu.reset": "初期配置に戻す",
   "note.layout_reset": "このワークスペースの配置を初期のものに戻しました．",
-  "note.popup_blocked": "ブラウザが新しい窓を開けませんでした．"
+  "note.popup_blocked": "ブラウザが新しい窓を開けませんでした．",
+  "save": "保存",
+  "save_as": "名前を付けて保存…",
+  "stop": "停止",
+  "save.title": "{speaker} を名前を付けて保存",
+  "save.path": "ファイル（話者のフォルダからの相対パスも可）",
+  "save.cancel": "やめる",
+  "save.ok": "保存",
+  "save.overwrite": "上書きする",
+  "save.exists": "{path} はすでにあります．上書きしますか？",
+  "note.saved": "{path} に保存しました．",
+  "note.save_protected": "{path} は手作業や録音由来のファイルなので上書きしません．別の名前で保存してください．",
+  "note.save_versioned": "{path} は版の付いた話者なので上書きしません．新しい版として保存してください．",
+  "note.play_failed": "再生できませんでした：{message}"
 }
