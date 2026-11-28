@@ -1,5 +1,6 @@
-import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
+import { createContext, useContext, useRef, useState, type ReactNode } from "react";
 import { EDITORS, editorKind, editorMin } from "../editors";
+import { Menu, type MenuItem } from "./Menu";
 import type { T } from "../i18n";
 import {
   DIVIDER, joinArea, leaves, minSize, neighbour, removeArea, resize, splitArea,
@@ -11,6 +12,7 @@ import {
 
 export interface LayoutActions {
   root: Node | null; // null in a detached window (one area, no layout)
+  workspace: string; // the workspace the window shows
   set: (root: Node) => void;
   reset: () => void;
   detach: (area: Leaf, rect: DOMRect) => void;
@@ -22,36 +24,6 @@ export const LayoutProvider = LayoutCtx.Provider;
 const useLayout = () => useContext(LayoutCtx)!;
 
 // ---------------------------------------------------------------------------
-// A floating menu (principles §5: frame and hard offset shadow)
-
-export type MenuItem = { label: string; onClick: () => void; selected?: boolean } | "sep";
-
-export function Menu({ x, y, items, onClose }: { x: number; y: number; items: MenuItem[]; onClose: () => void }) {
-  const el = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ x, y });
-  useEffect(() => {
-    // keep the menu inside the window
-    const r = el.current!.getBoundingClientRect();
-    setPos({ x: Math.max(0, Math.min(x, innerWidth - r.width - 8)), y: Math.max(0, Math.min(y, innerHeight - r.height - 8)) });
-    const down = (e: PointerEvent) => { if (!el.current!.contains(e.target as Element)) onClose(); };
-    const key = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    window.addEventListener("pointerdown", down, true);
-    window.addEventListener("keydown", key);
-    return () => { window.removeEventListener("pointerdown", down, true); window.removeEventListener("keydown", key); };
-  }, [x, y, onClose]);
-  return (
-    <div className="menu" role="menu" ref={el} style={{ left: pos.x, top: pos.y }}>
-      {items.map((it, i) => it === "sep" ? <div key={i} className="msep" /> : (
-        <button key={i} role="menuitem" className={"row" + (it.selected ? " sel" : "")} title={it.label}
-          onClick={() => { onClose(); it.onClick(); }}>
-          <span className="name">{it.label}</span>
-        </button>
-      ))}
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
 // One area: header (editor name ▾, info) and the editor
 
 export function AreaView({ area, t, onNote }: { area: Leaf; t: T; onNote: (s: string) => void }) {
@@ -60,9 +32,16 @@ export function AreaView({ area, t, onNote }: { area: Leaf; t: T; onNote: (s: st
   const box = useRef<HTMLElement>(null);
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
 
-  const items: MenuItem[] = EDITORS.map((e) => ({
-    label: t("ed." + e.id), selected: e.id === area.editor, onClick: () => L.setEditor(area, e.id),
-  }));
+  // The editors grouped by the workspace they come from, this workspace's group first.
+  const groups = [...new Set(EDITORS.map((e) => e.group))];
+  groups.sort((a, b) => Number(b === L.workspace) - Number(a === L.workspace));
+  const items: MenuItem[] = [];
+  groups.forEach((g, i) => {
+    if (i > 0) items.push("sep");
+    items.push({ heading: t("ws." + g) });
+    for (const e of EDITORS.filter((x) => x.group === g))
+      items.push({ label: t("ed." + e.id), selected: e.id === area.editor, onClick: () => L.setEditor(area, e.id) });
+  });
   if (L.root) {
     const root = L.root;
     items.push("sep",

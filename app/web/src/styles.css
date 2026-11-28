@@ -75,6 +75,7 @@ button:focus-visible, [role="slider"]:focus-visible { outline: none; box-shadow:
 .grow { flex: 1; }
 .abody { position: relative; min-height: 0; min-width: 0; overflow: hidden; }
 .empty { padding: var(--s4); color: var(--ink-2); }
+.empty.overlay { position: absolute; inset: 0; }
 
 /* drawings */
 svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
@@ -99,14 +100,31 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .row:hover { background: var(--paper-2); }
 .row.sel { background: var(--accent-paper); border-left-color: var(--accent); }
 .row .mark { width: 16px; flex: 0 0 16px; color: var(--accent); }
+.row .tag { margin-left: auto; flex: 0 0 auto; color: var(--accent); }
+.row:disabled { color: var(--ink-3); cursor: default; }
 .row .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .row.edited .name { color: var(--accent); }
+/* a row with its own controls: the name is a button, then the status mark and ▾ */
+.srow { padding: 0; gap: 0; align-items: stretch; }
+.srow .pick { display: flex; align-items: baseline; gap: var(--s2); flex: 1 1 auto; min-width: 0; padding: 0 var(--s2);
+  text-align: left; line-height: 24px; }
+.srow.off { color: var(--ink-3); }
+.srow .st { flex: 0 0 auto; width: 24px; text-align: center; line-height: 24px; color: var(--ink-3); }
+.srow .st.wip { color: var(--ink-2); }
+.srow .st.done { color: var(--ink); }
+.srow .more { flex: 0 0 24px; line-height: 24px; color: var(--ink-2); }
+.srow .more:hover { color: var(--ink); background: var(--paper-3); }
+.addrow { color: var(--ink-2); }
 .params { overflow-y: auto; overflow-x: hidden; padding: var(--s2) 0; min-width: 0; min-height: 0; }
 .group { margin: 0 var(--s2) var(--s4); padding-left: var(--s2); border-left: var(--rule-thick); }
 .group h3 { font-size: var(--t-small); line-height: var(--lh-small); font-weight: 600; color: var(--ink-2); }
 /* the value column keeps its width while it can; the slider gives way first, and in a
    very narrow area every column shrinks so the row stays inside it */
 .param { display: grid; grid-template-columns: minmax(0, 40px) minmax(0, 1fr) minmax(0, 72px); align-items: center; gap: var(--s2); height: 24px; }
+/* rows with long names (glottis); in a narrow area the names are cut so the slider keeps room */
+.param.wide { grid-template-columns: minmax(0, 136px) minmax(0, 1fr) minmax(0, 72px); }
+.params { container-type: inline-size; }
+@container (max-width: 360px) { .param.wide { grid-template-columns: minmax(0, 88px) minmax(0, 1fr) minmax(0, 64px); } }
 .param .v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small);
   padding: 0 var(--s1); color: var(--ink); }
 .param .v:hover { background: var(--paper-2); }
@@ -144,6 +162,8 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
   box-shadow: var(--layer-shadow); padding: var(--s1) 0; }
 .menu .row { padding: 0 var(--s3); border-left-width: 2px; }
 .menu .msep { border-top: var(--rule-thin); margin: var(--s1) 0; }
+.menu { max-height: calc(100vh - 16px); overflow-y: auto; }
+.menu .mhead { display: block; height: 24px; line-height: 24px; padding: 0 var(--s3); font-size: var(--t-small); color: var(--ink-2); }
 
 /* modal dialog (principles §5: frame and hard offset shadow; the scrim is flat, no blur) */
 .scrim { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: var(--s4); background: var(--scrim); }
@@ -157,3 +177,4 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .dialog .msg.err { color: var(--vermilion); }
 .dialog .actions { display: flex; justify-content: flex-end; gap: var(--s2); }
 .tbtn.primary { border: var(--layer); }
+.tbtn.danger { color: var(--vermilion); border-color: var(--vermilion); }

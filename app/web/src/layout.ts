@@ -19,9 +19,14 @@ const leaf = (editor: string): Leaf => ({ type: "area", id: newId(), editor });
 const split = (dir: Split["dir"], sizes: number[], children: Node[]): Split =>
   ({ type: "split", id: newId(), dir, sizes, children });
 
-/** The initial layout of each workspace. Only the vocal tract workspace has editors yet. */
+/** The initial layout of each workspace. */
 export function defaultLayout(workspace: string): Node {
   switch (workspace) {
+    case "glottis":
+      return split("row", [0.62, 0.38], [
+        split("column", [0.56, 0.44], [leaf("gwave"), split("row", [0.55, 0.45], [leaf("gmodels"), leaf("gshapes")])]),
+        split("column", [0.45, 0.55], [leaf("gparams"), leaf("gstatic")]),
+      ]);
     case "tract":
     default:
       return split("row", [0.72, 0.28], [

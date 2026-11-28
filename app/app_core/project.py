@@ -17,7 +17,7 @@ from typing import Any, Callable
 from . import operators  # noqa: F401  (registers the operations)
 from .names import APP_ID
 from .ops import OPERATORS, Change, Context, History, OpsNamespace, Step
-from .speaker import Speaker
+from .speaker import STATUS_LEVELS, Speaker
 
 Listener = Callable[[dict], None]
 
@@ -75,6 +75,7 @@ class Project:
     def open_speaker(self, path: str | Path, speaker_id: str | None = None) -> str:
         """Load a `.speaker` file. Opening is not an undoable operation."""
         sp = Speaker.load(path)
+        sp.status = read_status(Path(path))
         sid = speaker_id or Path(path).stem
         if sid in self.speakers:
             raise KeyError(f"speaker id {sid!r} is already in use")
@@ -107,6 +108,7 @@ class Project:
         if mp.exists():
             meta = json.loads(mp.read_text(encoding="utf-8"))
         meta.setdefault("app", APP_ID)
+        meta["status"] = sp.status_json()  # the marks as they are now (not a log)
         meta.setdefault("saves", []).append({
             "time": _iso(time.time()),
             "file": out.name,
@@ -149,7 +151,15 @@ class Project:
     def edited(self, speaker_id: str) -> dict[tuple, Any]:
         """Addresses whose value differs from the last save -> the saved value."""
         sp = self.speakers[speaker_id]
-        return {a: v for a, v in self._saved[speaker_id].items() if sp.get(a) != v}
+        out = {}
+        for a, v in self._saved[speaker_id].items():
+            try:
+                now = sp.get(a)
+            except KeyError:  # a value of a shape that is not there now: the shape counts
+                continue
+            if _differs(a, now, v):
+                out[a] = v
+        return out
 
     def _changes_json(self, changes: list[Change], use_old: bool = False) -> list[dict]:
         out = []
@@ -157,7 +167,7 @@ class Project:
             saved = self._saved[c.speaker].setdefault(c.address, c.new if use_old else c.old)
             value = c.old if use_old else c.new
             d = c.to_json(value)
-            d["edited"] = value != saved
+            d["edited"] = _differs(c.address, value, saved)
             d["saved"] = saved
             out.append(d)
         return out
@@ -280,6 +290,28 @@ class Project:
             "history": self.history.state(),
             "operations": {n: {"label": o.label, "doc": o.doc} for n, o in OPERATORS.items()},
         }
+
+
+def _differs(address: tuple, a: Any, b: Any) -> bool:
+    """Whether two values of `address` differ. A whole shape counts only as being
+    there or not: its values are addresses of their own, and moving (when its
+    siblings are added or removed) is not a change of its own."""
+    if address[0].endswith("_def"):
+        return (a is None) != (b is None)
+    return a != b
+
+
+def read_status(speaker_path: Path) -> dict[tuple, str]:
+    """The status marks kept in the speaker's `.meta.json` (none when it has none)."""
+    mp = meta_path(speaker_path)
+    if not mp.exists():
+        return {}
+    try:
+        meta = json.loads(mp.read_text(encoding="utf-8"))
+    except ValueError:
+        return {}
+    return {tuple(e["what"]): e["level"] for e in meta.get("status", [])
+            if e.get("level") in STATUS_LEVELS and e.get("level") != "todo"}
 
 
 class _Group:

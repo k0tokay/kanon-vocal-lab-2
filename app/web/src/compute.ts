@@ -14,8 +14,14 @@ export interface Computed {
 }
 
 export function useComputed(speaker: string | null, params: number[] | null, what: string[], fmax = 5000) {
-  const [result, setResult] = useState<Computed | null>(null);
-  const inputKey = speaker && params ? JSON.stringify([speaker, params]) : null;
+  return useLatest<Computed>("compute", speaker && params ? { speaker, params, what, fmax, n: 2048 } : null);
+}
+
+/** The answer to the latest `payload` for a request `kind`, computed on the server.
+ *  A new payload (by value) asks again; null clears the result. */
+export function useLatest<R>(kind: string, payload: Record<string, unknown> | null): R | null {
+  const [result, setResult] = useState<R | null>(null);
+  const inputKey = payload ? JSON.stringify(payload) : null;
   const st = useRef({ running: false, latest: null as string | null, alive: true });
 
   useEffect(() => {
@@ -32,9 +38,8 @@ export function useComputed(speaker: string | null, params: number[] | null, wha
       s.running = true;
       while (s.alive && s.latest) {
         const k = s.latest;
-        const [sp, p] = JSON.parse(k);
         try {
-          const r = await client.request<Computed>("compute", { speaker: sp, params: p, what, fmax, n: 2048 });
+          const r = await client.request<R>(kind, JSON.parse(k));
           // a late answer must not bring back a result after the input went away
           if (s.alive && s.latest !== null) setResult(r);
         } catch { /* reconnecting; the next change retries */ }

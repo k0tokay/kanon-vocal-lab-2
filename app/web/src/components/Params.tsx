@@ -15,21 +15,21 @@ export const GROUPS: [string, string[]][] = [
 
 let dragCounter = 0;
 
-function Slider({ info, value, onDrag, onDragEnd, onStep }: {
-  info: TractParamInfo; value: number;
+function Slider({ label, min, max, value, onDrag, onDragEnd, onStep }: {
+  label: string; min: number; max: number; value: number;
   onDrag: (v: number) => void; onDragEnd: (v: number) => void; onStep: (v: number) => void;
 }) {
   const el = useRef<HTMLDivElement>(null);
-  const span = info.max - info.min;
-  const frac = Math.min(1, Math.max(0, (value - info.min) / span));
+  const span = max - min;
+  const frac = Math.min(1, Math.max(0, (value - min) / span));
   const at = (clientX: number) => {
     const r = el.current!.getBoundingClientRect();
-    return info.min + Math.min(1, Math.max(0, (clientX - r.left) / r.width)) * span;
+    return min + Math.min(1, Math.max(0, (clientX - r.left) / r.width)) * span;
   };
   return (
     <div
       ref={el} className="slider" role="slider" tabIndex={0}
-      aria-label={info.name} aria-valuemin={info.min} aria-valuemax={info.max} aria-valuenow={value}
+      aria-label={label} aria-valuemin={min} aria-valuemax={max} aria-valuenow={value}
       onPointerDown={(e) => { el.current!.setPointerCapture(e.pointerId); onDrag(at(e.clientX)); }}
       onPointerMove={(e) => { if (el.current!.hasPointerCapture(e.pointerId)) onDrag(at(e.clientX)); }}
       onPointerUp={(e) => { if (el.current!.hasPointerCapture(e.pointerId)) onDragEnd(at(e.clientX)); }}
@@ -44,24 +44,25 @@ function Slider({ info, value, onDrag, onDragEnd, onStep }: {
   );
 }
 
-function ParamRow({ speaker, shape, info, value }: {
-  speaker: string; shape: string; info: TractParamInfo; value: number;
+/** One editable number: a slider when it has a range, and the value, which can be typed.
+ *  `op` with `args` (+ `value`) is the operation that sets it; a drag is one undo step. */
+export function ValueRow({ label, title, min, max, value, edited, op, args, wide }: {
+  label: string; title?: string; min: number; max: number; value: number; edited: boolean;
+  op: string; args: Record<string, unknown>; wide?: boolean;
 }) {
-  const address = ["tract_shape", shape, info.name];
-  const edited = client.isEdited(speaker, address);
   // While dragging, show the pointer's value at once; the server's comes back a moment later.
   const [local, setLocal] = useState<number | null>(null);
   const [typing, setTyping] = useState<string | null>(null);
   const drag = useRef<{ id: string; frame: number; latest: number } | null>(null);
   const shown = local ?? value;
+  const ranged = max > min;
 
-  const send = (v: number, dragId?: string) =>
-    client.op("tract.set_param", { speaker, shape, param: info.name, value: v }, dragId);
+  const send = (v: number, dragId?: string) => client.op(op, { ...args, value: v }, dragId);
 
   const onDrag = (v: number) => {
     setLocal(v);
     let d = drag.current;
-    if (!d) d = drag.current = { id: `${speaker}/${shape}/${info.name}/${++dragCounter}`, frame: 0, latest: v };
+    if (!d) d = drag.current = { id: `${op}/${label}/${++dragCounter}`, frame: 0, latest: v };
     d.latest = v;
     if (!d.frame) d.frame = requestAnimationFrame(() => { d!.frame = 0; void send(d!.latest, d!.id); });
   };
@@ -80,14 +81,16 @@ function ParamRow({ speaker, shape, info, value }: {
   };
 
   return (
-    <div className={"param" + (edited ? " edited" : "")}>
-      <span className="mono">{info.name}</span>
-      <Slider info={info} value={shown} onDrag={onDrag} onDragEnd={onDragEnd} onStep={(v) => void send(v)} />
+    <div className={"param" + (wide ? " wide" : "") + (edited ? " edited" : "")}>
+      <span className="mono clip" title={title ?? label}>{label}</span>
+      {ranged
+        ? <Slider label={label} min={min} max={max} value={shown} onDrag={onDrag} onDragEnd={onDragEnd} onStep={(v) => void send(v)} />
+        : <span />}
       {typing === null ? (
         <button className="v" title={shown.toFixed(4)} onClick={() => setTyping(value.toFixed(4))}>{shown.toFixed(3)}</button>
       ) : (
         <input
-          className="v" autoFocus value={typing} aria-label={info.name}
+          className="v" autoFocus value={typing} aria-label={label}
           onChange={(e) => setTyping(e.target.value)}
           onFocus={(e) => e.target.select()}
           onKeyDown={(e) => {
@@ -98,6 +101,16 @@ function ParamRow({ speaker, shape, info, value }: {
         />
       )}
     </div>
+  );
+}
+
+function ParamRow({ speaker, shape, info, value }: {
+  speaker: string; shape: string; info: TractParamInfo; value: number;
+}) {
+  return (
+    <ValueRow label={info.name} min={info.min} max={info.max} value={value}
+      edited={client.isEdited(speaker, ["tract_shape", shape, info.name])}
+      op="tract.set_param" args={{ speaker, shape, param: info.name }} />
   );
 }
 
