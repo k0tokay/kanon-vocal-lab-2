@@ -25,6 +25,8 @@
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
   --rule-thick: 2px solid var(--ink); --rule-thin: 1px solid var(--rule); --rule-dash: 1px dashed var(--rule);
   --layer: 1px solid var(--ink); --layer-shadow: 4px 4px 0 var(--ink);
+  /* the selected time range: the accent at low strength over whatever is below */
+  --range: color-mix(in srgb, var(--accent) 12%, transparent);
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body, #root { height: 100%; }
@@ -178,3 +180,101 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .dialog .actions { display: flex; justify-content: flex-end; gap: var(--s2); }
 .tbtn.primary { border: var(--layer); }
 .tbtn.danger { color: var(--vermilion); border-color: var(--vermilion); }
+
+/* ---------------------------------------------------------------------
+   the articulation workspace: the gestural score on a time line */
+.ahead > .keep { flex: 0 0 auto; }
+.hbtn { font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small); color: var(--ink-2); padding: 0 var(--s1); }
+.hbtn:hover { background: var(--paper-2); }
+.hbtn[aria-pressed="true"] { color: var(--accent); font-weight: 600; }
+.score { display: grid; grid-template-rows: minmax(0, 1fr) 24px; min-height: 0; min-width: 0; overflow: hidden; }
+.tl { overflow: auto; position: relative; min-height: 0; min-width: 0; }
+.tl-in { position: relative; }
+.tl-row { display: flex; border-bottom: var(--rule-thin); position: relative; }
+.tl-row .lab-c { position: sticky; left: 0; z-index: 3; flex: 0 0 128px; width: 128px; background: var(--paper);
+  border-right: var(--rule-thick); padding: 0 var(--s2); display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.tl-row .lab-c .lt { display: flex; align-items: baseline; gap: var(--s1); min-width: 0; }
+.tl-row .lab-c .fold { flex: 0 0 auto; width: 16px; font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small); color: var(--ink-2); text-align: left; }
+.tl-row .lab-c .fold:hover { color: var(--ink); background: var(--paper-2); }
+/* the lower edge of a lane name: drag it to set the lane's height */
+.tl-row .lab-c .rsz { position: absolute; left: 0; right: 0; bottom: -4px; height: 8px; cursor: row-resize; z-index: 6; touch-action: none; }
+.tl-row .lab-c .rsz:hover { border-bottom: 2px solid var(--accent); }
+.tl-row .lab-c .n { font-size: var(--t-small); line-height: var(--lh-small); }
+.tl-row .lab-c .n.edited { color: var(--accent); }
+.tl-row .lab-c .u { font-family: var(--font-mono); font-size: var(--t-small); line-height: 16px; color: var(--ink-3); }
+.tl-row .track { position: relative; flex: 0 0 auto; overflow: hidden; }
+.tl-row.ruler { position: sticky; top: 0; z-index: 4; background: var(--paper); border-bottom: var(--rule-thick); }
+.tl-row.ruler .track { cursor: text; touch-action: none; }
+.tl-row.ruler .lab-c { z-index: 5; }
+.tl-row.sound { border-bottom: var(--rule-thick); }
+.tl-row.sound .track { cursor: text; touch-action: none; }
+.tl-row .stale { position: absolute; inset: 0; background: color-mix(in srgb, var(--paper) 40%, transparent); pointer-events: none; }
+.ruler-svg text { font: var(--t-small) var(--font-mono); fill: var(--ink-2); }
+.ruler-svg .tick { stroke: var(--ink-2); stroke-width: 1; }
+.ruler-svg .tick.minor { stroke: var(--rule); }
+.ruler-svg .rangebar, .ovw .rangebar { fill: var(--accent); }
+.ruler-svg .headmark { fill: var(--ink); }
+.wavesvg { position: absolute; left: 0; top: 0; }
+.wave, .ovw-wave { fill: var(--ink-2); }
+.wave-axis { stroke: var(--rule); }
+.speccv { position: absolute; top: 0; display: block; }
+
+/* a gesture: a block over its time span; the value inside when it fits */
+.g { position: absolute; top: 2px; bottom: 2px; background: var(--paper-2); border: var(--rule-thin);
+  font-family: var(--font-mono); font-size: var(--t-small); line-height: 20px; padding: 0 var(--s1) 0 var(--s2);
+  white-space: nowrap; overflow: hidden; color: var(--ink); cursor: pointer; }
+.g .gt { display: block; overflow: hidden; text-overflow: ellipsis; }
+.g:hover { background: var(--paper-3); }
+/* neutral: the sequence does nothing here; no fill, dashed frame, the text dim */
+.g.neu { background: none; border: var(--rule-dash); color: var(--ink-3); }
+.g.neu:hover { background: var(--paper-2); }
+.g.edited { color: var(--accent); }
+.g.sel { background: var(--accent-paper); border: 1px solid var(--accent); color: var(--accent); z-index: 1; }
+/* how the block approaches its target: a rising curve over about 3 × the time constant,
+   from the block's left edge; a curve, not a bar, so it is not read as a length */
+.g .ap { position: absolute; left: 0; top: 0; height: 100%; overflow: visible; pointer-events: none; }
+.g .ap path, .aplegend path { fill: none; stroke: var(--ink-3); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.g.sel .ap path { stroke: var(--accent); }
+.g .grip { position: absolute; right: -1px; top: 0; bottom: 0; width: 4px; cursor: ew-resize; touch-action: none; z-index: 1; }
+.g .grip:hover, .g.sel .grip { background: var(--accent); }
+/* a folded lane: thin blocks, no text */
+.folded .g { top: 2px; bottom: 2px; padding: 0; }
+/* lanes with a line: the blocks are one line at the bottom, the line shows the value over time */
+.lane-line:not(.folded) .g { top: auto; height: 22px; bottom: 0; }
+.curve { position: absolute; left: 0; top: 0; pointer-events: none; }
+.curve .target { fill: none; stroke: var(--ink-3); stroke-width: 1; stroke-dasharray: 4 4; }
+.curve .real { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+.curve .selline { fill: none; stroke: var(--accent); stroke-width: 2; }
+.tl-row .scale { position: absolute; top: 0; color: var(--ink-3); pointer-events: none; z-index: 1; white-space: nowrap; }
+
+/* the playhead and the selected range, over every lane */
+.over { position: absolute; top: 0; bottom: 0; pointer-events: none; z-index: 2; }
+.over.range { background: var(--range); border-left: 1px solid var(--accent); border-right: 1px solid var(--accent); }
+.over.head { width: 0; border-left: 2px solid var(--ink); }
+
+/* the overview: the whole score and the part in view; drag to scroll */
+.ovw { position: relative; display: flex; border-top: var(--rule-thin); min-width: 0; }
+.ovw-lab { flex: 0 0 128px; width: 128px; padding: 0 var(--s2); line-height: 24px; border-right: var(--rule-thick); }
+.ovw-box { position: relative; flex: 1 1 auto; min-width: 0; cursor: grab; touch-action: none; overflow: hidden; }
+.ovw-box svg { position: absolute; left: 0; top: 0; display: block; }
+.ovw .win { position: absolute; top: 2px; bottom: 2px; border: 1px solid var(--ink); background: var(--range); pointer-events: none; }
+.ovw-head { stroke: var(--ink); stroke-width: 1; }
+
+/* the gesture panel: like the parameter rows of the other workspaces */
+.param .v.ro { color: var(--ink-2); }
+.param .v.ro:hover { background: none; }
+.param .pick { min-width: 0; text-align: left; padding: 0 var(--s1); color: var(--ink); background: var(--paper);
+  border: 0; border-bottom: var(--rule-thin); height: 24px; grid-column: 2 / 4; }
+.param .check { grid-column: 2 / 4; text-align: left; padding: 0 var(--s1); color: var(--ink); }
+.param .check:hover { background: var(--paper-2); }
+.param .check::before { content: "□ "; color: var(--ink-2); }
+.param .check[aria-pressed="true"]::before { content: "■ "; color: var(--accent); }
+.gesture .note-line { padding-left: 144px; color: var(--ink-3); }
+@container (max-width: 360px) { .gesture .note-line { padding-left: 96px; } }
+.gesture .hint { margin: 0 var(--s2) var(--s3); padding-left: var(--s2); font-size: var(--t-small); line-height: var(--lh-small); color: var(--ink-2); }
+.gesture .hint svg { display: inline-block; margin-right: var(--s1); vertical-align: baseline; }
+.gesture .cmds { display: flex; flex-wrap: wrap; gap: var(--s1) var(--s2); margin: 0 var(--s2); }
+.gesture .cmds .tbtn { border: var(--rule-thin); }
+.empty .tbtn { margin-top: var(--s2); }
+/* the selected range gives way before the command names */
+.status > .st-range { flex: 0 50 auto; }

@@ -31,7 +31,23 @@ export const LEVELS: Level[] = ["todo", "wip", "done"];
 export interface HistoryState {
   can_undo: boolean; can_redo: boolean; undo_label: string | null; redo_label: string | null; open: string | null;
 }
-export interface Project { speakers: Record<string, Speaker>; history: HistoryState }
+/** A gesture: [value, slope, duration_s, time_constant_s, neutral (0 | 1)]. The value is a
+ *  shape name, or a number written as text ("0.040000") in the number sequences. */
+export type Gesture = [string, number, number, number, number];
+export interface SequenceInfo {
+  type: string; unit: string; nominal: boolean; min: number; max: number;
+  min_slope: number; max_slope: number; min_tau: number; max_tau: number;
+}
+/** A gestural score (`.ges`): eight sequences of gestures, each one after another. */
+export interface Score {
+  path: string | null;
+  duration: number;
+  sequences: { type: string; gestures: Gesture[] }[];
+  info: SequenceInfo[];
+  modified: boolean;
+  edited: { address: Address; saved: unknown }[];
+}
+export interface Project { speakers: Record<string, Speaker>; scores: Record<string, Score>; history: HistoryState }
 
 export type SaveResult = { ok: true; path: string } | { ok: false; reason: "protected" | "versioned" | "exists"; path: string };
 
@@ -96,7 +112,7 @@ class Client {
       let needFull = false;
       for (const c of msg.changes as Change[]) needFull = !this.apply(c) || needFull;
       if (needFull) { void this.refresh(); return; }
-    } else if (msg.type === "speaker_saved" || msg.type === "speaker_opened") {
+    } else if (["speaker_saved", "speaker_opened", "score_saved", "score_opened"].includes(msg.type)) {
       void this.refresh();
       return;
     }
@@ -105,16 +121,32 @@ class Client {
 
   private setProject(p: Project) {
     this.project = p;
+    p.scores ??= {};
     this.edited.clear();
-    for (const [sid, sp] of Object.entries(p.speakers))
-      for (const e of sp.edited) this.edited.set(key(sid, e.address), e.saved);
+    for (const [sid, d] of [...Object.entries(p.speakers), ...Object.entries(p.scores)])
+      for (const e of d.edited) this.edited.set(key(sid, e.address), e.saved);
+    for (const id of Object.keys(p.scores)) this.scoreRev.set(id, (this.scoreRev.get(id) ?? 0) + 1);
     this.changed();
   }
+
+  /** A number that changes whenever the score `id` changes (for requests that depend on it). */
+  scoreRev = new Map<string, number>();
 
   async refresh() { this.setProject(await this.request("project")); }
 
   /** Apply one change in place. False if this kind of address needs a full reload. */
   private apply(c: Change): boolean {
+    const sc = this.project?.scores[c.speaker];
+    if (sc) {
+      const k = key(c.speaker, c.address);
+      if (c.edited) this.edited.set(k, c.saved); else this.edited.delete(k);
+      const seq = sc.sequences.find((q) => q.type === c.address[1]);
+      if (c.address[0] !== "sequence" || !seq) return false;
+      seq.gestures = c.value as Gesture[];
+      sc.duration = Math.max(...sc.sequences.map((q) => q.gestures.reduce((a, g) => a + g[2], 0)));
+      this.scoreRev.set(c.speaker, (this.scoreRev.get(c.speaker) ?? 0) + 1);
+      return true;
+    }
     const sp = this.project?.speakers[c.speaker];
     if (!sp) return false;
     const k = key(c.speaker, c.address);
@@ -187,9 +219,14 @@ class Client {
   undo() { return this.request("undo").catch((e) => this.report(e)); }
   redo() { return this.request("redo").catch((e) => this.report(e)); }
 
-  /** Save a speaker (to its own file, or to `path`). Refusals come back as a result. */
-  save(speaker: string, path?: string, overwrite = false) {
-    return this.request<SaveResult>("save", { speaker, ...(path ? { path } : {}), overwrite });
+  /** Save a speaker or the score `doc` (to its own file, or to `path`). Refusals come back as a result. */
+  save(doc: string, path?: string, overwrite = false) {
+    return this.request<SaveResult>("save", { speaker: doc, ...(path ? { path } : {}), overwrite });
+  }
+
+  /** Open a gestural score in place of the open one (`discard`: drop its unsaved changes). */
+  openScore(path: string, discard = false) {
+    return this.request<string>("open_score", { path, discard });
   }
 
   report(e: Error) { this.errors.forEach((f) => f(e.message)); }

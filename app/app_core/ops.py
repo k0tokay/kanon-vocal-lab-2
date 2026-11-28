@@ -29,7 +29,7 @@ Address = tuple
 
 @dataclass
 class Change:
-    speaker: str
+    speaker: str  # the document: a speaker id or a score id
     address: Address
     old: Any
     new: Any
@@ -99,11 +99,16 @@ class Context:
     def speaker(self, speaker_id: str):
         return self.project.speakers[speaker_id]
 
-    def get(self, speaker_id: str, address: Address) -> Any:
-        return self.speaker(speaker_id).get(tuple(address))
+    def score(self, score_id: str):
+        return self.project.scores[score_id]
 
-    def set(self, speaker_id: str, address: Address, value: Any) -> Any:
-        sp = self.speaker(speaker_id)
+    def get(self, doc_id: str, address: Address) -> Any:
+        return self.project.doc(doc_id).get(tuple(address))
+
+    def set(self, doc_id: str, address: Address, value: Any) -> Any:
+        """Set a value of a document (a speaker or a score) and record the change."""
+        speaker_id = doc_id
+        sp = self.project.doc(doc_id)
         address = sp.canonical(address)
         old = sp.get(address)
         new = sp.set(address, value)

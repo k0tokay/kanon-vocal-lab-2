@@ -27,6 +27,11 @@ export function defaultLayout(workspace: string): Node {
         split("column", [0.56, 0.44], [leaf("gwave"), split("row", [0.55, 0.45], [leaf("gmodels"), leaf("gshapes")])]),
         split("column", [0.45, 0.55], [leaf("gparams"), leaf("gstatic")]),
       ]);
+    case "articulation":
+      return split("row", [0.76, 0.24], [
+        split("column", [0.73, 0.27], [leaf("score"), leaf("parea")]),
+        split("column", [0.47, 0.53], [leaf("gesture"), leaf("ptract")]),
+      ]);
     case "tract":
     default:
       return split("row", [0.72, 0.28], [

@@ -394,6 +394,32 @@ C_EXPORT int vtlGesturalScoreToTractContourFiles(const char* gesFileName,
 
 
 // ****************************************************************************
+// This function gives the vocal tract parameters (and the glottis control
+// parameters) of a gestural score at a fixed frame rate, as the synthesis
+// sees them (GesturalScore::getParams at t = frame / frameRate_Hz).
+//
+// Parameters:
+// o gesFileName (in): Name of the gestural score file.
+// o frameRate_Hz (in): Frames per second (e.g. 100).
+// o tractParams (out): numFrames * numVocalTractParams values, frame by frame.
+//     NULL to ask only for the number of frames.
+// o glottisParams (out): numFrames * numGlottisParams values, or NULL.
+// o maxFrames (in): The capacity of the buffers in frames.
+// o numFrames (out): The number of frames of the whole score.
+//
+// Function return value:
+// 0: success.
+// 1: The API was not initialized.
+// 2: Loading the gestural score file failed.
+// 3: The frame rate is not positive.
+// 4: The buffers hold fewer frames than the score has (numFrames is set).
+// ****************************************************************************
+
+C_EXPORT int vtlGesturalScoreToTractParams(const char* gesFileName, double frameRate_Hz,
+  double* tractParams, double* glottisParams, int maxFrames, int* numFrames);
+
+
+// ****************************************************************************
 // This function directly converts a gestural score to an audio signal or file.
 // Parameters:
 // o gesFileName (in): Name of the gestural score file to synthesize.

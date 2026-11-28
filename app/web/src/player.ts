@@ -26,6 +26,45 @@ class Player {
   subscribe = (f: () => void) => { this.listeners.add(f); return () => { this.listeners.delete(f); }; };
   private changed() { this.version++; this.listeners.forEach((f) => f()); }
 
+  /** Play the part from `start` to `end` s of the sound at `url` (a synthesized score).
+   *  `position` counts from the start of that sound, so a playhead can follow it. */
+  async playUrl(url: string, start = 0, end?: number) {
+    this.stop();
+    const token = ++this.token;
+    this.status = "loading";
+    this.changed();
+    const ctx = (this.ctx ??= new AudioContext());
+    if (ctx.state === "suspended") await ctx.resume();
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error((await r.json().catch(() => null))?.error ?? `HTTP ${r.status}`);
+      const buf = await ctx.decodeAudioData(await r.arrayBuffer());
+      if (token !== this.token) return;
+      const a = Math.min(Math.max(0, start), buf.duration);
+      const b = Math.min(end ?? buf.duration, buf.duration);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      src.connect(ctx.destination);
+      src.onended = () => { if (this.src === src) this.finish(); };
+      this.src = src;
+      this.started = ctx.currentTime - a;
+      this.position = a;
+      this.status = "playing";
+      src.start(0, a, Math.max(0.01, b - a));
+      const tick = () => {
+        if (this.src !== src) return;
+        this.position = Math.min(ctx.currentTime - this.started, b);
+        this.changed();
+        this.raf = requestAnimationFrame(tick);
+      };
+      this.raf = requestAnimationFrame(tick);
+      this.changed();
+    } catch (e) {
+      if (token === this.token) this.finish();
+      throw e;
+    }
+  }
+
   /** Synthesize `params` of `speaker` and play it. Throws (after resetting) on failure. */
   async play(speaker: string, params: number[], duration = 1.0, glottisShape?: string) {
     this.stop();

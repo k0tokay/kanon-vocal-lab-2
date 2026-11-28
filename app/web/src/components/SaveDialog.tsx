@@ -2,13 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import type { T } from "../i18n";
 import { client, type SaveResult } from "../store";
 
-/** A file name to offer for "save as": the next version of a versioned speaker,
- *  else the same name with "-copy". */
-export function suggestName(path: string | null, speaker: string): string {
-  const name = path ? path.split(/[\\/]/).pop()! : speaker + ".speaker";
-  const v = name.match(/^(.*-v\d+-\d+-)(\d+)\.speaker$/);
-  if (v) return `${v[1]}${Number(v[2]) + 1}.speaker`;
-  return name.replace(/\.speaker$/, "") + "-copy.speaker";
+/** A file name to offer for "save as": the next version of a versioned file,
+ *  else the same name with "-copy". `ext` is ".speaker" or ".ges". */
+export function suggestName(path: string | null, doc: string, ext = ".speaker"): string {
+  const name = path ? path.split(/[\\/]/).pop()! : doc + ext;
+  const e = ext.replace(".", "\\.");
+  const v = name.match(new RegExp(`^(.*-v\\d+-\\d+-)(\\d+)${e}$`));
+  if (v) return `${v[1]}${Number(v[2]) + 1}${ext}`;
+  return name.replace(new RegExp(`${e}$`), "") + "-copy" + ext;
 }
 
 export function refusalNote(t: T, r: SaveResult & { ok: false }) {
@@ -27,7 +28,7 @@ export function SaveDialog({ t, speaker, initial, onDone, onClose }: {
   useEffect(() => {
     const el = input.current!;
     el.focus();
-    el.setSelectionRange(0, el.value.replace(/\.speaker$/, "").length);
+    el.setSelectionRange(0, el.value.replace(/\.(speaker|ges)$/, "").length);
   }, []);
 
   const submit = async (overwrite: boolean) => {

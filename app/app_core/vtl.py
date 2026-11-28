@@ -15,7 +15,10 @@ What it computes from a vector of vocal tract parameters:
 - `sustained`: a held vowel (time-domain synthesis, `vtlSynthesisAddTract`);
 - `glottis_wave`: glottal area, glottal flow and output of a held vowel, per
   sample, from the "misc" file of `vtlGesturalScoreToAudio` (the only API
-  call that gives the glottis signals).
+  call that gives the glottis signals);
+- `score_audio`: a gestural score synthesized (`vtlGesturalScoreToAudio`);
+- `score_tract_params`: the vocal tract parameters of a gestural score frame by
+  frame (`vtlGesturalScoreToTractParams`, added to this fork's API).
 
 The library is found through `VTL_LIB`, else `build-mac/gui/libVocalTractLabApi.dylib`
 of this checkout.
@@ -99,9 +102,13 @@ class Backend:
         L.vtlExportTractSvg.argtypes = [_D, ct.c_char_p]
         L.vtlSynthesisAddTract.argtypes = [ct.c_int, _D, _D, _D]
         L.vtlGesturalScoreToAudio.argtypes = [ct.c_char_p, ct.c_char_p, ct.c_char_p, _D, _I, ct.c_int, ct.c_int]
+        self.has_tract_params = hasattr(L, "vtlGesturalScoreToTractParams")
+        if self.has_tract_params:
+            L.vtlGesturalScoreToTractParams.argtypes = [ct.c_char_p, ct.c_double, _D, _D, ct.c_int, _I]
         self.L = L
         self.lock = threading.RLock()
         self._key: str | None = None
+        self._all_anatomy: str | None = None  # the anatomy key of a speaker loaded by `use_all`
         self._tmp = tempfile.TemporaryDirectory(prefix="vtl-")
         self.sampling_rate = 0
         self.num_tube_sections = 0
@@ -123,8 +130,9 @@ class Backend:
     def use(self, speaker: Speaker) -> None:
         with self.lock:
             key = self._key_of(speaker)
-            if key == self._key:
-                return
+            if key == self._key or (self._key is not None and key == self._all_anatomy):
+                return  # loaded (a whole speaker loaded by `use_all` has the same anatomy)
+            self._all_anatomy = None
             f = Path(self._tmp.name) / "speaker.speaker"
             f.write_text(speaker.text(), encoding="utf-8", newline="")
             if self.L.vtlInitialize(str(f).encode()) != 0:
@@ -141,6 +149,16 @@ class Backend:
         with self.lock:
             self._key = None
             self.use(speaker)
+
+    def use_all(self, speaker: Speaker) -> None:
+        """Load the whole speaker, shapes included, unless exactly this one is loaded."""
+        with self.lock:
+            key = "all:" + hashlib.sha256(speaker.text().encode()).hexdigest()
+            if key == self._key:
+                return
+            self._key = None
+            self.use(speaker)
+            self._all_anatomy, self._key = self._key, key
 
     def invalidate(self) -> None:
         with self.lock:
@@ -343,6 +361,51 @@ class Backend:
             "flow_cm3_s": flow[a:end],
             "output": out[a:end],
         }
+
+
+    # -- gestural scores ------------------------------------------------------------
+
+    def _score_file(self, score_text: str) -> Path:
+        f = Path(self._tmp.name) / "score.ges"
+        f.write_text(score_text, encoding="utf-8", newline="")
+        return f
+
+    def score_audio(self, speaker: Speaker, score_text: str, duration: float) -> tuple[np.ndarray, int]:
+        """A gestural score (its XML text) synthesized with `speaker`, the shapes as they
+        are now. Returns (samples, sampling rate); VTL's scale (peaks near 0.1-0.3)."""
+        with self.lock:
+            self.use_all(speaker)
+            f = self._score_file(score_text)
+            sr = self.sampling_rate
+            audio = _arr(int((duration + 1.0) * sr))
+            n = ct.c_int()
+            r = self.L.vtlGesturalScoreToAudio(str(f).encode(), b"", b"", _p(audio), ct.byref(n), 0, 0)
+            if r != 0:
+                raise RuntimeError(f"vtlGesturalScoreToAudio failed ({r})")
+            return audio[:n.value].copy(), sr
+
+    def score_tract_params(self, speaker: Speaker, score_text: str, rate: float = 200.0,
+                           glottis: bool = False):
+        """The vocal tract parameters of a gestural score at `rate` frames per second,
+        as the synthesis uses them: (frames, parameters). With `glottis`, also the
+        selected glottis model's control parameters: (tract, glottis)."""
+        if not self.has_tract_params:
+            raise RuntimeError(f"{self.lib_path} has no vtlGesturalScoreToTractParams: rebuild it")
+        with self.lock:
+            self.use_all(speaker)
+            f = str(self._score_file(score_text)).encode()
+            n = ct.c_int()
+            r = self.L.vtlGesturalScoreToTractParams(f, rate, None, None, 0, ct.byref(n))
+            if r != 0:
+                raise RuntimeError(f"vtlGesturalScoreToTractParams failed ({r})")
+            out = _arr(n.value * self.num_tract_params)
+            g = _arr(n.value * self.num_glottis_params) if glottis else None
+            r = self.L.vtlGesturalScoreToTractParams(f, rate, _p(out), _p(g) if glottis else None,
+                                                     n.value, ct.byref(n))
+            if r != 0:
+                raise RuntimeError(f"vtlGesturalScoreToTractParams failed ({r})")
+            tract = out.reshape(n.value, self.num_tract_params)
+            return (tract, g.reshape(n.value, self.num_glottis_params)) if glottis else tract
 
 
 def _xml_attr(v: str) -> str:
