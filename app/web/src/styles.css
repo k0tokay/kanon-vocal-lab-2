@@ -5,6 +5,7 @@
   --rule: rgba(31, 36, 33, .22);
   --accent: #24705f; --accent-paper: #d3e4dd;
   --vermilion: #b03c24;
+  --scrim: rgba(31, 36, 33, .32);
   color-scheme: light;
 }
 /* principles §10: ink ground, unbleached text, rules and tints one step stronger */
@@ -14,6 +15,7 @@
   --rule: rgba(228, 230, 223, .30);
   --accent: #6cb8a3; --accent-paper: #2b4740;
   --vermilion: #e07a62;
+  --scrim: rgba(0, 0, 0, .48);
   color-scheme: dark;
 }
 :root {
@@ -123,6 +125,10 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 /* status bar */
 .status { display: flex; align-items: baseline; gap: var(--s4); padding: var(--s1) var(--s4); border-top: var(--rule-thick); white-space: nowrap; min-width: 0; overflow: hidden; }
 .status > * { flex: 0 0 auto; }
+/* in a narrow window the command names are cut before anything leaves the bar */
+.status > .tbtn { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.status > .tbtn.icon { flex: 0 0 auto; }
+.status > .tbtn.long { flex-shrink: 4; }
 .status > .clip { flex: 0 1 auto; }
 .status > .grow { flex: 1 1 0; min-width: 0; }
 .tbtn { padding: 0 var(--s2); }
@@ -138,3 +144,16 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
   box-shadow: var(--layer-shadow); padding: var(--s1) 0; }
 .menu .row { padding: 0 var(--s3); border-left-width: 2px; }
 .menu .msep { border-top: var(--rule-thin); margin: var(--s1) 0; }
+
+/* modal dialog (principles §5: frame and hard offset shadow; the scrim is flat, no blur) */
+.scrim { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: var(--s4); background: var(--scrim); }
+.dialog { width: min(480px, 100%); min-width: 0; background: var(--paper); border: var(--layer); box-shadow: var(--layer-shadow);
+  padding: var(--s4); display: grid; gap: var(--s3); white-space: normal; }
+.dialog h2 { font-size: var(--t-head); line-height: var(--lh-head); font-weight: 600; }
+.dialog .field { display: grid; gap: var(--s1); min-width: 0; }
+.dialog input { width: 100%; min-width: 0; height: 32px; padding: 0 var(--s2); border: 0; border-bottom: 2px solid var(--accent);
+  background: var(--paper-2); color: var(--ink); outline: none; font-size: var(--t-body); }
+.dialog .msg { font-size: var(--t-small); line-height: var(--lh-small); overflow-wrap: anywhere; }
+.dialog .msg.err { color: var(--vermilion); }
+.dialog .actions { display: flex; justify-content: flex-end; gap: var(--s2); }
+.tbtn.primary { border: var(--layer); }

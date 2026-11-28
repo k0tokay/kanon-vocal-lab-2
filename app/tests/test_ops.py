@@ -141,7 +141,7 @@ class Save(Base):
             self.p.ops.tract.set_param(speaker="kanon", shape="a", param="TCX", value=0.6)
             self.p.undo()
             self.assertTrue(self.p.is_modified("kanon"))
-            self.p.save_speaker("kanon", path)
+            self.p.save_speaker("kanon", path, overwrite=True)  # another file that exists
             self.assertFalse(self.p.is_modified("kanon"))
             meta = json.loads(meta_path(path).read_text())
             ops = meta["saves"][0]["operations"]

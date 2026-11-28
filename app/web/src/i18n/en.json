@@ -38,7 +38,6 @@
   "status.connecting": "connecting to the server…",
   "status.disconnected": "no connection to the server",
   "note.not_yet": "Not available yet: {what}",
-  "note.play": "playback",
   "note.error": "Error: {message}",
   "loading": "Loading…",
   "no_speaker": "No speaker is open. Start the server with --speaker.",
@@ -52,5 +51,18 @@
   "menu.detach": "Open in a new window",
   "menu.reset": "Reset the layout",
   "note.layout_reset": "The layout of this workspace is back to the initial one.",
-  "note.popup_blocked": "The browser blocked the new window."
+  "note.popup_blocked": "The browser blocked the new window.",
+  "save": "Save",
+  "save_as": "Save as…",
+  "stop": "Stop",
+  "save.title": "Save {speaker} as",
+  "save.path": "File (relative to the speaker's folder)",
+  "save.cancel": "Cancel",
+  "save.ok": "Save",
+  "save.overwrite": "Overwrite",
+  "save.exists": "{path} exists. Overwrite it?",
+  "note.saved": "Saved {path}",
+  "note.save_protected": "{path} is hand-made or from a recording and is never overwritten. Save under another name.",
+  "note.save_versioned": "{path} is a released version and is not overwritten. Save it as a new version.",
+  "note.play_failed": "Could not play: {message}"
 }

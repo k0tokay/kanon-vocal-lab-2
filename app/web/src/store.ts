@@ -20,6 +20,8 @@ export interface HistoryState {
 }
 export interface Project { speakers: Record<string, Speaker>; history: HistoryState }
 
+export type SaveResult = { ok: true; path: string } | { ok: false; reason: "protected" | "versioned" | "exists"; path: string };
+
 interface Change { speaker: string; address: Address; value: unknown; edited: boolean; saved: unknown }
 
 type Status = "connecting" | "open" | "closed";
@@ -148,6 +150,11 @@ class Client {
   endDrag(drag: string) { return this.request("drag_end", { drag }).catch((e) => this.report(e)); }
   undo() { return this.request("undo").catch((e) => this.report(e)); }
   redo() { return this.request("redo").catch((e) => this.report(e)); }
+
+  /** Save a speaker (to its own file, or to `path`). Refusals come back as a result. */
+  save(speaker: string, path?: string, overwrite = false) {
+    return this.request<SaveResult>("save", { speaker, ...(path ? { path } : {}), overwrite });
+  }
 
   report(e: Error) { this.errors.forEach((f) => f(e.message)); }
 }
