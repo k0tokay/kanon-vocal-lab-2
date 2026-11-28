@@ -12,6 +12,19 @@ Values are addressed by tuples (they become JSON arrays on the wire):
     ("glottis_static", model, abbr)            e.g. (..., "Triangular body-cover glottis", "rest_f0")
     ("glottis_shape", model, shape, abbr)      e.g. (..., "modal", "f0"); abbr may be the index
     ("anatomy", tag, ..., attribute)           e.g. ("anatomy", "palate", "p3", "x")
+    ("tract_shape_def", shape)                 a whole shape: (position, its XML) or None
+    ("glottis_shape_def", model, shape)        the same for a glottis shape
+    ("status", what...)                        how far a shape or model is worked out
+                                               (STATUS_LEVELS; kept in `.meta.json`)
+
+A `*_def` value is the shape's position among its siblings and its text (the
+text before it, such as indentation, included), so removing a shape and
+putting it back gives the original bytes. None means there is no such shape.
+
+`status` addresses name what they describe: ("status", "tract_shape", shape),
+("status", "glottis_shape", model, shape) or ("status", "glottis_model", model).
+They live in `Speaker.status`, not in the `.speaker` file, which VTL reads
+as it is.
 
 `get` returns a float for numbers and a str otherwise. `set` writes a number
 with as many decimals as the file used for that value, so the value in the
@@ -21,6 +34,7 @@ tree is always the value VTL will read back (`quantize` gives it in advance).
 from __future__ import annotations
 
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -29,6 +43,8 @@ from . import xmltree
 from .xmltree import Element
 
 Address = tuple
+
+STATUS_LEVELS = ("todo", "wip", "done")  # 未整備, 調整中, 整備済み; "todo" is the default
 
 GLOTTIS_MODELS = (
     "Geometric glottis 2025",
@@ -124,8 +140,12 @@ class GlottisModel:
         self.type = element.get("type")
         self.static = [self._param(p) for p in element.child("static_params").elements("param")]
         self.control = [self._param(p) for p in element.child("control_params").elements("param")]
+        self.shapes_element = element.child("shapes")
+        self.index_shapes()
+
+    def index_shapes(self) -> None:
         self.shapes: dict[str, dict[int, Element]] = {}
-        for s in element.child("shapes").elements("shape"):
+        for s in self.shapes_element.elements("shape"):
             self.shapes[s.get("name")] = {int(c.get("index")): c for c in s.elements("control_param")}
 
     @staticmethod
@@ -181,11 +201,17 @@ class Speaker:
                       float(p.get("neutral")), p)
             for p in self.anatomy.elements("param")
         ]
-        self.tract_shapes: dict[str, dict[str, Element]] = {}
-        for s in vt.child("shapes").elements("shape"):
-            self.tract_shapes[s.get("name")] = {p.get("name"): p for p in s.elements("param")}
+        self.tract_shapes_element = vt.child("shapes")
+        self.index_tract_shapes()
         self.glottis_models = {m.get("type"): GlottisModel(m)
                                for m in root.child("glottis_models").elements("glottis_model")}
+        # address tail (what) -> level other than "todo"; filled from `.meta.json`
+        self.status: dict[tuple, str] = {}
+
+    def index_tract_shapes(self) -> None:
+        self.tract_shapes: dict[str, dict[str, Element]] = {}
+        for s in self.tract_shapes_element.elements("shape"):
+            self.tract_shapes[s.get("name")] = {p.get("name"): p for p in s.elements("param")}
 
     # -- files ------------------------------------------------------------
 
@@ -262,10 +288,101 @@ class Speaker:
             return addr[:2] + (self.glottis_models[addr[1]].static_param(addr[2]).abbr,)
         return addr
 
+    # -- whole shapes ---------------------------------------------------------
+
+    def _shapes_parent(self, addr: Address) -> tuple[Element, Any]:
+        """The <shapes> element a `*_def` address is in, and a function re-indexing it."""
+        if addr[0] == "tract_shape_def":
+            return self.tract_shapes_element, self.index_tract_shapes
+        m = self.glottis_models[addr[1]]
+        return m.shapes_element, m.index_shapes
+
+    @staticmethod
+    def _shape_element(parent: Element, name: str) -> Element | None:
+        return next((e for e in parent.elements("shape") if e.get("name") == name), None)
+
+    def _get_def(self, addr: Address) -> tuple[int, str] | None:
+        parent, _ = self._shapes_parent(addr)
+        e = self._shape_element(parent, addr[-1])
+        if e is None:
+            return None
+        i = parent.children.index(e)
+        j = i
+        while j > 0 and isinstance(parent.children[j - 1], str):
+            j -= 1
+        out: list[str] = [c for c in parent.children[j:i]]  # the text before it
+        e.write(out)
+        return list(parent.elements("shape")).index(e), "".join(out)
+
+    def _set_def(self, addr: Address, value) -> Any:
+        parent, reindex = self._shapes_parent(addr)
+        name = addr[-1]
+        old = self._shape_element(parent, name)
+        if old is not None:  # remove it with the text before it
+            i = parent.children.index(old)
+            j = i
+            while j > 0 and isinstance(parent.children[j - 1], str):
+                j -= 1
+            del parent.children[j:i + 1]
+        if value is not None:
+            pos, text = value
+            k = text.find("<")
+            lead, body = text[:k], text[k:]
+            e = xmltree.parse(body).root
+            if e.tag != "shape" or e.get("name") != name:
+                raise ValueError(f"{addr}: not a <shape name={name!r}>")
+            e.parent = parent
+            shapes = list(parent.elements("shape"))
+            if pos < len(shapes):  # before the text that leads the shape now at `pos`
+                at = parent.children.index(shapes[pos])
+                while at > 0 and isinstance(parent.children[at - 1], str):
+                    at -= 1
+            else:  # after the last shape (before the closing text)
+                at = parent.children.index(shapes[-1]) + 1 if shapes else 0
+            parent.children[at:at] = [lead, e] if lead else [e]
+            value = (int(pos), text)
+        reindex()
+        return value
+
+    def new_shape_text(self, addr: Address, values: dict[str, float] | None = None,
+                       like: str | None = None) -> str:
+        """The text (with leading space) of a shape named `addr[-1]`: a copy of the shape
+        `like`, or of the first shape with `values` (by parameter name or glottis index)."""
+        parent, _ = self._shapes_parent(addr)
+        first = next(parent.elements("shape"), None)
+        src = self._shape_element(parent, like) if like is not None else first
+        if src is None:
+            raise KeyError(f"no shape to copy for {addr}")
+        out: list[str] = []
+        src.write(out)
+        e = xmltree.parse("".join(out)).root
+        e.set("name", addr[-1])
+        if values is not None:
+            for p in e.elements():
+                key = p.get("name") if p.tag == "param" else int(p.get("index"))
+                if key in values:
+                    a = p.attr("value")
+                    a.raw = format_like(a.raw, float(values[key]))
+        out = []
+        e.write(out)
+        lead = ""
+        if first is not None:
+            got = self._get_def(addr[:-1] + (first.get("name"),))
+            lead = got[1][:got[1].find("<")] if got else ""
+            m = re.search(r"\r?\n[^\n]*$", lead)  # its last line break and indentation
+            lead = m.group(0) if m else lead
+        return lead + "".join(out)
+
+    # -- values ------------------------------------------------------------------
+
     def get(self, addr: Address) -> Any:
         addr = tuple(addr)
         if addr[0] == "glottis_selected":
             return self.selected_glottis.type
+        if addr[0] in ("tract_shape_def", "glottis_shape_def"):
+            return self._get_def(addr)
+        if addr[0] == "status":
+            return self.status.get(addr[1:], "todo")
         e, name = self._locate(addr)
         v = e.get(name)
         if v is None:
@@ -275,7 +392,8 @@ class Speaker:
     def quantize(self, addr: Address, value: Any) -> Any:
         """The value as it will be stored (numbers rounded to the file's decimals)."""
         addr = tuple(addr)
-        if addr[0] == "glottis_selected" or isinstance(value, str):
+        if addr[0] in ("glottis_selected", "status", "tract_shape_def", "glottis_shape_def") \
+                or isinstance(value, str):
             return value
         e, name = self._locate(addr)
         value = float(value)
@@ -291,6 +409,16 @@ class Speaker:
                 raise KeyError(f"no glottis model {value!r}")
             for t, m in self.glottis_models.items():
                 m.element.set("selected", "1" if t == value else "0")
+            return value
+        if addr[0] in ("tract_shape_def", "glottis_shape_def"):
+            return self._set_def(addr, None if value is None else tuple(value))
+        if addr[0] == "status":
+            if value not in STATUS_LEVELS:
+                raise ValueError(f"status must be one of {STATUS_LEVELS}, not {value!r}")
+            if value == "todo":
+                self.status.pop(addr[1:], None)
+            else:
+                self.status[addr[1:]] = value
             return value
         e, name = self._locate(addr)
         if isinstance(value, str):
@@ -324,4 +452,8 @@ class Speaker:
                 "selected": self.selected_glottis.type,
                 "models": [m.to_json() for m in self.glottis_models.values()],
             },
+            "status": self.status_json(),
         }
+
+    def status_json(self) -> list[dict]:
+        return [{"what": list(k), "level": v} for k, v in self.status.items()]
