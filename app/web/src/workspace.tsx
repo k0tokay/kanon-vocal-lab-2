@@ -100,9 +100,16 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
   const cur = useComputed(speaker, params, ["tube", "formants", "spectrum", "contours"], FMAX);
   const saved = useComputed(speaker, savedParams, ["tube", "spectrum", "contours"], FMAX);
   const edited = speaker ? c.editedAddresses(speaker) : [];
-  const editedShapes = new Set(edited.filter((a) => a[0] === "tract_shape").map((a) => a[1] as string));
-  const editedGShapes = new Set(edited.filter((a) => a[0] === "glottis_shape" && a[1] === glottis?.type).map((a) => a[2] as string));
-  const editedModels = new Set(edited.filter((a) => a[0] === "glottis_shape" || a[0] === "glottis_static").map((a) => a[1] as string));
+  // what an address is about, for the ● marks: status marks count like values
+  const about = (a: (string | number)[]) => (a[0] === "status" ? a.slice(1) : a);
+  const editedShapes = new Set(edited.map(about)
+    .filter((a) => a[0] === "tract_shape" || a[0] === "tract_shape_def").map((a) => a[1] as string));
+  const editedGShapes = new Set(edited.map(about)
+    .filter((a) => (a[0] === "glottis_shape" || a[0] === "glottis_shape_def") && a[1] === glottis?.type)
+    .map((a) => a[2] as string));
+  const editedModels = new Set(edited.map(about)
+    .filter((a) => ["glottis_shape", "glottis_shape_def", "glottis_static", "glottis_model"].includes(a[0] as string))
+    .map((a) => a[1] as string));
 
   const value: WorkspaceData = {
     speakers, speaker, shapeNames, shape, editedShapes, cur, saved,

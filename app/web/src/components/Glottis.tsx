@@ -9,6 +9,7 @@ import { client, useClient } from "../store";
 import { useWorkspace } from "../workspace";
 import { useSize } from "./plots";
 import { ValueRow } from "./Params";
+import { Row, ShapeList, statusItems } from "./Shapes";
 
 /** The four models VTL has, in its order. A speaker file may lack some. */
 export const GLOTTIS_MODELS = [
@@ -27,15 +28,13 @@ export function ModelList({ t }: { t: T }) {
       {GLOTTIS_MODELS.map((m) => {
         const has = sp.glottis.models.some((x) => x.type === m);
         const sel = sp.glottis.selected === m;
-        const edited = w.editedModels.has(m) || (sel && selEdited);
         return (
-          <button key={m} className={"row" + (sel ? " sel" : "") + (edited ? " edited" : "")} disabled={!has}
-            aria-pressed={sel} title={has ? m : `${m} · ${t("glottis.absent")}`}
-            onClick={() => { if (!sel) void client.op("glottis.select_model", { speaker: w.speaker, model: m }); }}>
-            <span className="mono mark">{edited ? "●" : ""}</span>
-            <span className="name">{m}</span>
-            {sel && <span className="mono tag">{t("glottis.in_use")}</span>}
-          </button>
+          <Row key={m} t={t} name={m} sel={sel} edited={w.editedModels.has(m) || (sel && selEdited)} disabled={!has}
+            title={has ? m : `${m} · ${t("glottis.absent")}`}
+            tag={sel ? <span className="mono tag">{t("glottis.in_use")}</span> : undefined}
+            level={c.statusOf(w.speaker!, ["glottis_model", m])}
+            onSelect={() => { if (!sel) void client.op("glottis.select_model", { speaker: w.speaker, model: m }); }}
+            menu={has ? () => statusItems(t, w.speaker!, ["glottis_model", m]) : null} />
         );
       })}
     </div>
@@ -59,19 +58,10 @@ export function StaticParams() {
   );
 }
 
-export function GShapeList() {
+export function GShapeList({ t }: { t: T }) {
   const w = useWorkspace();
-  return (
-    <div className="list">
-      {w.gshapeNames.map((n) => (
-        <button key={n} className={"row" + (n === w.gshape ? " sel" : "") + (w.editedGShapes.has(n) ? " edited" : "")}
-          onClick={() => w.setGShape(n)}>
-          <span className="mono mark">{w.editedGShapes.has(n) ? "●" : ""}</span>
-          <span className="name" title={n}>{n}</span>
-        </button>
-      ))}
-    </div>
-  );
+  return <ShapeList t={t} speaker={w.speaker!} kind="glottis" model={w.glottis!.type} names={w.gshapeNames}
+    selected={w.gshape} edited={w.editedGShapes} onSelect={w.setGShape} />;
 }
 
 export function GShapeParams() {
@@ -119,7 +109,8 @@ function f0Text(t: T, wave: GlottisWave) {
   return t("wave.f0", { f0: wave.f0_measured.toFixed(1), target: wave.f0_target.toFixed(0) });
 }
 
-const M = { l: 56, r: 16, t: 8, b: 44 }; // the bottom holds the time axis and a line for F0
+const M = { l: 56, r: 16, t: 4, b: 44 }; // the bottom holds the time axis and a line for F0
+const LABEL = 20; // a line above each trace for its name, so the name never sits on the trace
 
 export function WaveView({ wave, t }: { wave: GlottisWave | null; t: T }) {
   const [box, size] = useSize<HTMLDivElement>();
@@ -132,20 +123,18 @@ export function WaveView({ wave, t }: { wave: GlottisWave | null; t: T }) {
     ];
     const n = wave.flow_cm3_s.length;
     const W = size.w - M.l - M.r;
-    const gap = 8;
-    const H = (size.h - M.t - M.b - gap * (traces.length - 1)) / traces.length;
+    const gap = 4;
+    const H = (size.h - M.t - M.b - gap * (traces.length - 1)) / traces.length - LABEL;
     const X = (i: number) => M.l + (i / (n - 1)) * W;
     const ms = (n / wave.sampling_rate) * 1000;
     const step = ms > 30 ? 10 : 5;
     const xt = Array.from({ length: Math.floor(ms / step) + 1 }, (_, i) => i * step);
     const period = wave.sampling_rate / wave.f0_target;
+    const periods = Array.from({ length: Math.floor((n - 1) / period) + 1 }, (_, k) => k * period);
     body = (
       <>
-        {Array.from({ length: Math.floor(n / period) + 1 }, (_, k) => k * period).map((p) => (
-          <line key={p} className="grid" x1={X(p)} x2={X(p)} y1={M.t} y2={size.h - M.b} />
-        ))}
         {H > 12 && traces.map(([label, ys, fmt], k) => {
-          const top = M.t + k * (H + gap);
+          const top = M.t + k * (H + LABEL + gap) + LABEL;
           let lo = Math.min(...ys), hi = Math.max(...ys);
           if (k === 0) lo = Math.min(lo, 0); // area from 0
           if (hi - lo < 1e-12) { hi += 1; lo -= 1; }
@@ -153,11 +142,16 @@ export function WaveView({ wave, t }: { wave: GlottisWave | null; t: T }) {
           const ptsStr = ys.map((v, i) => `${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
           return (
             <g key={k}>
+              {/* the target period, within the band only (the name line stays clear) */}
+              {periods.map((p) => <line key={p} className="grid" x1={X(p)} x2={X(p)} y1={top} y2={top + H} />)}
               <line className="axis" x1={M.l} x2={M.l} y1={top} y2={top + H} />
-              <text x={M.l - 6} y={top + 10} textAnchor="end">{fmt(hi)}</text>
-              <text x={M.l - 6} y={top + H} textAnchor="end">{fmt(lo)}</text>
+              <line className="axis" x1={M.l - 4} x2={M.l} y1={top} y2={top} />
+              <line className="axis" x1={M.l - 4} x2={M.l} y1={top + H} y2={top + H} />
+              {/* tick values left of the axis, inside the band (the top one hangs below its tick) */}
+              <text x={M.l - 8} y={top + 9} textAnchor="end">{fmt(hi)}</text>
+              {H > 28 && <text x={M.l - 8} y={top + H} textAnchor="end">{fmt(lo)}</text>}
               <polyline className="line" points={ptsStr} />
-              <text className="peaklab" x={M.l + 6} y={top + 12}>{label}</text>
+              <text className="peaklab" x={M.l} y={top - 6}>{label}</text>
             </g>
           );
         })}

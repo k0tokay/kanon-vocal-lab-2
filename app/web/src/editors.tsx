@@ -8,10 +8,13 @@ import { useClient } from "./store";
 import { FMAX, useWorkspace } from "./workspace";
 import { Params } from "./components/Params";
 import { AreaPlot, SpectrumPlot, TractView } from "./components/plots";
+import { ShapeList } from "./components/Shapes";
 import { GShapeList, GShapeParams, ModelList, StaticParams, WaveView, useGlottisWave } from "./components/Glottis";
 
 export interface EditorKind {
   id: string;
+  /** The standard workspace it belongs to ("ws.<group>" names it in the editor menu). */
+  group: "tract" | "glottis";
   /** Smallest body size in px (the 32 px header comes on top). */
   min: { w: number; h: number };
   /** Text right of the editor name in the header (cut with … when narrow). */
@@ -31,6 +34,7 @@ const clip = (text: string) => <span className="mono clip" title={text}>{text}</
 export const EDITORS: EditorKind[] = [
   {
     id: "tract",
+    group: "tract",
     min: { w: 160, h: 120 },
     Info: () => {
       const w = useWorkspace();
@@ -43,6 +47,7 @@ export const EDITORS: EditorKind[] = [
   },
   {
     id: "area",
+    group: "tract",
     min: { w: 160, h: 96 },
     Info: ({ t }) => clip(`${t("ax.area")} × cm`),
     Body: ({ t }) => {
@@ -52,6 +57,7 @@ export const EDITORS: EditorKind[] = [
   },
   {
     id: "spectrum",
+    group: "tract",
     min: { w: 160, h: 96 },
     Info: () => {
       const w = useWorkspace();
@@ -64,6 +70,7 @@ export const EDITORS: EditorKind[] = [
   },
   {
     id: "shapes",
+    group: "tract",
     min: { w: 160, h: 72 },
     Info: () => {
       const w = useWorkspace();
@@ -84,21 +91,13 @@ export const EDITORS: EditorKind[] = [
     Body: ({ t }) => {
       const w = useWorkspace();
       if (!w.speaker) return <Empty t={t} />;
-      return (
-        <div className="list">
-          {w.shapeNames.map((n) => (
-            <button key={n} className={"row" + (n === w.shape ? " sel" : "") + (w.editedShapes.has(n) ? " edited" : "")}
-              onClick={() => w.setShape(n)}>
-              <span className="mono mark">{w.editedShapes.has(n) ? "●" : ""}</span>
-              <span className="name" title={n}>{n}</span>
-            </button>
-          ))}
-        </div>
-      );
+      return <ShapeList t={t} speaker={w.speaker} kind="tract" names={w.shapeNames} selected={w.shape}
+        edited={w.editedShapes} onSelect={w.setShape} />;
     },
   },
   {
     id: "params",
+    group: "tract",
     min: { w: 200, h: 96 },
     Info: () => {
       const w = useWorkspace();
@@ -112,6 +111,7 @@ export const EDITORS: EditorKind[] = [
   // -- the glottis workspace ---------------------------------------------------
   {
     id: "gmodels",
+    group: "glottis",
     min: { w: 200, h: 72 },
     Info: () => {
       const w = useWorkspace();
@@ -124,6 +124,7 @@ export const EDITORS: EditorKind[] = [
   },
   {
     id: "gstatic",
+    group: "glottis",
     min: { w: 240, h: 96 },
     Info: () => {
       const w = useWorkspace();
@@ -136,6 +137,7 @@ export const EDITORS: EditorKind[] = [
   },
   {
     id: "gshapes",
+    group: "glottis",
     min: { w: 160, h: 72 },
     Info: () => {
       const w = useWorkspace();
@@ -143,11 +145,12 @@ export const EDITORS: EditorKind[] = [
     },
     Body: ({ t }) => {
       const w = useWorkspace();
-      return w.glottis ? <GShapeList /> : <Empty t={t} />;
+      return w.glottis ? <GShapeList t={t} /> : <Empty t={t} />;
     },
   },
   {
     id: "gparams",
+    group: "glottis",
     min: { w: 240, h: 96 },
     Info: () => {
       const w = useWorkspace();
@@ -160,6 +163,7 @@ export const EDITORS: EditorKind[] = [
   },
   {
     id: "gwave",
+    group: "glottis",
     min: { w: 240, h: 160 },
     Info: ({ t }) => {
       const w = useWorkspace();

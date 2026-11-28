@@ -22,7 +22,12 @@ export interface Speaker {
   glottis: { selected: string; models: GlottisModel[] };
   modified: boolean;
   edited: { address: Address; saved: unknown }[];
+  /** status marks other than "todo"; what: ["tract_shape", shape] | ["glottis_shape", model, shape] | ["glottis_model", model] */
+  status: { what: Address; level: Level }[];
 }
+/** How far a shape or a glottis model is worked out: 未整備 / 調整中 / 整備済み. */
+export type Level = "todo" | "wip" | "done";
+export const LEVELS: Level[] = ["todo", "wip", "done"];
 export interface HistoryState {
   can_undo: boolean; can_redo: boolean; undo_label: string | null; redo_label: string | null; open: string | null;
 }
@@ -123,6 +128,12 @@ class Client {
       values[i] = c.value as number;
       return true;
     }
+    if (kind === "status") {
+      const what = JSON.stringify(c.address.slice(1));
+      sp.status = sp.status.filter((e) => JSON.stringify(e.what) !== what);
+      if (c.value !== "todo") sp.status.push({ what: c.address.slice(1), level: c.value as Level });
+      return true;
+    }
     if (kind === "glottis_selected") {
       sp.glottis.selected = c.value as string;
       for (const m of sp.glottis.models) m.selected = m.type === c.value;
@@ -143,6 +154,11 @@ class Client {
       return true;
     }
     return false;
+  }
+
+  statusOf(speaker: string, what: Address): Level {
+    const w = JSON.stringify(what);
+    return this.project?.speakers[speaker]?.status.find((e) => JSON.stringify(e.what) === w)?.level ?? "todo";
   }
 
   isEdited(speaker: string, address: Address) { return this.edited.has(key(speaker, address)); }

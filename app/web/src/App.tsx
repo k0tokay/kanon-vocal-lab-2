@@ -124,6 +124,7 @@ function Layout({ workspace, t, onNote }: { workspace: string; t: T; onNote: (s:
   useEffect(() => saveLayout(workspace, root), [workspace, root]);
   const actions = {
     root,
+    workspace,
     set: setRoot,
     reset: () => setRoot(defaultLayout(workspace)),
     setEditor: (a: Leaf, editor: string) => setRoot((r) => setEditor(r, a.id, editor)),
@@ -148,6 +149,7 @@ function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (
   useEffect(() => { document.title = t("ed." + area.editor); }, [t, area.editor]);
   const actions = {
     root: null,
+    workspace: WORKSPACE,
     set: () => {},
     reset: () => {},
     detach: () => {},
