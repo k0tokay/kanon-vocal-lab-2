@@ -1,9 +1,9 @@
 """The operations themselves. Importing this module registers them.
 
-Stage 1 has two, the first examples of the pattern:
-
 - `tract.set_param`: one parameter of a vocal tract shape;
-- `glottis.set_param`: one control parameter of a glottis shape.
+- `glottis.set_param`: one control parameter of a glottis shape;
+- `glottis.set_static`: one static parameter of a glottis model;
+- `glottis.select_model`: which glottis model VTL uses.
 
 Values are clamped to the parameter's range in the speaker file, as VTL does.
 """
@@ -41,3 +41,24 @@ def glottis_set_param(ctx: Context, speaker: str, shape: str, param: str | int, 
     info = m.control[m.control_index(param)]
     return ctx.set(speaker, ("glottis_shape", m.type, shape, info.index),
                    _clamp(value, info.min, info.max))
+
+
+@operator("glottis.set_static", "Set glottis static parameter")
+def glottis_set_static(ctx: Context, speaker: str, param: str | int, value: float,
+                       model: str | None = None) -> float:
+    """Set one static parameter (abbreviation such as "rest_length", or index) of `model`
+    (default: the selected glottis model). Returns the stored value."""
+    sp = ctx.speaker(speaker)
+    m = sp.glottis_models[model] if model else sp.selected_glottis
+    info = m.static_param(param)
+    lo, hi = (info.min, info.max) if info.min < info.max else (-float("inf"), float("inf"))
+    return ctx.set(speaker, ("glottis_static", m.type, info.abbr), _clamp(value, lo, hi))
+
+
+@operator("glottis.select_model", "Select glottis model")
+def glottis_select_model(ctx: Context, speaker: str, model: str) -> str:
+    """Make `model` the glottis model VTL uses for this speaker."""
+    sp = ctx.speaker(speaker)
+    if model not in sp.glottis_models:
+        raise KeyError(f"no glottis model {model!r}")
+    return ctx.set(speaker, ("glottis_selected",), model)

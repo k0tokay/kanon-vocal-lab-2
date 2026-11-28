@@ -14,7 +14,9 @@ HTTP
     POST /api/save      {speaker, path?, overwrite?}
                         -> {result: {ok: true, path}} or {result: {ok: false, reason, path}}
                            reason: protected | versioned | exists (see project.save_refusal)
-    POST /api/sustained {speaker, shape | params, duration?}  -> audio/wav (a held vowel)
+    POST /api/sustained {speaker, shape | params, glottis_shape?, duration?}  -> audio/wav (a held vowel)
+    POST /api/glottis_wave {speaker, tract_shape, glottis_shape, duration?}
+                        -> a few periods of glottal area, glottal flow and output, and f0
     POST /api/compute   {speaker, shape | params, what?: [tube, formants, spectrum, contours]}
 
 WebSocket /ws
@@ -62,6 +64,13 @@ def compute(project: Project, req: dict) -> dict:
     return out
 
 
+def glottis_wave(project: Project, req: dict) -> dict:
+    sp = project.speakers[req["speaker"]]
+    w = backend().glottis_wave(sp, req["tract_shape"], req.get("glottis_shape") or "modal",
+                               min(max(float(req.get("duration", 0.3)), 0.1), 1.0))
+    return {k: (v.tolist() if hasattr(v, "tolist") else v) for k, v in w.items()}
+
+
 def handle(project: Project, msg: dict):
     """One request, shared by HTTP and WebSocket."""
     kind = msg["kind"]
@@ -81,6 +90,8 @@ def handle(project: Project, msg: dict):
         return {"ok": True, "path": str(out)}
     if kind == "compute":
         return compute(project, msg)
+    if kind == "glottis_wave":
+        return glottis_wave(project, msg)
     if kind == "project":
         return project.to_json()
     raise KeyError(f"unknown request kind {kind!r}")
@@ -100,7 +111,9 @@ class SoundCache:
         sp = project.speakers[req["speaker"]]
         params = req.get("params") or sp.tract_shape(req["shape"])
         h = hashlib.sha256(Backend._key_of(sp).encode())
-        h.update(json.dumps([list(map(float, params)), glottis_vector(sp), float(req.get("duration", 1.0))]).encode())
+        g = req.get("glottis_shape") or "modal"
+        h.update(json.dumps([list(map(float, params)), g, glottis_vector(sp, g),
+                             float(req.get("duration", 1.0))]).encode())
         return h.hexdigest()
 
     def get(self, k: str) -> bytes | None:
@@ -118,7 +131,7 @@ def sustained_wav(project: Project, req: dict) -> bytes:
     sp = project.speakers[req["speaker"]]
     params = req.get("params") or req["shape"]
     duration = min(max(float(req.get("duration", 1.0)), 0.1), 5.0)
-    x, sr = backend().sustained(sp, params, duration)
+    x, sr = backend().sustained(sp, params, duration, req.get("glottis_shape") or "modal")
     return wav_bytes(x * PLAY_GAIN, sr)
 
 
@@ -180,7 +193,7 @@ def make_app(project: Project) -> web.Application:
 
         async def compute_reply(msg: dict) -> None:
             try:
-                r = await asyncio.get_running_loop().run_in_executor(None, compute, project, msg)
+                r = await asyncio.get_running_loop().run_in_executor(None, handle, project, msg)
                 q.put_nowait({"type": "reply", "id": msg.get("id"), "result": r})
             except Exception as e:  # noqa: BLE001
                 q.put_nowait({"type": "reply", "id": msg.get("id"), **_error(e)})
@@ -190,7 +203,7 @@ def make_app(project: Project) -> web.Application:
                     continue
                 try:
                     msg = json.loads(m.data)
-                    if msg.get("kind") == "compute":
+                    if msg.get("kind") in ("compute", "glottis_wave"):
                         # off the event loop: a synthesis may hold VTL for a second
                         tasks.add(t := asyncio.create_task(compute_reply(msg)))
                         t.add_done_callback(tasks.discard)
@@ -208,7 +221,7 @@ def make_app(project: Project) -> web.Application:
         return ws
 
     app.router.add_get("/api/project", get_project)
-    for kind in ("op", "drag_end", "undo", "redo", "save", "compute"):
+    for kind in ("op", "drag_end", "undo", "redo", "save", "compute", "glottis_wave"):
         app.router.add_post(f"/api/{kind}", route(kind))
     app.router.add_post("/api/sustained", sustained)
     app.router.add_get("/ws", ws_handler)

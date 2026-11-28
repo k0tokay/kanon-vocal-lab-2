@@ -5,5 +5,7 @@ used in file names and in the `.meta.json` files) here only; nothing else
 spells the name out.
 """
 
-APP_NAME = "VTL Studio (provisional)"
-APP_ID = "vtl-studio"
+# The user's first choice, not final yet: Konomeno for "vocal tract - computer".
+# The folder app/ and the package app_core keep their names.
+APP_NAME = "noygcoelo-keln"
+APP_ID = "noygcoelo-keln"

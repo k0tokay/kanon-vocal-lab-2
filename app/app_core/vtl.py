@@ -12,7 +12,10 @@ What it computes from a vector of vocal tract parameters:
 - `spectrum`: the volume velocity transfer function (glottis to lips);
 - `formants`: peaks of that spectrum;
 - `contours`: the midsagittal outline, from `vtlExportTractSvg`;
-- `sustained`: a held vowel (time-domain synthesis, `vtlSynthesisAddTract`).
+- `sustained`: a held vowel (time-domain synthesis, `vtlSynthesisAddTract`);
+- `glottis_wave`: glottal area, glottal flow and output of a held vowel, per
+  sample, from the "misc" file of `vtlGesturalScoreToAudio` (the only API
+  call that gives the glottis signals).
 
 The library is found through `VTL_LIB`, else `build-mac/gui/libVocalTractLabApi.dylib`
 of this checkout.
@@ -95,6 +98,7 @@ class Backend:
         L.vtlGetTransferFunction.argtypes = [_D, ct.c_int, _D, _D]
         L.vtlExportTractSvg.argtypes = [_D, ct.c_char_p]
         L.vtlSynthesisAddTract.argtypes = [ct.c_int, _D, _D, _D]
+        L.vtlGesturalScoreToAudio.argtypes = [ct.c_char_p, ct.c_char_p, ct.c_char_p, _D, _I, ct.c_int, ct.c_int]
         self.L = L
         self.lock = threading.RLock()
         self._key: str | None = None
@@ -131,6 +135,12 @@ class Backend:
             self.sampling_rate, self.num_tube_sections = sr.value, nt.value
             self.num_tract_params, self.num_glottis_params = nv.value, ng.value
             self._key = key
+
+    def load_all(self, speaker: Speaker) -> None:
+        """Load the whole speaker, shapes included (gestural scores name their shapes)."""
+        with self.lock:
+            self._key = None
+            self.use(speaker)
 
     def invalidate(self) -> None:
         with self.lock:
@@ -261,6 +271,103 @@ class Backend:
             out[:m] *= w
             out[-m:] *= w[::-1]
         return out, sr
+
+    def glottis_wave(self, speaker: Speaker, tract_shape: str, glottis_shape: str = "modal",
+                     duration: float = 0.3, periods: int = 4) -> dict:
+        """A held vowel of `duration` s through a gestural score (tract shape and glottis
+        shape by name, f0 and lung pressure from the glottis shape), and of its last
+        `periods` periods (ending 5 ms before the end): glottal area [cm^2] (the
+        narrower of the lower and upper area, plus the posterior or chink area where
+        the model has one), glottal flow [cm^3/s] and the output (radiated) signal.
+        Also the f0 asked for and the f0 measured from the flow."""
+        m = speaker.selected_glottis
+        if glottis_shape not in m.shapes:
+            raise KeyError(f"{m.type}: no glottis shape {glottis_shape!r}")
+        if tract_shape not in speaker.tract_shapes:
+            raise KeyError(f"no vocal tract shape {tract_shape!r}")
+        values = dict(zip((p.abbr for p in sorted(m.control, key=lambda p: p.index)),
+                          m.shape_values(glottis_shape)))
+        f0 = float(values.get("f0", 120.0))
+        pressure = float(values.get("pressure", 8000.0))
+        st = 12 * np.log2(max(f0, 1.0))  # semitones re 1 Hz (GesturalScore::REFERENCE_FREQUENCY)
+        x = lambda v: _xml_attr(v)  # noqa: E731
+        ges = (
+            "<gestural_score>\n"
+            f'  <gesture_sequence type="vowel-gestures" unit=""><gesture value="{x(tract_shape)}" slope="0" duration_s="{duration}" time_constant_s="0.012" neutral="0" /></gesture_sequence>\n'
+            '  <gesture_sequence type="lip-gestures" unit=""></gesture_sequence>\n'
+            '  <gesture_sequence type="tongue-tip-gestures" unit=""></gesture_sequence>\n'
+            '  <gesture_sequence type="tongue-body-gestures" unit=""></gesture_sequence>\n'
+            '  <gesture_sequence type="velic-gestures" unit=""></gesture_sequence>\n'
+            f'  <gesture_sequence type="glottal-shape-gestures" unit=""><gesture value="{x(glottis_shape)}" slope="0" duration_s="{duration}" time_constant_s="0.012" neutral="0" /></gesture_sequence>\n'
+            f'  <gesture_sequence type="f0-gestures" unit="st"><gesture value="{st:.6f}" slope="0" duration_s="{duration}" time_constant_s="0.03" neutral="0" /></gesture_sequence>\n'
+            '  <gesture_sequence type="lung-pressure-gestures" unit="dPa">'
+            '<gesture value="0" slope="0" duration_s="0.01" time_constant_s="0.005" neutral="0" />'
+            f'<gesture value="{pressure:.3f}" slope="0" duration_s="{duration - 0.01}" time_constant_s="0.005" neutral="0" />'
+            "</gesture_sequence>\n"
+            "</gestural_score>\n")
+        with self.lock:
+            self.load_all(speaker)  # the current shapes, edits included
+            d = Path(self._tmp.name)
+            (d / "wave.ges").write_text(ges, encoding="utf-8")
+            misc = d / "wave.misc.txt"
+            sr = self.sampling_rate
+            audio = _arr(int(duration * sr) + 4 * sr // 100)
+            n = ct.c_int()
+            r = self.L.vtlGesturalScoreToAudio(str(d / "wave.ges").encode(), b"", str(misc).encode(),
+                                               _p(audio), ct.byref(n), 0, 0)
+            if r != 0:
+                raise RuntimeError(f"vtlGesturalScoreToAudio failed ({r})")
+            with open(misc) as f:
+                names = [h.split("[")[0] for h in f.readline().split()]
+                cols = {k: names.index(k) for k in ("glottal_flow", "lower_area", "upper_area",
+                                                    "posterior_area", "chink_area") if k in names}
+                data = np.loadtxt(f, usecols=sorted(cols.values()), ndmin=2)
+        col = {k: data[:, sorted(cols.values()).index(i)] for k, i in cols.items()}
+        flow = col["glottal_flow"]
+        area = np.minimum(col["lower_area"], col["upper_area"])
+        if "posterior_area" in col:  # TBCM: the posterior gap is in parallel
+            area = area + col["posterior_area"]
+        out = audio[:n.value]
+        k = min(len(flow), len(out))
+        f0_measured = _f0_autocorr(flow[max(0, k - sr // 10):k], sr)
+        span = int(round(periods * sr / max(f0, 40.0)))
+        end = k - sr // 200
+        a = max(0, end - span)
+        return {
+            "sampling_rate": sr,
+            "start_s": a / sr,
+            "f0_target": f0,
+            "f0_measured": f0_measured,
+            "pressure": pressure,
+            "area_cm2": area[a:end],
+            "flow_cm3_s": flow[a:end],
+            "output": out[a:end],
+        }
+
+
+def _xml_attr(v: str) -> str:
+    return v.replace("&", "&amp;").replace('"', "&quot;").replace("<", "&lt;")
+
+
+def _f0_autocorr(x: np.ndarray, sr: int, lo: float = 50.0, hi: float = 1000.0) -> float | None:
+    """F0 of a periodic signal from the autocorrelation peak; None if not periodic."""
+    if len(x) < sr // lo * 2:
+        return None
+    x = x - x.mean()
+    if not np.any(x):
+        return None
+    n = len(x)
+    f = np.fft.rfft(x, 2 * n)
+    r = np.fft.irfft(f * np.conj(f))[:n]
+    a, b = int(sr / hi), int(sr / lo)
+    i = a + int(np.argmax(r[a:b]))
+    if r[i] < 0.3 * r[0]:
+        return None
+    if 0 < i < n - 1:  # parabolic interpolation
+        y0, y1, y2 = r[i - 1], r[i], r[i + 1]
+        den = y0 - 2 * y1 + y2
+        i = i + (0.5 * (y0 - y2) / den if den else 0.0)
+    return float(sr / i)
 
 
 def glottis_vector(speaker: Speaker, shape: str = "modal") -> list[float]:
