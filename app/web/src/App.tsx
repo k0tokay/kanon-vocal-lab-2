@@ -9,6 +9,7 @@ import { AreaView, LayoutProvider, NodeView } from "./components/Areas";
 import { SaveDialog, refusalNote, suggestName } from "./components/SaveDialog";
 
 const WORKSPACES = ["tract", "glottis", "articulation", "speak", "sing", "compare"];
+const READY = new Set(["tract", "glottis"]); // workspaces with editors so far
 
 // A detached area is this page with ?editor=<kind> (and the workspace).
 const query = new URLSearchParams(location.search);
@@ -64,6 +65,16 @@ export function App() {
     return () => { c.errors.delete(f); };
   }, [c, t, show]);
 
+  const [ws, setWs] = useState(READY.has(WORKSPACE) ? WORKSPACE : "tract");
+  const go = (w: string) => {
+    if (w === ws) return;
+    if (!READY.has(w)) { show(t("note.not_yet", { what: t("ws." + w) })); return; }
+    setWs(w);
+    // the address names the workspace (no reload: the data and the selection stay)
+    history.replaceState(null, "", w === "tract" ? location.pathname : `?ws=${encodeURIComponent(w)}`);
+  };
+  useEffect(() => { if (!DETACHED && c.app) document.title = c.app; }, [c.app]);
+
   const noteView = note && <div className={"note" + (note.error ? " err" : "")} role="status">{note.text}</div>;
 
   if (DETACHED) return <Detached t={t} editor={DETACHED} onNote={show} note={noteView} />;
@@ -75,8 +86,8 @@ export function App() {
           <span className="app" title={c.app}>{c.app || " "}</span>
           <nav className="tabs">
             {WORKSPACES.map((w) => (
-              <button key={w} className="tab" aria-selected={w === WORKSPACE}
-                title={t("ws." + w)} onClick={() => { if (w !== WORKSPACE) show(t("note.not_yet", { what: t("ws." + w) })); }}>
+              <button key={w} className="tab" aria-selected={w === ws}
+                title={t("ws." + w)} onClick={() => go(w)}>
                 {t("ws." + w)}
               </button>
             ))}
@@ -100,8 +111,8 @@ export function App() {
             </span>
           </div>
         </header>
-        <Layout workspace={WORKSPACE} t={t} onNote={show} />
-        <Commands t={t} onNote={show} />
+        <Layout key={ws} workspace={ws} t={t} onNote={show} />
+        <Commands t={t} onNote={show} workspace={ws} />
       </div>
       {noteView}
     </WorkspaceProvider>
@@ -149,7 +160,7 @@ function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (
     <WorkspaceProvider>
       <LayoutProvider value={actions}>
         <div className="detached"><AreaView area={area} t={t} onNote={onNote} /></div>
-        <Commands t={t} onNote={onNote} bar={false} />
+        <Commands t={t} onNote={onNote} bar={false} workspace={WORKSPACE} />
       </LayoutProvider>
       {note}
     </WorkspaceProvider>
@@ -160,7 +171,9 @@ function Detached({ t, editor, onNote, note }: { t: T; editor: string; onNote: (
 // Commands of a window: play / stop, save / save as, undo / redo, from the
 // status bar and the keyboard. A detached window has the keys but no bar.
 
-function Commands({ t, onNote, bar = true }: { t: T; onNote: (s: string, e?: boolean) => void; bar?: boolean }) {
+function Commands({ t, onNote, workspace, bar = true }: {
+  t: T; onNote: (s: string, e?: boolean) => void; workspace: string; bar?: boolean;
+}) {
   const c = useClient();
   const w = useWorkspace();
   const p = usePlayer();
@@ -170,8 +183,9 @@ function Commands({ t, onNote, bar = true }: { t: T; onNote: (s: string, e?: boo
   const play = () => {
     if (p.status !== "idle") { player.stop(); return; }
     if (!w.speaker || !w.shape || !sp) return;
-    // the values on screen now, edits included
-    player.play(w.speaker, [...sp.tract.shapes[w.shape]])
+    // the values on screen now, edits included; in the glottis workspace with the chosen glottis shape
+    const g = workspace === "glottis" ? w.gshape ?? undefined : undefined;
+    player.play(w.speaker, [...sp.tract.shapes[w.shape]], 1.0, g)
       .catch((e: Error) => onNote(t("note.play_failed", { message: e.message }), true));
   };
   const saveAs = () => { if (w.speaker) setDialog(suggestName(sp?.path ?? null, w.speaker)); };
@@ -186,7 +200,7 @@ function Commands({ t, onNote, bar = true }: { t: T; onNote: (s: string, e?: boo
   };
 
   // keys: Space plays / stops, Cmd/Ctrl+S saves, +Shift saves as, Cmd/Ctrl+Z undoes
-  const latest = useRef({ play, save, saveAs });
+  const latest = useRef({ play, save, saveAs });  // the handlers of this render
   latest.current = { play, save, saveAs };
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

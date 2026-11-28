@@ -7,7 +7,15 @@ import { useSyncExternalStore } from "react";
 export type Address = (string | number)[];
 
 export interface TractParamInfo { index: number; name: string; min: number; max: number; neutral: number }
-export interface GlottisModel { type: string; selected: boolean; shapes: Record<string, number[]> }
+export interface GlottisParamInfo {
+  index: number; name: string; abbr: string; unit: string; min: number; max: number; default: number;
+}
+export interface GlottisModel {
+  type: string; selected: boolean;
+  static: (GlottisParamInfo & { value: number })[];
+  control: GlottisParamInfo[];
+  shapes: Record<string, number[]>;
+}
 export interface Speaker {
   path: string | null;
   tract: { params: TractParamInfo[]; shapes: Record<string, number[]> };
@@ -113,6 +121,18 @@ class Client {
       const values = sp.tract.shapes[shape as string];
       if (i < 0 || !values) return false;
       values[i] = c.value as number;
+      return true;
+    }
+    if (kind === "glottis_selected") {
+      sp.glottis.selected = c.value as string;
+      for (const m of sp.glottis.models) m.selected = m.type === c.value;
+      return true;
+    }
+    if (kind === "glottis_static") {
+      const [, model, abbr] = c.address;
+      const p = sp.glottis.models.find((m) => m.type === model)?.static.find((q) => q.abbr === abbr);
+      if (!p) return false;
+      p.value = c.value as number;
       return true;
     }
     if (kind === "glottis_shape") {

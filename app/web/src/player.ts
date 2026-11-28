@@ -27,7 +27,7 @@ class Player {
   private changed() { this.version++; this.listeners.forEach((f) => f()); }
 
   /** Synthesize `params` of `speaker` and play it. Throws (after resetting) on failure. */
-  async play(speaker: string, params: number[], duration = 1.0) {
+  async play(speaker: string, params: number[], duration = 1.0, glottisShape?: string) {
     this.stop();
     const token = ++this.token;
     this.status = "loading";
@@ -38,7 +38,7 @@ class Player {
     try {
       const r = await fetch("/api/sustained", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ speaker, params, duration }),
+        body: JSON.stringify({ speaker, params, duration, ...(glottisShape ? { glottis_shape: glottisShape } : {}) }),
       });
       if (!r.ok) throw new Error((await r.json().catch(() => null))?.error ?? `HTTP ${r.status}`);
       const buf = await ctx.decodeAudioData(await r.arrayBuffer());

@@ -64,5 +64,20 @@
   "note.saved": "Saved {path}",
   "note.save_protected": "{path} is hand-made or from a recording and is never overwritten. Save under another name.",
   "note.save_versioned": "{path} is a released version and is not overwritten. Save it as a new version.",
-  "note.play_failed": "Could not play: {message}"
+  "note.play_failed": "Could not play: {message}",
+  "ed.gmodels": "Glottis models",
+  "ed.gstatic": "Static parameters",
+  "ed.gshapes": "Glottis shapes",
+  "ed.gparams": "Shape parameters",
+  "ed.gwave": "Glottal waveform",
+  "glottis.in_use": "in use",
+  "glottis.absent": "not in this speaker file",
+  "wave.area": "glottal area [cm²]",
+  "wave.flow": "glottal flow [cm³/s]",
+  "wave.output": "output",
+  "wave.f0": "F0 {f0} Hz (target {target})",
+  "wave.not_periodic": "not periodic (target {target} Hz)",
+  "wave.ms": "ms",
+  "wave.computing": "Computing…",
+  "wave.info": "{glottis} · vowel {tract}"
 }

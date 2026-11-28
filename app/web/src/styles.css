@@ -75,6 +75,7 @@ button:focus-visible, [role="slider"]:focus-visible { outline: none; box-shadow:
 .grow { flex: 1; }
 .abody { position: relative; min-height: 0; min-width: 0; overflow: hidden; }
 .empty { padding: var(--s4); color: var(--ink-2); }
+.empty.overlay { position: absolute; inset: 0; }
 
 /* drawings */
 svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
@@ -99,6 +100,8 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 .row:hover { background: var(--paper-2); }
 .row.sel { background: var(--accent-paper); border-left-color: var(--accent); }
 .row .mark { width: 16px; flex: 0 0 16px; color: var(--accent); }
+.row .tag { margin-left: auto; flex: 0 0 auto; color: var(--accent); }
+.row:disabled { color: var(--ink-3); cursor: default; }
 .row .name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .row.edited .name { color: var(--accent); }
 .params { overflow-y: auto; overflow-x: hidden; padding: var(--s2) 0; min-width: 0; min-height: 0; }
@@ -107,6 +110,10 @@ svg.fill { position: absolute; inset: 0; display: block; width: 100%; height: 10
 /* the value column keeps its width while it can; the slider gives way first, and in a
    very narrow area every column shrinks so the row stays inside it */
 .param { display: grid; grid-template-columns: minmax(0, 40px) minmax(0, 1fr) minmax(0, 72px); align-items: center; gap: var(--s2); height: 24px; }
+/* rows with long names (glottis); in a narrow area the names are cut so the slider keeps room */
+.param.wide { grid-template-columns: minmax(0, 136px) minmax(0, 1fr) minmax(0, 72px); }
+.params { container-type: inline-size; }
+@container (max-width: 360px) { .param.wide { grid-template-columns: minmax(0, 88px) minmax(0, 1fr) minmax(0, 64px); } }
 .param .v { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: right; font-family: var(--font-mono); font-size: var(--t-small); line-height: var(--lh-small);
   padding: 0 var(--s1); color: var(--ink); }
 .param .v:hover { background: var(--paper-2); }

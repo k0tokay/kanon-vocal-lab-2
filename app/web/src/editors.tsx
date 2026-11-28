@@ -8,6 +8,7 @@ import { useClient } from "./store";
 import { FMAX, useWorkspace } from "./workspace";
 import { Params } from "./components/Params";
 import { AreaPlot, SpectrumPlot, TractView } from "./components/plots";
+import { GShapeList, GShapeParams, ModelList, StaticParams, WaveView, useGlottisWave } from "./components/Glottis";
 
 export interface EditorKind {
   id: string;
@@ -108,7 +109,72 @@ export const EDITORS: EditorKind[] = [
       return w.speaker && w.shape ? <Params speaker={w.speaker} shape={w.shape} t={t} /> : <Empty t={t} />;
     },
   },
+  // -- the glottis workspace ---------------------------------------------------
+  {
+    id: "gmodels",
+    min: { w: 200, h: 72 },
+    Info: () => {
+      const w = useWorkspace();
+      return w.speaker ? clip(w.speaker) : null;
+    },
+    Body: ({ t }) => {
+      const w = useWorkspace();
+      return w.speaker ? <ModelList t={t} /> : <Empty t={t} />;
+    },
+  },
+  {
+    id: "gstatic",
+    min: { w: 240, h: 96 },
+    Info: () => {
+      const w = useWorkspace();
+      return w.glottis ? clip(w.glottis.type) : null;
+    },
+    Body: ({ t }) => {
+      const w = useWorkspace();
+      return w.glottis ? <StaticParams /> : <Empty t={t} />;
+    },
+  },
+  {
+    id: "gshapes",
+    min: { w: 160, h: 72 },
+    Info: () => {
+      const w = useWorkspace();
+      return w.glottis ? <span className="mono">{w.gshapeNames.length}</span> : null;
+    },
+    Body: ({ t }) => {
+      const w = useWorkspace();
+      return w.glottis ? <GShapeList /> : <Empty t={t} />;
+    },
+  },
+  {
+    id: "gparams",
+    min: { w: 240, h: 96 },
+    Info: () => {
+      const w = useWorkspace();
+      return w.gshape ? clip(w.gshape) : null;
+    },
+    Body: ({ t }) => {
+      const w = useWorkspace();
+      return w.glottis && w.gshape ? <GShapeParams /> : <Empty t={t} />;
+    },
+  },
+  {
+    id: "gwave",
+    min: { w: 240, h: 160 },
+    Info: ({ t }) => {
+      const w = useWorkspace();
+      return w.gshape && w.shape ? clip(t("wave.info", { glottis: w.gshape, tract: w.shape })) : null;
+    },
+    Body: ({ t }) => {
+      const w = useWorkspace();
+      return w.glottis ? <GlottisWaveBody t={t} /> : <Empty t={t} />;
+    },
+  },
 ];
+
+function GlottisWaveBody({ t }: { t: T }) {
+  return <WaveView wave={useGlottisWave()} t={t} />;
+}
 
 export const EDITOR_IDS = new Set(EDITORS.map((e) => e.id));
 

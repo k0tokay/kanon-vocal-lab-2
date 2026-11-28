@@ -64,5 +64,20 @@
   "note.saved": "{path} に保存しました．",
   "note.save_protected": "{path} は手作業や録音由来のファイルなので上書きしません．別の名前で保存してください．",
   "note.save_versioned": "{path} は版の付いた話者なので上書きしません．新しい版として保存してください．",
-  "note.play_failed": "再生できませんでした：{message}"
+  "note.play_failed": "再生できませんでした：{message}",
+  "ed.gmodels": "声門モデル",
+  "ed.gstatic": "静的パラメタ",
+  "ed.gshapes": "声門の形状",
+  "ed.gparams": "形状パラメタ",
+  "ed.gwave": "声門の波形",
+  "glottis.in_use": "使用中",
+  "glottis.absent": "この話者ファイルには無い",
+  "wave.area": "声門面積 [cm²]",
+  "wave.flow": "声門流 [cm³/s]",
+  "wave.output": "出力音",
+  "wave.f0": "F0 {f0} Hz（目標 {target}）",
+  "wave.not_periodic": "周期的でない（目標 {target} Hz）",
+  "wave.ms": "ms",
+  "wave.computing": "計算中…",
+  "wave.info": "{glottis} · 母音 {tract}"
 }
