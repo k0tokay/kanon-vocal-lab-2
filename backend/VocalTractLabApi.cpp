@@ -1233,6 +1233,75 @@ int vtlGesturalScoreToTubeSequence(const char* gesFileName, const char* tubeSequ
 
 
 // ****************************************************************************
+// The vocal tract and glottis parameters of a gestural score at a fixed
+// frame rate (see the header for the details).
+// ****************************************************************************
+
+int vtlGesturalScoreToTractParams(const char* gesFileName, double frameRate_Hz,
+  double* tractParams, double* glottisParams, int maxFrames, int* numFrames)
+{
+  if (!vtlApiInitialized)
+  {
+    printf("Error: The API has not been initialized.\n");
+    return 1;
+  }
+  if (frameRate_Hz <= 0.0)
+  {
+    return 3;
+  }
+
+  GesturalScore* gesturalScore = new GesturalScore(vocalTract, glottises[selectedGlottis]);
+  bool allValuesInRange = true;
+  if (gesturalScore->loadGesturesXml(string(gesFileName), allValuesInRange) == false)
+  {
+    printf("Error in vtlGesturalScoreToTractParams(): Loading the gestural score file failed!\n");
+    delete gesturalScore;
+    return 2;
+  }
+  gesturalScore->calcCurves();
+
+  int n = (int)(gesturalScore->getScoreDuration_s() * frameRate_Hz) + 1;
+  if (numFrames != NULL)
+  {
+    *numFrames = n;
+  }
+  if (tractParams == NULL)
+  {
+    delete gesturalScore;
+    return 0;
+  }
+  if (n > maxFrames)
+  {
+    delete gesturalScore;
+    return 4;
+  }
+
+  int numGlottisParams = (int)glottises[selectedGlottis]->controlParams.size();
+  double tract[VocalTract::NUM_PARAMS];
+  double glottis[Glottis::MAX_CONTROL_PARAMS];
+  int i, k;
+  for (k = 0; k < n; k++)
+  {
+    gesturalScore->getParams((double)k / frameRate_Hz, tract, glottis);
+    for (i = 0; i < VocalTract::NUM_PARAMS; i++)
+    {
+      tractParams[k * VocalTract::NUM_PARAMS + i] = tract[i];
+    }
+    if (glottisParams != NULL)
+    {
+      for (i = 0; i < numGlottisParams; i++)
+      {
+        glottisParams[k * numGlottisParams + i] = glottis[i];
+      }
+    }
+  }
+
+  delete gesturalScore;
+  return 0;
+}
+
+
+// ****************************************************************************
 // This function generates a sequence of text files each of which contains the
 // 2D vocal tract contour lines in terms of (x, y) coordinates. The vocal tract
 // shapes are obtained from the provided gestural score with 100 frames/s.

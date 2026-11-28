@@ -6,7 +6,8 @@
 - `glottis.select_model`: which glottis model VTL uses;
 - `tract.add_shape`, `.duplicate_shape`, `.rename_shape`, `.delete_shape`, and the
   same for `glottis.`: whole shapes;
-- `status.set`: the status mark of a shape or glottis model.
+- `status.set`: the status mark of a shape or glottis model;
+- `gesture.*`: the gestures of a gestural score (see the section at the end).
 
 Values are clamped to the parameter's range in the speaker file, as VTL does.
 """
@@ -247,3 +248,158 @@ def status_set(ctx: Context, speaker: str, what: list, level: str) -> str:
     if not ok:
         raise KeyError(f"no such {kind}: {list(what[1:])}")
     return ctx.set(speaker, ("status",) + what, level)
+
+
+# ---------------------------------------------------------------------------
+# Gestural scores. Every operation sets whole sequences (see `score`).
+#
+# - `gesture.set`: value, slope, duration, time constant or neutral of one gesture;
+# - `gesture.set_boundary`: move the end of a gesture (the next one gives or takes
+#   the time, so nothing after them moves); a drag is one undo step;
+# - `gesture.split`: cut the gesture under a time in two;
+# - `gesture.delete`: remove a gesture; the one before it (or after it, for the
+#   first) takes its time, so the other gestures keep their times;
+# - `gesture.add`: a new gesture at a time, cut out of the gesture there.
+
+from .score import DEFAULT_TAU, MIN_DURATION, SEQUENCE, quantize, starts  # noqa: E402
+
+
+def _sequence(ctx: Context, score: str, sequence: str) -> list:
+    sc = ctx.score(score)
+    if sequence not in SEQUENCE:
+        raise KeyError(f"no gesture sequence {sequence!r}")
+    return [list(g) for g in sc.sequences[sequence]]
+
+
+def _index(gs: list, index: int) -> int:
+    i = int(index)
+    if not 0 <= i < len(gs):
+        raise IndexError(f"no gesture {index} (the sequence has {len(gs)})")
+    return i
+
+
+def _rest(info, gs: list) -> str:
+    """A number value for a gesture with nothing to copy: the middle of the range."""
+    return str(0.5 * (info.min + info.max))
+
+
+def _at(gs: list, t: float) -> int:
+    """The gesture under time `t` (the last one when `t` is at or after the end)."""
+    st = starts(gs)
+    for i in range(len(gs) - 1, -1, -1):
+        if t >= st[i]:
+            return i
+    return 0
+
+
+@operator("gesture.set", "Set gesture")
+def gesture_set(ctx: Context, score: str, sequence: str, index: int, value=None, slope=None,
+                duration=None, time_constant=None, neutral=None) -> list:
+    """Set fields of gesture `index` of `sequence` (only those given). Values outside
+    VTL's ranges are clamped. Returns the gesture as stored."""
+    gs = _sequence(ctx, score, sequence)
+    i = _index(gs, index)
+    g = gs[i]
+    for k, v in ((0, value), (1, slope), (2, duration), (3, time_constant), (4, neutral)):
+        if v is not None:
+            g[k] = v
+    out = ctx.set(score, ("sequence", sequence), gs)
+    return list(out[i])
+
+
+@operator("gesture.set_boundary", "Move gesture boundary")
+def gesture_set_boundary(ctx: Context, score: str, sequence: str, index: int, time: float) -> float:
+    """Move the end of gesture `index` to `time` (s). The next gesture starts there too,
+    so the gestures after it keep their times; the last gesture just gets longer or
+    shorter. Each keeps at least 1 ms. Returns the boundary as stored."""
+    gs = _sequence(ctx, score, sequence)
+    i = _index(gs, index)
+    st = starts(gs)
+    lo = st[i] + MIN_DURATION
+    if i + 1 < len(gs):
+        hi = st[i + 1] + gs[i + 1][2] - MIN_DURATION
+        end_next = st[i + 1] + gs[i + 1][2]
+        t = quantize(_clamp(time, lo, hi))
+        gs[i][2] = t - st[i]
+        gs[i + 1][2] = end_next - t
+    else:
+        t = quantize(max(float(time), lo))
+        gs[i][2] = t - st[i]
+    ctx.set(score, ("sequence", sequence), gs)
+    return t
+
+
+@operator("gesture.split", "Split gesture")
+def gesture_split(ctx: Context, score: str, sequence: str, time: float) -> int:
+    """Cut the gesture under `time` in two equal-valued gestures. Returns the index
+    of the second one."""
+    gs = _sequence(ctx, score, sequence)
+    t = float(time)
+    i = _at(gs, t)
+    st = starts(gs)
+    left = quantize(t - st[i])
+    right = gs[i][2] - left
+    if left < MIN_DURATION or right < MIN_DURATION:
+        raise ValueError("the time is not inside a gesture")
+    second = list(gs[i])
+    gs[i][2], second[2] = left, right
+    gs.insert(i + 1, second)
+    ctx.set(score, ("sequence", sequence), gs)
+    return i + 1
+
+
+@operator("gesture.delete", "Delete gesture")
+def gesture_delete(ctx: Context, score: str, sequence: str, index: int) -> None:
+    """Remove gesture `index`. Its time goes to the gesture before it (or after it,
+    for the first), so no other gesture moves. The last gesture of a sequence stays."""
+    gs = _sequence(ctx, score, sequence)
+    i = _index(gs, index)
+    if len(gs) == 1:
+        raise ValueError("a sequence keeps at least one gesture")
+    j = i - 1 if i > 0 else 1
+    gs[j][2] += gs[i][2]
+    del gs[i]
+    ctx.set(score, ("sequence", sequence), gs)
+
+
+@operator("gesture.add", "Add gesture")
+def gesture_add(ctx: Context, score: str, sequence: str, time: float, duration: float = 0.1,
+                value=None) -> int:
+    """A new gesture from `time` for `duration` s, taken out of the gesture there (which
+    is cut; what is left of it after the new one stays). At or after the end of the
+    sequence it is appended. The new gesture is neutral for shape sequences unless
+    `value` is given, and has the value of the gesture it cuts for number sequences.
+    Returns its index."""
+    gs = _sequence(ctx, score, sequence)
+    info = SEQUENCE[sequence]
+    t, d = float(time), max(float(duration), MIN_DURATION)
+    end = sum(g[2] for g in gs)
+    if t >= end - MIN_DURATION:  # after the end (or an empty sequence): a pause, then the gesture
+        if t - end >= MIN_DURATION:
+            gs.append(["" if info.nominal else _rest(info, gs), 0.0, t - end, DEFAULT_TAU, True])
+        base_value = gs[-1][0] if gs else _rest(info, gs)
+        new = [value if value is not None else ("" if info.nominal else base_value),
+               0.0, d, DEFAULT_TAU, value is None and info.nominal]
+        gs.append(new)
+        ctx.set(score, ("sequence", sequence), gs)
+        return len(gs) - 1
+    i = _at(gs, t)
+    st = starts(gs)
+    g = gs[i]
+    left = quantize(t - st[i])
+    rest = st[i] + g[2] - t
+    d = min(d, rest)
+    new = [value if value is not None else ("" if info.nominal else g[0]),
+           0.0, d, g[3], value is None and info.nominal]
+    out = []
+    if left >= MIN_DURATION:
+        out.append([*g[:2], left, *g[3:]])
+    out.append(new)
+    if rest - d >= MIN_DURATION:
+        out.append([*g[:2], rest - d, *g[3:]])
+    else:
+        new[2] = rest
+    gs[i:i + 1] = out
+    ctx.set(score, ("sequence", sequence), gs)
+    return i + (1 if left >= MIN_DURATION else 0)
+
