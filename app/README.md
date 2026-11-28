@@ -21,8 +21,9 @@ app/start.sh
 | [app_core/names.py](app_core/names.py) | 仮のアプリ名(ここだけ直せば名前が変わる) |
 | [app_core/xmltree.py](app_core/xmltree.py) | 書式を1バイトも失わない XML の読み書き |
 | [app_core/speaker.py](app_core/speaker.py) | `.speaker` を木として読む(解剖，声道の形状，声門モデル4種と選択，静的パラメタと形状)．値は番地(タプル)で読み書きする |
+| [app_core/score.py](app_core/score.py) | 発話動作(`.ges`)を木として読む．変えていない系列はバイト単位でそのまま，変えた系列は VTL と同じ書式で書く．番地は `("sequence", 種類)` で，値はジェスチャ(値，傾き，長さ，時定数，中立)の並び |
 | [app_core/ops.py](app_core/ops.py) | 操作の仕組み：登録，変更の記録，履歴の1歩 |
-| [app_core/operators.py](app_core/operators.py) | 操作そのもの(`tract.set_param`，`glottis.set_param`，`glottis.set_static`，`glottis.select_model`，形状の `add_shape`・`duplicate_shape`・`rename_shape`・`delete_shape`(`tract.` と `glottis.`)，`status.set`) |
+| [app_core/operators.py](app_core/operators.py) | 操作そのもの(`tract.set_param`，`glottis.set_param`，`glottis.set_static`，`glottis.select_model`，形状の `add_shape`・`duplicate_shape`・`rename_shape`・`delete_shape`(`tract.` と `glottis.`)，`status.set`，発話動作の `gesture.set`・`gesture.set_boundary`・`gesture.split`・`gesture.delete`・`gesture.add`) |
 | [app_core/project.py](app_core/project.py) | プロジェクト：話者，履歴(1本)，元に戻す・やり直す，通知，保存と `.meta.json` |
 | [app_core/vtl.py](app_core/vtl.py) | VTL を呼ぶ層：面積関数，伝達関数，フォルマント，正中断面の輪郭 |
 | [app_core/server.py](app_core/server.py) | HTTP と WebSocket の最小のサーバー |
@@ -100,6 +101,8 @@ API は話者をファイルからしか読めず，同時に1人しか持てな
 - `formants`：そのスペクトルの山(dB の放物線補間．既定 8192 点 = 5.9 Hz 刻み)．
 - `sustained`：持続母音(`vtlSynthesisAddTract`，2 ms ごと)．声門は選ばれている声門モデルの `modal` 形状(F0・肺圧は話者の値．無ければ既定値)．肺圧を最初と最後の 30 ms で上げ下げし，出力にも同じ長さのフェードを掛ける．1 秒の合成に約 1.7 秒かかる．
 - `glottis_wave`：声門の信号．API で声門の信号を出すのは `vtlGesturalScoreToAudio` の misc ファイルだけなので，持続母音(声道の形状と声門の形状を名前で指し，F0 と肺圧は声門の形状の値)の発話動作を一時ファイルに書いて合成し，1サンプルごとの声門流と下・上の声門面積を読む．声門面積は下と上の狭い方(TBCM は後部の隙間を足す)．最後の数周期(終わりの 5 ms 前まで)と出力音，目標の F0 と声門流から測った F0 を返す．話者を毎回まるごと読み直す(編集した形状もそのまま効く)．0.3 秒で約 0.8 秒．
+- `score_audio`：発話動作の合成(`vtlGesturalScoreToAudio`)．
+- `score_tract_params`：発話動作の各時刻の声道(と声門)のパラメタ．C++ に足した API 関数 `vtlGesturalScoreToTractParams(ges, frameRate, tractParams, glottisParams, maxFrames, numFrames)` で，合成と同じ `GesturalScore::getParams` を `frameRate` ごとに呼ぶ(既定 200 Hz)．再生位置の声道・面積関数はこの列を時刻で補間して `tube` と `contours` に渡す．**この関数を使うので，main の checkout でも `build-mac/gui` のライブラリを作り直す必要がある．**
 - `contours`：正中断面の輪郭．既存の `vtlExportTractSvg` が書く SVG の折れ線 14 本を読み，cm(VTL の座標，唇が +x，上が +y)に戻す．名前は `CONTOUR_NAMES`．1回約 12 ms．backend に手は入れていない．速さが足りなければ，同じ折れ線を配列で返す API 関数を足せばよい．
 
 ## 画面(web/)
@@ -115,6 +118,8 @@ API は話者をファイルからしか読めず，同時に1人しか持てな
 | [web/src/components/Areas.tsx](web/src/components/Areas.tsx) | 区画の描画：分割(CSS grid)，境界のドラッグ，見出し，メニュー |
 | [web/src/components/plots.tsx](web/src/components/plots.tsx) | 正中断面，面積関数，スペクトル |
 | [web/src/components/Params.tsx](web/src/components/Params.tsx) | パラメタのスライダと数値入力 |
+| [web/src/articulation.ts](web/src/articulation.ts) | 調音ワークスペースの見る側の状態：再生位置，範囲，選んだジェスチャ(窓どうしで共有)，拡大率・系列の高さ・畳み(窓ごと) |
+| [web/src/components/Score.tsx](web/src/components/Score.tsx) | ジェスチャスコアの時間軸，ジェスチャの区画，再生位置の声道・面積関数，スコアを開く窓 |
 | [web/src/i18n/](web/src/i18n/) | 翻訳ファイル(`en.json` が既定，`ja.json`) |
 | [web/src/styles.css](web/src/styles.css) | トークンと見た目(schedule2 の principles.md に従う) |
 
@@ -140,6 +145,21 @@ API は話者をファイルからしか読めず，同時に1人しか持てな
 - ▶ は声帯ワークスペースでは選んだ声門の形状で鳴らす(声道ワークスペースでは modal)．
 - ● の印，保存，元に戻す，明暗，英日，別窓は声道と同じ．
 - 波形の名前は各帯の上の行に置き，線と重ならない．出力音は VTL の音のサンプル値(口からの流量の微分を放射特性と低域通過に通して 1e-7 倍したもの．放射音圧に比例し，±1 が満尺．物理単位は無い)．
+
+### 調音ワークスペース
+
+区画の種類：ジェスチャスコア(`score`)，ジェスチャ(`gesture`)，再生位置の声道(`ptract`)，再生位置の面積関数(`parea`)．発話動作は一度に1つ開く(起動時の `--score PATH`，または下の帯の「開く…」でパスを入れる．未保存の変更があれば捨ててよいか聞く)．声道・声門の形状は，声道ワークスペースで選んでいる話者のものを使う．
+
+- スコア：上から時刻の目盛り，合成した音(スペクトログラムと波形を見出しで切り替え)，VTL の8系列，全体の帯．系列の名前の欄は左に固定．
+  - ブロックは1行の高さで，値が入りきらなければ「…」．全文は `title` とジェスチャの区画に出る．中立のジェスチャは塗らず点線の枠．ブロック左端の曲線は目標への近づき方(時定数の約3倍で落ち着く)．
+  - F0 と肺圧の系列は目標を点線，合成が実際にたどる値(声門の制御列から)を実線で描く．高さは名前の欄の下の縁をドラッグで変える(音の欄も)．どの系列も ▾ で畳める．高さ・畳み・拡大率は窓ごとに `localStorage`(`ui.articulation.view`)に覚え，履歴には入らない．
+  - 目盛りのドラッグで再生位置を動かす．音の欄はクリックで再生位置，ドラッグで範囲を選ぶ．
+  - ブロックを押すと選ぶ．右の縁をドラッグすると境界が動く(次のジェスチャは終わりを保つので，後ろの時刻は変わらない．どちらも 1 ms は残す)．ドラッグは履歴の1歩．
+  - 横の拡大は見出しの −/+，Ctrl(Cmd)+ホイール(ポインタの位置を保つ)，「全体」．全体の帯で表示位置を動かす．見えている部分だけ描く．
+  - 保存したときと違うブロックと系列に特色の印．編集のたびにサーバーで合成し直す(話者とスコアの中身のハッシュで覚え，合成は同時に1つ．古い依頼は新しいものに譲る)．合成中は音の欄が薄くなる．
+- ジェスチャ：値(形状は一覧から．声門の形状の系列は声門の形状)，中立，開始(前の長さで決まる．読むだけ)，長さ，時定数，F0 では傾き．数値は声道と同じ行(ドラッグは1歩)．VTL の範囲に切り詰め，"%f" の6桁に丸める．前へ・次へ，再生位置で分ける，再生位置に足す(形状の系列なら中立，数値の系列は切ったところの値．終わりより後なら中立の間を置いてから足す)，削除(その時間は前のジェスチャへ．最初なら次へ．最後の1つは消さない)．
+- 再生位置の声道・面積関数：その時刻のパラメタで描く．再生位置・範囲・選んだジェスチャ・音の表示は窓どうしで共有する(BroadcastChannel)．
+- ▶ と Space は，範囲があればその範囲，なければ全体を鳴らし，再生位置が付いてくる．保存・名前を付けて保存・Cmd/Ctrl+S は開いている発話動作に対して働く(守るファイルの扱いは話者と同じ．`.ges.meta.json` に記録)．
 
 ### 形状の一覧と整備の状態
 
@@ -219,10 +239,11 @@ Python から：
 - サーバー：HTTP の操作が2つの WebSocket に届く，WebSocket からの操作・ドラッグ・元に戻す，エラー，計算．
 - 声帯(`test_glottis.py`)：形状・静的パラメタの操作と元に戻す(バイト単位)，ドラッグが1歩，範囲への切り詰め，モデルの切り替えと元に戻す・やり直す，ファイルに無いモデルは何も変えない，保存したファイルを VTL が読み返す(モデル・F0)，4つのモデルとも波形が目標の F0 で周期的，編集が波形に効く，WebSocket の `glottis_wave`，声門の形状を変えた持続母音．
 - 形状と状態(`test_shapes.py`)：声道・声門の形状の追加(中立値・既定値)・複製・名前の変更・削除が各1歩でバイト単位に戻る，名前の重複・空・前後の空白を断る，最後の1つは消さない，編集した形状を消しても戻る，状態は操作で `.speaker` を変えず `.meta.json` に保存され読み戻せる，知らない対象・段階を断る，追加・複製・名前の変更・削除して保存したファイルを VTL が読み返す(値と声門の F0)．
+- 発話動作(`test_score.py`)：`.ges` がバイト単位で往復する，変えた系列は VTL の書式で書く，境界・値・中立・分割・削除・追加の操作と元に戻す(バイト単位)，ドラッグが1歩，1 ms の下限，範囲への切り詰め，保存と別名保存・守るファイル，別のスコアを開くと前の履歴が消える，保存したファイルを VTL が読み返して同じパラメタ列になる，取り出したパラメタ列が VTL 自身の面積関数の列と一致する，再生位置の声道と F0・肺圧の列，音のキャッシュ．
 - 保存と再生(`test_save_play.py`)：保存で値が1つだけ変わり履歴は増えない，VTL が読み返せる，守るファイル・版付き・既存ファイルの扱い，持続母音が無音でなく長さが合いフェードが付く，WAV の長さ・RMS とキャッシュ．
 
 VTL のライブラリが無いと，VTL を使うテストは飛ばす．
 
 ## まだ無いもの(第6段以降)
 
-声道・声帯以外のワークスペース(調音など)，声門の制御方式(ユーザーが考え直す予定)，声道の図の操作点，トラック・クリップ・作品・プロジェクトのファイル，保存していない変更の自動退避．
+話す・歌う・比較のワークスペース，スコアの系列の追加・削除と長い子音名の扱い，声門の制御方式(ユーザーが考え直す予定)，声道の図の操作点，トラック・クリップ・作品・プロジェクトのファイル，保存していない変更の自動退避．

@@ -9,12 +9,13 @@ import { FMAX, useWorkspace } from "./workspace";
 import { Params } from "./components/Params";
 import { AreaPlot, SpectrumPlot, TractView } from "./components/plots";
 import { ShapeList } from "./components/Shapes";
+import { AreaAtPlayhead, GestureEditor, GestureInfo, PlayheadInfo, ScoreInfo, ScoreView, TractAtPlayhead } from "./components/Score";
 import { GShapeList, GShapeParams, ModelList, StaticParams, WaveView, useGlottisWave } from "./components/Glottis";
 
 export interface EditorKind {
   id: string;
   /** The standard workspace it belongs to ("ws.<group>" names it in the editor menu). */
-  group: "tract" | "glottis";
+  group: "tract" | "glottis" | "articulation";
   /** Smallest body size in px (the 32 px header comes on top). */
   min: { w: number; h: number };
   /** Text right of the editor name in the header (cut with … when narrow). */
@@ -173,6 +174,35 @@ export const EDITORS: EditorKind[] = [
       const w = useWorkspace();
       return w.glottis ? <GlottisWaveBody t={t} /> : <Empty t={t} />;
     },
+  },
+  // -- the articulation workspace --------------------------------------------
+  {
+    id: "score",
+    group: "articulation",
+    min: { w: 320, h: 160 },
+    Info: ScoreInfo,
+    Body: ({ t }) => <ScoreView t={t} onOpen={() => window.dispatchEvent(new Event("score-open"))} />,
+  },
+  {
+    id: "gesture",
+    group: "articulation",
+    min: { w: 240, h: 120 },
+    Info: GestureInfo,
+    Body: GestureEditor,
+  },
+  {
+    id: "ptract",
+    group: "articulation",
+    min: { w: 160, h: 120 },
+    Info: PlayheadInfo,
+    Body: TractAtPlayhead,
+  },
+  {
+    id: "parea",
+    group: "articulation",
+    min: { w: 160, h: 96 },
+    Info: PlayheadInfo,
+    Body: AreaAtPlayhead,
   },
 ];
 

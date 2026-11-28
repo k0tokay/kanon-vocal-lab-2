@@ -46,9 +46,11 @@ function Slider({ label, min, max, value, onDrag, onDragEnd, onStep }: {
 
 /** One editable number: a slider when it has a range, and the value, which can be typed.
  *  `op` with `args` (+ `value`) is the operation that sets it; a drag is one undo step. */
-export function ValueRow({ label, title, min, max, value, edited, op, args, wide }: {
+export function ValueRow({ label, title, min, max, value, edited, op, args, wide, field = "value", map }: {
   label: string; title?: string; min: number; max: number; value: number; edited: boolean;
   op: string; args: Record<string, unknown>; wide?: boolean;
+  /** The argument the value goes in, and how the shown value becomes it. */
+  field?: string; map?: (v: number) => number;
 }) {
   // While dragging, show the pointer's value at once; the server's comes back a moment later.
   const [local, setLocal] = useState<number | null>(null);
@@ -57,7 +59,7 @@ export function ValueRow({ label, title, min, max, value, edited, op, args, wide
   const shown = local ?? value;
   const ranged = max > min;
 
-  const send = (v: number, dragId?: string) => client.op(op, { ...args, value: v }, dragId);
+  const send = (v: number, dragId?: string) => client.op(op, { ...args, [field]: map ? map(v) : v }, dragId);
 
   const onDrag = (v: number) => {
     setLocal(v);

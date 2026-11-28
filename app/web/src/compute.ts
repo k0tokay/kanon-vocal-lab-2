@@ -20,7 +20,13 @@ export function useComputed(speaker: string | null, params: number[] | null, wha
 /** The answer to the latest `payload` for a request `kind`, computed on the server.
  *  A new payload (by value) asks again; null clears the result. */
 export function useLatest<R>(kind: string, payload: Record<string, unknown> | null): R | null {
-  const [result, setResult] = useState<R | null>(null);
+  return useLatestFresh<R>(kind, payload)[0];
+}
+
+/** `useLatest`, and whether the result answers the latest payload (false while a newer
+ *  one is being computed, e.g. a sound after an edit). */
+export function useLatestFresh<R>(kind: string, payload: Record<string, unknown> | null): [R | null, boolean] {
+  const [result, setResultState] = useState<{ r: R | null; k: string | null }>({ r: null, k: null });
   const inputKey = payload ? JSON.stringify(payload) : null;
   const st = useRef({ running: false, latest: null as string | null, alive: true });
 
@@ -32,7 +38,7 @@ export function useLatest<R>(kind: string, payload: Record<string, unknown> | nu
   useEffect(() => {
     const s = st.current;
     s.latest = inputKey;
-    if (!inputKey) { setResult(null); return; }
+    if (!inputKey) { setResultState({ r: null, k: null }); return; }
     if (s.running) return;
     const run = async () => {
       s.running = true;
@@ -41,7 +47,7 @@ export function useLatest<R>(kind: string, payload: Record<string, unknown> | nu
         try {
           const r = await client.request<R>(kind, JSON.parse(k));
           // a late answer must not bring back a result after the input went away
-          if (s.alive && s.latest !== null) setResult(r);
+          if (s.alive && s.latest !== null) setResultState({ r, k });
         } catch { /* reconnecting; the next change retries */ }
         if (s.latest === k) break;
       }
@@ -50,5 +56,5 @@ export function useLatest<R>(kind: string, payload: Record<string, unknown> | nu
     void run();
   }, [inputKey]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  return result;
+  return [result.r, result.k === inputKey];
 }
