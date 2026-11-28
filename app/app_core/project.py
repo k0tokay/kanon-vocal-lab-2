@@ -9,6 +9,7 @@ from __future__ import annotations
 import contextlib
 import hashlib
 import json
+import re
 import time
 from pathlib import Path
 from typing import Any, Callable
@@ -24,6 +25,38 @@ Listener = Callable[[dict], None]
 def meta_path(speaker_path: Path) -> Path:
     """`foo.speaker` -> `foo.meta.json` (version notes and the operation log)."""
     return speaker_path.with_name(speaker_path.stem + ".meta.json")
+
+
+# Files the server never overwrites: the user's hand-made speakers and those
+# derived from recordings. They are saved under another name instead.
+PROTECTED = re.compile(r"manual-edit|intuition|(^|[-_.])rec([-_.]|$)|recording", re.IGNORECASE)
+# A released version of a speaker (`speakers/.../*-vX-Y-Z.speaker`) is not
+# overwritten either: a change becomes a new version (save as).
+VERSIONED = re.compile(r"-v\d+-\d+-\d+\.speaker$")
+
+
+class SaveRefused(Exception):
+    """A save the server will not do. `reason`: "protected" | "versioned" | "exists"."""
+
+    def __init__(self, reason: str, path: Path):
+        super().__init__(f"{reason}: {path}")
+        self.reason = reason
+        self.path = path
+
+
+def save_refusal(target: Path, current: Path | None, overwrite: bool) -> str | None:
+    """Why writing `target` is refused, or None. `current` is the speaker's own file."""
+    target = target.resolve()
+    if not target.exists():
+        return None
+    if PROTECTED.search(target.stem):
+        return "protected"
+    if VERSIONED.search(target.name) and "speakers" in target.parts:
+        return "versioned"
+    same = current is not None and current.resolve() == target
+    if not same and not overwrite:
+        return "exists"
+    return None
 
 
 class Project:
@@ -54,12 +87,21 @@ class Project:
     def is_modified(self, speaker_id: str) -> bool:
         return bool(self._unsaved_log[speaker_id])
 
-    def save_speaker(self, speaker_id: str, path: str | Path | None = None) -> Path:
+    def save_speaker(self, speaker_id: str, path: str | Path | None = None, *,
+                     overwrite: bool = False) -> Path:
         """Write the `.speaker` and add this save, with the operations since the
-        last save, to the `.meta.json` next to it."""
-        self._commit_open()
+        last save, to the `.meta.json` next to it. Saving is not an undo step.
+
+        Without `path` the speaker's own file is written. Raises `SaveRefused`
+        for protected and versioned files, and for another existing file
+        unless `overwrite`."""
         sp = self.speakers[speaker_id]
-        out = sp.save(path)
+        target = self.resolve_path(speaker_id, path)
+        why = save_refusal(target, sp.path, overwrite)
+        if why:
+            raise SaveRefused(why, target)
+        self._commit_open()
+        out = sp.save(target)
         mp = meta_path(out)
         meta: dict = {}
         if mp.exists():
@@ -76,6 +118,21 @@ class Project:
         self._saved[speaker_id] = {}
         self._emit({"type": "speaker_saved", "speaker": speaker_id, "path": str(out)})
         return out
+
+    def resolve_path(self, speaker_id: str, path: str | Path | None) -> Path:
+        """The file a save writes: relative paths are taken from the speaker's
+        folder, `~` is expanded and `.speaker` is added when missing."""
+        sp = self.speakers[speaker_id]
+        if path is None or str(path).strip() == "":
+            if sp.path is None:
+                raise ValueError("no path to save to")
+            return Path(sp.path)
+        p = Path(str(path).strip()).expanduser()
+        if not p.is_absolute():
+            p = (Path(sp.path).parent if sp.path else Path.cwd()) / p
+        if p.suffix != ".speaker":
+            p = p.with_name(p.name + ".speaker")
+        return p
 
     # -- listeners ------------------------------------------------------------
 

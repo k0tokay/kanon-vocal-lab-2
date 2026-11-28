@@ -11,7 +11,8 @@ What it computes from a vector of vocal tract parameters:
 - `tube`: the area function (VTL's 40 tube sections);
 - `spectrum`: the volume velocity transfer function (glottis to lips);
 - `formants`: peaks of that spectrum;
-- `contours`: the midsagittal outline, from `vtlExportTractSvg`.
+- `contours`: the midsagittal outline, from `vtlExportTractSvg`;
+- `sustained`: a held vowel (time-domain synthesis, `vtlSynthesisAddTract`).
 
 The library is found through `VTL_LIB`, else `build-mac/gui/libVocalTractLabApi.dylib`
 of this checkout.
@@ -93,6 +94,7 @@ class Backend:
         L.vtlTractToTube.argtypes = [_D, _D, _D, _I, _D, _D, _D]
         L.vtlGetTransferFunction.argtypes = [_D, ct.c_int, _D, _D]
         L.vtlExportTractSvg.argtypes = [_D, ct.c_char_p]
+        L.vtlSynthesisAddTract.argtypes = [ct.c_int, _D, _D, _D]
         self.L = L
         self.lock = threading.RLock()
         self._key: str | None = None
@@ -222,6 +224,75 @@ class Backend:
             a[:, 1] = -a[:, 1]
             out[name] = a
         return out
+
+    # -- sound ------------------------------------------------------------------
+
+    def sustained(self, speaker: Speaker, params, duration: float = 1.0,
+                  glottis_shape: str = "modal", fade: float = 0.03) -> tuple[np.ndarray, int]:
+        """A held vowel: the tract shape `params` with the selected glottis model's
+        `glottis_shape` (its f0 and pressure are the speaker's). The lung pressure
+        rises over the first and falls over the last `fade` seconds, and the
+        output fades the same way. Returns (samples, sampling rate)."""
+        glottis = glottis_vector(speaker, glottis_shape)
+        step = 96  # 2 ms chunks at 48 kHz
+        with self.lock:
+            x = self._params(speaker, params)
+            if len(glottis) != self.num_glottis_params:
+                raise ValueError(f"{len(glottis)} glottis parameters, the API has {self.num_glottis_params}")
+            sr = self.sampling_rate
+            n = int(round(duration * sr / step))
+            p_index = _pressure_index(speaker)
+            t = np.arange(n + 1) * step / sr
+            ramp = np.clip(np.minimum(t / fade, (n * step / sr - t) / fade), 0.0, 1.0)
+            out = np.zeros(n * step)
+            buf = _arr(step)
+            self.L.vtlResetTractSynthesis()
+            for k in range(n + 1):
+                g = np.array(glottis, dtype=np.float64)
+                if p_index is not None:
+                    g[p_index] *= ramp[k]
+                if self.L.vtlSynthesisAddTract(0 if k == 0 else step, _p(buf), _p(x), _p(g)) != 0:
+                    raise RuntimeError("vtlSynthesisAddTract failed")
+                if k:
+                    out[(k - 1) * step:k * step] = buf
+        m = min(len(out), int(fade * sr))  # output fade on top of the pressure ramp
+        if m:
+            w = 0.5 - 0.5 * np.cos(np.pi * np.arange(m) / m)
+            out[:m] *= w
+            out[-m:] *= w[::-1]
+        return out, sr
+
+
+def glottis_vector(speaker: Speaker, shape: str = "modal") -> list[float]:
+    """Control parameters of the selected glottis model for one of its shapes;
+    the parameters' defaults when the model has no such shape."""
+    m = speaker.selected_glottis
+    if shape in m.shapes:
+        return m.shape_values(shape)
+    return [p.default for p in sorted(m.control, key=lambda p: p.index)]
+
+
+def _pressure_index(speaker: Speaker) -> int | None:
+    for p in speaker.selected_glottis.control:
+        if p.abbr == "pressure" or p.name.lower().startswith("lung pressure") or "pressure" in p.name.lower():
+            return p.index
+    return None
+
+
+def wav_bytes(x: np.ndarray, sr: int, peak: float = 0.9) -> bytes:
+    """16-bit mono WAV. Scaled down only if it would clip."""
+    import io
+    import wave
+    a = np.max(np.abs(x)) if len(x) else 0.0
+    y = x * (peak / a) if a > peak else x
+    pcm = np.round(np.clip(y, -1, 1) * 32767).astype("<i2")
+    b = io.BytesIO()
+    with wave.open(b, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(pcm.tobytes())
+    return b.getvalue()
 
 
 _backend: Backend | None = None
