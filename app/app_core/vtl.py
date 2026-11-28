@@ -384,9 +384,11 @@ class Backend:
                 raise RuntimeError(f"vtlGesturalScoreToAudio failed ({r})")
             return audio[:n.value].copy(), sr
 
-    def score_tract_params(self, speaker: Speaker, score_text: str, rate: float = 200.0) -> np.ndarray:
+    def score_tract_params(self, speaker: Speaker, score_text: str, rate: float = 200.0,
+                           glottis: bool = False):
         """The vocal tract parameters of a gestural score at `rate` frames per second,
-        as the synthesis uses them: (frames, parameters)."""
+        as the synthesis uses them: (frames, parameters). With `glottis`, also the
+        selected glottis model's control parameters: (tract, glottis)."""
         if not self.has_tract_params:
             raise RuntimeError(f"{self.lib_path} has no vtlGesturalScoreToTractParams: rebuild it")
         with self.lock:
@@ -397,10 +399,13 @@ class Backend:
             if r != 0:
                 raise RuntimeError(f"vtlGesturalScoreToTractParams failed ({r})")
             out = _arr(n.value * self.num_tract_params)
-            r = self.L.vtlGesturalScoreToTractParams(f, rate, _p(out), None, n.value, ct.byref(n))
+            g = _arr(n.value * self.num_glottis_params) if glottis else None
+            r = self.L.vtlGesturalScoreToTractParams(f, rate, _p(out), _p(g) if glottis else None,
+                                                     n.value, ct.byref(n))
             if r != 0:
                 raise RuntimeError(f"vtlGesturalScoreToTractParams failed ({r})")
-            return out.reshape(n.value, self.num_tract_params)
+            tract = out.reshape(n.value, self.num_tract_params)
+            return (tract, g.reshape(n.value, self.num_glottis_params)) if glottis else tract
 
 
 def _xml_attr(v: str) -> str:

@@ -21,6 +21,8 @@ HTTP
     GET  /api/score_wav?key=...            that sound as audio/wav
     POST /api/score_tract {score, speaker, time} -> the vocal tract at `time`:
                         {params, tube, contours} (from the score's tract parameters)
+    POST /api/score_curves {score, speaker} -> f0 [st] and lung pressure [dPa] as the
+                        synthesis follows them (200 per second)
     POST /api/sustained {speaker, shape | params, glottis_shape?, duration?}  -> audio/wav (a held vowel)
     POST /api/glottis_wave {speaker, tract_shape, glottis_shape, duration?}
                         -> a few periods of glottal area, glottal flow and output, and f0
@@ -109,6 +111,8 @@ def handle(project: Project, msg: dict):
         return SCORE.sound(project, msg)[1]
     if kind == "score_tract":
         return SCORE.tract(project, msg)
+    if kind == "score_curves":
+        return SCORE.curves(project, msg)
     if kind == "project":
         return project.to_json()
     raise KeyError(f"unknown request kind {kind!r}")
@@ -165,7 +169,7 @@ class ScoreWork:
     def __init__(self, size: int = 8):
         self.size = size
         self.sounds: OrderedDict[str, tuple[bytes, dict]] = OrderedDict()
-        self.params: OrderedDict[str, np.ndarray] = OrderedDict()
+        self.params: OrderedDict[str, tuple[np.ndarray, np.ndarray]] = OrderedDict()  # tract, glottis
         self.synth = threading.Lock()
         self.latest: dict[str, int] = {}
         self.counter = 0
@@ -207,13 +211,27 @@ class ScoreWork:
         v = self.sounds.get(k)
         return v[0] if v else None
 
-    def tract(self, project: Project, req: dict) -> dict:
+    def _params(self, project: Project, req: dict) -> tuple[np.ndarray, np.ndarray]:
         k = self.key(project, req)
-        sp = project.speakers[req["speaker"]]
         if k not in self.params:
-            self._put(self.params, k, backend().score_tract_params(sp, project.scores[req["score"]].text(),
-                                                                  TRACT_RATE))
-        seq = self.params[k]
+            sp = project.speakers[req["speaker"]]
+            self._put(self.params, k, backend().score_tract_params(
+                sp, project.scores[req["score"]].text(), TRACT_RATE, glottis=True))
+        return self.params[k]
+
+    def curves(self, project: Project, req: dict) -> dict:
+        _, g = self._params(project, req)
+        m = project.speakers[req["speaker"]].selected_glottis
+        idx = {p.abbr: p.index for p in m.control}
+        out: dict = {"rate": TRACT_RATE, "count": len(g)}
+        if "f0" in idx:
+            out["f0"] = np.round(12 * np.log2(np.maximum(g[:, idx["f0"]], 1.0)), 3).tolist()
+        if "pressure" in idx:
+            out["pressure"] = np.round(g[:, idx["pressure"]], 1).tolist()
+        return out
+
+    def tract(self, project: Project, req: dict) -> dict:
+        seq, _ = self._params(project, req)
         # between two frames: linear (the frames are 5 ms apart)
         x = min(max(float(req["time"]), 0.0), (len(seq) - 1) / TRACT_RATE) * TRACT_RATE
         i = min(int(x), len(seq) - 2) if len(seq) > 1 else 0
@@ -330,7 +348,7 @@ def make_app(project: Project) -> web.Application:
                     continue
                 try:
                     msg = json.loads(m.data)
-                    if msg.get("kind") in ("compute", "glottis_wave", "score_sound", "score_tract"):
+                    if msg.get("kind") in ("compute", "glottis_wave", "score_sound", "score_tract", "score_curves"):
                         # off the event loop: a synthesis may hold VTL for a second
                         tasks.add(t := asyncio.create_task(compute_reply(msg)))
                         t.add_done_callback(tasks.discard)
@@ -349,7 +367,7 @@ def make_app(project: Project) -> web.Application:
 
     app.router.add_get("/api/project", get_project)
     for kind in ("op", "drag_end", "undo", "redo", "save", "open_score", "compute", "glottis_wave",
-                 "score_sound", "score_tract"):
+                 "score_sound", "score_tract", "score_curves"):
         app.router.add_post(f"/api/{kind}", route(kind))
     app.router.add_post("/api/sustained", sustained)
 

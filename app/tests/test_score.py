@@ -215,6 +215,12 @@ class WithVTL(Base):
         r = SCORE.tract(self.p, {"speaker": "jd2", "score": self.sid, "time": st[i] + gs[i][2] * 0.8})
         self.assertEqual(len(r["params"]), b.num_tract_params)
         self.assertIn("tongue", r["contours"])
+        # f0 and pressure as the synthesis follows them: near the targets of long gestures
+        c = SCORE.curves(self.p, {"speaker": "jd2", "score": self.sid})
+        self.assertEqual(len(c["f0"]), seq.shape[0])
+        p = self.sc.sequences["lung-pressure-gestures"]
+        mid = int((starts(p)[1] + p[1][2] / 2) * 200)
+        self.assertAlmostEqual(c["pressure"][mid], float(p[1][0]), delta=0.05 * float(p[1][0]))
 
     def test_sound_view_and_cache(self):
         req = {"speaker": "jd2", "score": self.sid}
